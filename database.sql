@@ -1,7 +1,7 @@
 
 CREATE TABLE Categories
 (
-  Category_ID          uuid    NOT NULL,
+  Category_ID          uuid  DEFAULT gen_random_uuid()  NOT NULL,
   Category_Name        varchar NOT NULL,
   Category_Description text    NOT NULL,
   PRIMARY KEY (Category_ID)
@@ -49,7 +49,7 @@ CREATE TABLE Orders
   Order_Date    date    NOT NULL,
   Status        varchar NOT NULL,
   PRIMARY KEY (Order_ID),
-  FOREIGN KEY (Product_ID) REFERENCES Products (Product_ID)
+  FOREIGN KEY (Customer_ID) REFERENCES Customers (Customer_ID)
 );
 
 CREATE TABLE Order_Details
@@ -61,7 +61,7 @@ CREATE TABLE Order_Details
   Order_ID        uuid    NOT NULL,
   PRIMARY KEY (Order_Detail_ID),
   FOREIGN KEY (Product_ID) REFERENCES Products (Product_ID),
-  FOREIGN KEY (Customer_ID) REFERENCES Customers (Customer_ID)
+  FOREIGN KEY (Order_ID) REFERENCES Orders (Order_ID)
 );
 
 CREATE INDEX By_Email
@@ -74,11 +74,7 @@ CREATE INDEX By_ID
   ON Customers (Customer_ID ASC);
 
 
-  INSERT INTO Categories(Category_Name,Category_Description)
+INSERT INTO Categories(Category_Name,Category_Description)
   VALUES
-  ("Electronics","some good stuff going on over here"),
-  ("Bags","bags are good"),
-  ("Shoes","shoe are cool"),
-  ("Hoodies","hoodies are the best"),
-  ("Pants","pants are a must"),
-  ("Hats","hats off");
+  ('Bags','bags are good');
+
