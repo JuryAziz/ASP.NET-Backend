@@ -1,5 +1,5 @@
 
-CREATE TABLE Category
+CREATE TABLE Categories
 (
   Category_ID          uuid    NOT NULL,
   Category_Name        varchar NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE Category
   PRIMARY KEY (Category_ID)
 );
 
-CREATE TABLE Customer
+CREATE TABLE Customers
 (
   Customer_ID  uuid    NOT NULL,
   Full_Name    varchar NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE Customer
   PRIMARY KEY (Customer_ID)
 );
 
-CREATE TABLE Product
+CREATE TABLE Products
 (
   Product_ID     uuid    NOT NULL,
   Title          varchar NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE Product_Categories
   FOREIGN KEY (Category_ID) REFERENCES Category (Category_ID)
 );
 
-CREATE TABLE Order
+CREATE TABLE Orders
 (
   Order_ID      uuid    NOT NULL,
   Customer_ID   uuid    NOT NULL,
@@ -72,3 +72,6 @@ CREATE INDEX By_Number
 
 CREATE INDEX By_ID
   ON Customer (Customer_ID ASC);
+
+
+  INSERT INTO Categories(Category_Name,Category_Description)

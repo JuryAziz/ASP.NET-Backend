@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -379.6277,
-    "scrollLeft": -99.4592,
-    "zoomLevel": 0.5,
+    "scrollTop": 0,
+    "scrollLeft": -519,
+    "zoomLevel": 1,
     "show": 431,
     "database": 16,
     "databaseName": "",
@@ -56,7 +56,7 @@
     "tableEntities": {
       "yuONhQcopsb25nQuT4KJs": {
         "id": "yuONhQcopsb25nQuT4KJs",
-        "name": "Product",
+        "name": "Products",
         "comment": "Product table",
         "columnIds": [
           "HeZ_f_8ImpNF7xxA6Wawl",
@@ -87,13 +87,13 @@
           "color": "#FFD400"
         },
         "meta": {
-          "updateAt": 1713703365922,
+          "updateAt": 1713783937083,
           "createAt": 1713698293200
         }
       },
       "gvUM55mMK7UnWiFGSAvT1": {
         "id": "gvUM55mMK7UnWiFGSAvT1",
-        "name": "Customer",
+        "name": "Customers",
         "comment": "Customer table",
         "columnIds": [
           "_aMt-e5tVb9mXTMemgIJy",
@@ -125,13 +125,13 @@
           "color": "#02B43D"
         },
         "meta": {
-          "updateAt": 1713783435805,
+          "updateAt": 1713783965010,
           "createAt": 1713698797285
         }
       },
       "JCrGC_c18IJQtOSqqFBik": {
         "id": "JCrGC_c18IJQtOSqqFBik",
-        "name": "Category",
+        "name": "Categories",
         "comment": "",
         "columnIds": [
           "BXFrI-o_lFtk2bNU_uvqH",
@@ -153,13 +153,13 @@
           "color": "#B506B6"
         },
         "meta": {
-          "updateAt": 1713703547990,
+          "updateAt": 1713783948863,
           "createAt": 1713698825082
         }
       },
       "j-9-gQo5sUwc7D_AIaPVG": {
         "id": "j-9-gQo5sUwc7D_AIaPVG",
-        "name": "Order",
+        "name": "Orders",
         "comment": "Order table",
         "columnIds": [
           "lMMR3N_GfHZ_q4F5V6TMH",
@@ -190,7 +190,7 @@
           "color": "#B40000"
         },
         "meta": {
-          "updateAt": 1713783430890,
+          "updateAt": 1713783958809,
           "createAt": 1713698883259
         }
       },
@@ -1607,7 +1607,7 @@
       1713698769421,
       1713698767698,
       {
-        "name": 1713698303635,
+        "name": 1713783937081,
         "comment": 1713698748061,
         "ui.color": 1713699542538
       }
@@ -1674,7 +1674,7 @@
       1713698797284,
       -1,
       {
-        "name": 1713698803376,
+        "name": 1713783965009,
         "comment": 1713699451761,
         "ui.color": 1713699558830
       }
@@ -1695,7 +1695,7 @@
       1713698825081,
       -1,
       {
-        "name": 1713698875749,
+        "name": 1713783948862,
         "ui.color": 1713703547990
       }
     ],
@@ -1725,7 +1725,7 @@
       1713698883256,
       -1,
       {
-        "name": 1713698890132,
+        "name": 1713783958807,
         "ui.color": 1713699575413,
         "comment": 1713700672627
       }
