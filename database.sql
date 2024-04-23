@@ -86,6 +86,143 @@ CREATE INDEX by_id
   ON "user" (user_id ASC);
 
 
-INSERT INTO category(category_name, category_description)
-  VALUES
-  ('a55','a2');
+
+/****************************************************************************************************************************/
+/*********************************************JUST TEST**********************************************************************/
+/****************************************************************************************************************************/
+
+
+
+INSERT INTO public."user"( full_name, gender, phone_number, email, password, age)
+	VALUES ( 'A1', 'M', '050000000', 'email@example.com', '----------', '25');
+
+SELECT * FROM public."user";
+
+UPDATE public."user"
+	SET  full_name='a2'
+	WHERE email = 'email@example.com';
+
+DELETE FROM public."user"
+	WHERE email = 'email@example.com';
+
+/*----------------------------------*/
+
+
+
+-- add user
+
+INSERT INTO public."user"( full_name, gender, phone_number, email, password, age)
+	VALUES ( 'A1', 'M', '050000000', 'email@example.com', '----------', '25');
+
+
+
+-- insert address
+
+INSERT INTO public.address( country, city, province, postal_code, district, street, user_id)
+	SELECT  'country','city','province','postal_code','district','street',user_id
+FROM    public."user"
+WHERE   email = 'email@example.com';
+
+
+
+
+-- insert order
+
+
+INSERT INTO public."order"( status, address_id, user_id)
+SELECT  'IN_PROGRESS', public."address".address_id,public."user".user_id
+FROM public."user"
+INNER JOIN address ON address.user_id = "user".user_id WHERE   email = 'email@example.com';
+
+
+
+-- insert order Details
+
+
+INSERT INTO public.category( category_name, category_description)
+	VALUES ('books', 'Books');
+
+INSERT INTO public.category( category_name, category_description)
+	VALUES ('audio_books', 'Audio Books');
+
+
+
+-- add Prodacts
+
+
+INSERT INTO public.product(
+ title, price, total_quantity, description, thumbnail)
+	VALUES ( 'Book a1', 30.72, 50, 'description description description', 'path/image.png');
+
+INSERT INTO public.product(
+ title, price, total_quantity, description, thumbnail)
+	VALUES ( 'Book a2', 29.56, 50, 'description description description', 'path/image.png');
+
+INSERT INTO public.product(
+ title, price, total_quantity, description, thumbnail)
+	VALUES ( 'Book a3', 50.86, 50, 'description description description', 'path/image.png');
+
+INSERT INTO public.product(
+ title, price, total_quantity, description, thumbnail)
+	VALUES ( 'Book a4', 20.62, 50, 'description description description', 'path/image.png');
+
+INSERT INTO public.product(
+ title, price, total_quantity, description, thumbnail)
+	VALUES ( 'Book a5', 13.31, 50, 'description description description', 'path/image.png');
+
+INSERT INTO public.product(
+ title, price, total_quantity, description, thumbnail)
+	VALUES ( 'Book a6', 92.29, 50, 'description description description', 'path/image.png');
+
+
+-- connect product - catigory
+
+INSERT INTO public.product_category(product_id, category_id)
+SELECT public.product.product_id, public.category.category_id from public.product,public.category 
+WHERE public.product.title = 'Book a1' and public.category.category_name = 'books';
+
+
+
+
+INSERT INTO public.product_category(product_id, category_id)
+SELECT public.product.product_id, public.category.category_id from public.product,public.category 
+WHERE public.product.title = 'Book a2' and public.category.category_name = 'books';
+
+
+INSERT INTO public.product_category(product_id, category_id)
+SELECT public.product.product_id, public.category.category_id from public.product,public.category 
+WHERE public.product.title = 'Book a3' and public.category.category_name = 'books';
+
+
+INSERT INTO public.product_category(product_id, category_id)
+SELECT public.product.product_id, public.category.category_id from public.product,public.category 
+WHERE public.product.title = 'Book a4' and public.category.category_name = 'books';
+
+
+
+
+
+
+
+
+-- insert order Details
+
+INSERT INTO public.order_details( quantity, unit_price, product_id, order_id)
+SELECT  5, public."product".price , public."product".product_id, public."order".order_id 
+  from public.product,public."order" 
+  INNER JOIN "user" ON public."user".user_id = public."order".user_id WHERE   email = 'email@example.com';
+
+
+
+
+
+---- select all product by category_name
+SELECT product.title, category.category_name
+FROM product
+CROSS JOIN product_category 
+inner JOIN category
+  ON product_category.category_id = category.category_id  and product_category.product_id = product.product_id
+  And  category.category_name = 'books';
+
+
+
