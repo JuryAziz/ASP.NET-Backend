@@ -1,80 +1,93 @@
 
-CREATE TABLE Categories
+CREATE TABLE categories
 (
-  Category_ID          uuid  DEFAULT gen_random_uuid()  NOT NULL,
-  Category_Name        varchar NOT NULL,
-  Category_Description text    NOT NULL,
-  PRIMARY KEY (Category_ID)
+  category_id          integer AUTO_INCREMENT NOT NULL,
+  category_name        varchar NOT NULL,
+  category_description text    NOT NULL,
+  PRIMARY KEY (category_id)
 );
 
-CREATE TABLE Customers
+CREATE TABLE users
 (
-  Customer_ID  uuid    NOT NULL,
-  Full_Name    varchar NOT NULL,
-  Gender       char    NOT NULL,
-  Phone_Number varchar NOT NULL UNIQUE,
-  Email        varchar NOT NULL UNIQUE,
-  Password     varchar NOT NULL,
-  Age          integer NOT NULL,
-  Address      varchar NOT NULL,
-  PRIMARY KEY (Customer_ID)
+  user_id      uuid    NOT NULL,
+  full_name    varchar NOT NULL,
+  gender       char    NOT NULL,
+  phone_number varchar NOT NULL UNIQUE,
+  email        varchar NOT NULL UNIQUE,
+  password     varchar NOT NULL,
+  age          integer NOT NULL,
+  PRIMARY KEY (user_id)
 );
 
-CREATE TABLE Products
+CREATE TABLE products
 (
-  Product_ID     uuid    NOT NULL,
-  Title          varchar NOT NULL,
-  Price          float4  NOT NULL,
-  Total_Quantity integer NOT NULL,
-  Description    text    NOT NULL,
-  Thumbnail      varchar NOT NULL,
-  PRIMARY KEY (Product_ID)
+  product_id     uuid DEFAULT gen_random_uuid() NOT NULL,
+  title          varchar NOT NULL,
+  price          float4  NOT NULL,
+  total_quantity integer NOT NULL,
+  description    text    NOT NULL,
+  thumbnail      varchar NOT NULL,
+  PRIMARY KEY (product_id)
 );
 
-CREATE TABLE Product_Categories
+CREATE TABLE product_categories
 (
-  ID          uuid NOT NULL,
-  Product_ID  uuid NOT NULL,
-  Category_ID uuid NOT NULL,
-  PRIMARY KEY (ID),
-  FOREIGN KEY (Product_ID) REFERENCES Products (Product_ID),
-  FOREIGN KEY (Category_ID) REFERENCES Categories (Category_ID)
+  id          uuid NOT NULL,
+  product_id  uuid NOT NULL,
+  category_id uuid NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (product_id) REFERENCES products (product_id),
+  FOREIGN KEY (category_id) REFERENCES categories (category_id)
 );
 
-CREATE TABLE Orders
+CREATE TABLE address
 (
-  Order_ID      uuid    NOT NULL,
-  Customer_ID   uuid    NOT NULL,
-  Order_Address varchar NOT NULL,
-  Order_Date    date    NOT NULL,
-  Status        varchar NOT NULL,
-  PRIMARY KEY (Order_ID),
-  FOREIGN KEY (Customer_ID) REFERENCES Customers (Customer_ID)
+  address_id  uuid    NOT NULL,
+  country     varchar NOT NULL,
+  city        varchar NOT NULL,
+  province    varchar NOT NULL,
+  postal_code varchar NOT NULL,
+  district    varchar NOT NULL,
+  street      varchar NOT NULL,
+  user_id     uuid    NOT NULL,
+  PRIMARY KEY (address_id),
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
-CREATE TABLE Order_Details
+CREATE TABLE orders
 (
-  Order_Detail_ID uuid    NOT NULL,
-  Quantity        integer NOT NULL,
-  Unit_Price      integer NOT NULL,
-  Product_ID      uuid    NOT NULL,
-  Order_ID        uuid    NOT NULL,
-  PRIMARY KEY (Order_Detail_ID),
-  FOREIGN KEY (Product_ID) REFERENCES Products (Product_ID),
-  FOREIGN KEY (Order_ID) REFERENCES Orders (Order_ID)
+  order_id  uuid  DEFAULT gen_random_uuid()  NOT NULL,
+  user_id   uuid  NOT NULL,
+  status     varchar NOT NULL,
+  address_id uuid    NOT NULL,
+  user_id    uuid    NOT NULL,
+  PRIMARY KEY (order_id),
+  FOREIGN KEY (user_id) REFERENCES users (user_id),
+  FOREIGN KEY (address_id) REFERENCES address (address_id)
 );
 
-CREATE INDEX By_Email
-  ON Customers (Email ASC);
+CREATE TABLE order_details
+(
+  order_detail_id  uuid  DEFAULT gen_random_uuid()  NOT NULL,
+  quantity        integer NOT NULL,
+  unit_price      float4  NOT NULL,
+  product_id      uuid    NOT NULL,
+  order_id        uuid    NOT NULL,
+  PRIMARY KEY (order_detail_id),
+  FOREIGN KEY (product_id) REFERENCES product (product_id),
+  FOREIGN KEY (order_id) REFERENCES orders (order_id)
+);
 
-CREATE INDEX By_Number
-  ON Customers (Phone_Number ASC);
+CREATE INDEX by_email
+  ON users (email ASC);
 
-CREATE INDEX By_ID
-  ON Customers (Customer_ID ASC);
+CREATE INDEX by_number
+  ON users (phone_number ASC);
+
+CREATE INDEX by_id
+  ON users (user_id ASC);
 
 
-INSERT INTO Categories(Category_Name,Category_Description)
+INSERT INTO categories(category_name, category_description)
   VALUES
-  ('Bags','bags are good');
-
+  ('cows','Ayman');
