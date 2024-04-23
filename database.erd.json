@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -400,
-    "scrollLeft": -392.2952,
-    "zoomLevel": 0.5,
+    "scrollTop": -36,
+    "scrollLeft": -259,
+    "zoomLevel": 0.9,
     "show": 431,
     "database": 16,
     "databaseName": "E-commerce erd",
@@ -59,7 +59,7 @@
     "tableEntities": {
       "yuONhQcopsb25nQuT4KJs": {
         "id": "yuONhQcopsb25nQuT4KJs",
-        "name": "products",
+        "name": "product",
         "comment": "",
         "columnIds": [
           "HeZ_f_8ImpNF7xxA6Wawl",
@@ -90,13 +90,13 @@
           "color": "#FFD400"
         },
         "meta": {
-          "updateAt": 1713859115984,
+          "updateAt": 1713862199280,
           "createAt": 1713698293200
         }
       },
       "gvUM55mMK7UnWiFGSAvT1": {
         "id": "gvUM55mMK7UnWiFGSAvT1",
-        "name": "users",
+        "name": "user",
         "comment": "",
         "columnIds": [
           "_aMt-e5tVb9mXTMemgIJy",
@@ -129,13 +129,13 @@
           "color": "#02B43D"
         },
         "meta": {
-          "updateAt": 1713859131608,
+          "updateAt": 1713862247950,
           "createAt": 1713698797285
         }
       },
       "JCrGC_c18IJQtOSqqFBik": {
         "id": "JCrGC_c18IJQtOSqqFBik",
-        "name": "categories",
+        "name": "categorie",
         "comment": "",
         "columnIds": [
           "BXFrI-o_lFtk2bNU_uvqH",
@@ -157,13 +157,13 @@
           "color": "#B506B6"
         },
         "meta": {
-          "updateAt": 1713856947809,
+          "updateAt": 1713862237456,
           "createAt": 1713698825082
         }
       },
       "j-9-gQo5sUwc7D_AIaPVG": {
         "id": "j-9-gQo5sUwc7D_AIaPVG",
-        "name": "orders",
+        "name": "order",
         "comment": "",
         "columnIds": [
           "lMMR3N_GfHZ_q4F5V6TMH",
@@ -196,7 +196,7 @@
           "color": "#B40000"
         },
         "meta": {
-          "updateAt": 1713859119059,
+          "updateAt": 1713862242007,
           "createAt": 1713698883259
         }
       },
@@ -269,7 +269,7 @@
           "x": 779.8789,
           "y": 59.2391,
           "zIndex": 356,
-          "widthName": 70,
+          "widthName": 69,
           "widthComment": 60,
           "color": "#673AB7"
         },
@@ -352,7 +352,7 @@
       "HeZ_f_8ImpNF7xxA6Wawl": {
         "id": "HeZ_f_8ImpNF7xxA6Wawl",
         "tableId": "yuONhQcopsb25nQuT4KJs",
-        "name": "Product_ID",
+        "name": "product_id",
         "comment": "",
         "dataType": "uuid",
         "default": "",
@@ -365,7 +365,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1713699918777,
+          "updateAt": 1713862219717,
           "createAt": 1713698324548
         }
       },
@@ -579,7 +579,7 @@
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 82,
+          "widthName": 83,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
@@ -1119,7 +1119,7 @@
         "options": 10,
         "ui": {
           "keys": 1,
-          "widthName": 80,
+          "widthName": 79,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
@@ -1910,7 +1910,7 @@
           "columnIds": [
             "qvncD-zJYftIwVrSe9mIg"
           ],
-          "x": 972.3789,
+          "x": 971.8789,
           "y": 235.2391,
           "direction": 8
         },
@@ -2209,7 +2209,7 @@
           "columnIds": [
             "_aMt-e5tVb9mXTMemgIJy"
           ],
-          "x": 1702.5833,
+          "x": 1703.0833,
           "y": 340.16700000000003,
           "direction": 8
         },
@@ -2390,7 +2390,7 @@
       1713698769421,
       1713698767698,
       {
-        "name": 1713856922684,
+        "name": 1713862199277,
         "comment": 1713859115984,
         "ui.color": 1713699542538
       }
@@ -2400,7 +2400,7 @@
       1713698324547,
       -1,
       {
-        "name": 1713699918776,
+        "name": 1713862219717,
         "dataType": 1713698592588,
         "options(notNull)": 1713698492089,
         "options(primaryKey)": 1713699533529
@@ -2457,7 +2457,7 @@
       1713698797284,
       -1,
       {
-        "name": 1713857449804,
+        "name": 1713862247949,
         "comment": 1713859131608,
         "ui.color": 1713699558830
       }
@@ -2478,7 +2478,7 @@
       1713698825081,
       -1,
       {
-        "name": 1713856947808,
+        "name": 1713862237455,
         "ui.color": 1713703547990
       }
     ],
@@ -2508,7 +2508,7 @@
       1713698883256,
       -1,
       {
-        "name": 1713856966010,
+        "name": 1713862242001,
         "ui.color": 1713699575413,
         "comment": 1713859119055
       }
