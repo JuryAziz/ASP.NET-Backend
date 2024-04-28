@@ -22,14 +22,6 @@ namespace Store.API.Controllers.Addresses
             return Ok(await _addressController.GetAddresses());
         }
 
-        [HttpGet("user/{userId:guid}")]
-        public async Task<IActionResult> GetUserAddresses(Guid userId)
-        {
-            var foundUser = await _addressController.GetUserAddresses(userId);
-            if (foundUser == null) return NotFound();
-            return Ok(foundUser);
-        }
-
         [HttpGet("{addressId:guid}")]
         public async Task<IActionResult> GetAddressById(Guid addressId)
         {

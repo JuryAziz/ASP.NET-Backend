@@ -22,14 +22,6 @@ namespace Store.API.Controllers.PaymentMethods
             return Ok(await _paymentMethods.GetPaymentMethods());
         }
 
-        [HttpGet("user/{userId:guid}")]
-        public async Task<IActionResult> GetUserPaymentMethods(Guid userId)
-        {
-            var foundPaymentMethod = await _paymentMethods.GetUserPaymentMethods(userId);
-            if (foundPaymentMethod == null) return NotFound();
-            return Ok(foundPaymentMethod);
-        }
-
         [HttpGet("{paymentMethodId:guid}")]
         public async Task<IActionResult> GetPaymentMethodById(Guid paymentMethodId)
         {

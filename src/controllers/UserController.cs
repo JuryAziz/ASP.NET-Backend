@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Store.Application.Services.Users;
+
 using Store.Models.User;
+
+using Store.Application.Services.Users;
+using Store.Application.Services.Addresses;
+using Store.Application.Services.PaymentMethods;
 
 namespace Store.API.Controllers.Users
 {
@@ -9,10 +13,14 @@ namespace Store.API.Controllers.Users
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly AddressService _addressService;
+        private readonly PaymentMethodService _paymentMethodService;
 
         public UsersController()
         {
             _userService = new UserService();
+            _addressService = new AddressService();
+            _paymentMethodService = new PaymentMethodService();
         }
 
 
@@ -28,6 +36,22 @@ namespace Store.API.Controllers.Users
             var foundUser = await _userService.GetUserById(userId);
             if (foundUser == null) return NotFound();
             return Ok(foundUser);
+        }
+
+        [HttpGet("{userId:guid}/addresses")]
+        public async Task<IActionResult> GetUserAddresses(Guid userId)
+        {
+            var foundUserAddress = await _addressService.GetUserAddresses(userId);
+            if (foundUserAddress == null) return NotFound();
+            return Ok(foundUserAddress);
+        }
+
+        [HttpGet("{userId:guid}/paymentmethods")]
+        public async Task<IActionResult> GetUserPaymentMethods(Guid userId)
+        {
+            var foundUserPaymentMethods = await _paymentMethodService.GetUserPaymentMethods(userId);
+            if (foundUserPaymentMethods == null) return NotFound();
+            return Ok(foundUserPaymentMethods);
         }
 
         [HttpPost]
