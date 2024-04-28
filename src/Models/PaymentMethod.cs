@@ -1,4 +1,5 @@
 namespace Store.Models.PaymentMethod;
+
 public class PaymentMethod
 {
     public required Guid PaymentMethodId { get; set; }

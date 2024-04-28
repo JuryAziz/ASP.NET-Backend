@@ -1,4 +1,5 @@
 namespace Store.Models.Address;
+
 public class Address
 {
     public required Guid AddressId { get; set; }

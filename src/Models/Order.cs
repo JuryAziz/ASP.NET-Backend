@@ -1,4 +1,5 @@
 namespace Store.Models.Order;
+
 public class Order
 {
     public required Guid OrderId { get; set; }
