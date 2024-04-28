@@ -6,11 +6,11 @@ namespace Store.API.Controllers.Addresses
 {
     [ApiController]
     [Route("/api/addresses")]
-    public class AddressController : ControllerBase
+    public class AddressesController : ControllerBase
     {
         private readonly AddressService _addressController;
 
-        public AddressController()
+        public AddressesController()
         {
             _addressController = new AddressService();
         }

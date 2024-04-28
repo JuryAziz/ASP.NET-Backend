@@ -6,11 +6,11 @@ namespace Store.API.Controllers.PaymentMethods
 {
     [ApiController]
     [Route("/api/paymentmethods")]
-    public class PaymentMethodController : ControllerBase
+    public class PaymentMethodsController : ControllerBase
     {
         private readonly PaymentMethodService _paymentMethods;
 
-        public PaymentMethodController()
+        public PaymentMethodsController()
         {
             _paymentMethods = new PaymentMethodService();
         }

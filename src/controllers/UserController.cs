@@ -6,11 +6,11 @@ namespace Store.API.Controllers.Users
 {
     [ApiController]
     [Route("/api/users")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
 
-        public UserController()
+        public UsersController()
         {
             _userService = new UserService();
         }
