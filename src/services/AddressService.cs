@@ -122,9 +122,9 @@ namespace Store.Application.Services.Addresses
             },
         ];
 
-        public async Task<IEnumerable<Address>> GetAddresses()
+        public async Task<IEnumerable<Address>> GetAddresses(int page, int limit)
         {
-            return await Task.FromResult(_addresses.AsEnumerable());
+            return await Task.FromResult(_addresses[((page - 1) * limit)..(_addresses.Count > (page * limit) ? page * limit : _addresses.Count)].AsEnumerable());
         }
 
         public async Task<IEnumerable<Address>> GetUserAddresses(Guid userId)
