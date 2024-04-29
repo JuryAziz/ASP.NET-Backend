@@ -50,10 +50,6 @@ namespace Store.Application.Services.Addresses
                 PostalCode = 99790,
                 IsDefault = false
             },
-
-
-
-
             new() {
                 AddressId = Guid.Parse("e4bc5d0b-56a5-4815-aa57-8e2d4e4eca38"),
                 UserId = Guid.Parse("49e4b1ef-483c-48f7-ad70-01226369542d"),
