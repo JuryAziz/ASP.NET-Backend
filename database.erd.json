@@ -69,7 +69,7 @@
     "tableEntities": {
       "yuONhQcopsb25nQuT4KJs": {
         "id": "yuONhQcopsb25nQuT4KJs",
-        "name": "product",
+        "name": "products",
         "comment": "",
         "columnIds": [
           "HeZ_f_8ImpNF7xxA6Wawl",
@@ -111,7 +111,7 @@
       },
       "gvUM55mMK7UnWiFGSAvT1": {
         "id": "gvUM55mMK7UnWiFGSAvT1",
-        "name": "user",
+        "name": "users",
         "comment": "",
         "columnIds": [
           "_aMt-e5tVb9mXTMemgIJy",
@@ -151,6 +151,7 @@
       },
       "JCrGC_c18IJQtOSqqFBik": {
         "id": "JCrGC_c18IJQtOSqqFBik",
+
         "name": "category",
         "comment": "",
         "columnIds": [
@@ -179,7 +180,7 @@
       },
       "j-9-gQo5sUwc7D_AIaPVG": {
         "id": "j-9-gQo5sUwc7D_AIaPVG",
-        "name": "order",
+        "name": "orders",
         "comment": "",
         "columnIds": [
           "lMMR3N_GfHZ_q4F5V6TMH",
@@ -247,25 +248,6 @@
         "meta": {
           "updateAt": 1714007761075,
           "createAt": 1713700714654
-        }
-      },
-      "BsL_taOw5HkKL1mWh02Al": {
-        "id": "BsL_taOw5HkKL1mWh02Al",
-        "name": "",
-        "comment": "",
-        "columnIds": [],
-        "seqColumnIds": [],
-        "ui": {
-          "x": 140.9246,
-          "y": 132.4891,
-          "zIndex": 454,
-          "widthName": 60,
-          "widthComment": 60,
-          "color": ""
-        },
-        "meta": {
-          "updateAt": 1713703364419,
-          "createAt": 1713703339453
         }
       },
       "yd1A7zrvZH0TgNJXLZ8Ft": {
@@ -510,7 +492,7 @@
       "HeZ_f_8ImpNF7xxA6Wawl": {
         "id": "HeZ_f_8ImpNF7xxA6Wawl",
         "tableId": "yuONhQcopsb25nQuT4KJs",
-        "name": "product_id",
+        "name": "Product_ID",
         "comment": "",
         "dataType": "uuid",
         "default": "",
@@ -523,7 +505,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1713862219717,
+          "updateAt": 1713699918777,
           "createAt": 1713698324548
         }
       },
@@ -1647,66 +1629,6 @@
           "createAt": 1713855708158
         }
       },
-      "DH7t06z130PtfSg9Y2FnX": {
-        "id": "DH7t06z130PtfSg9Y2FnX",
-        "tableId": "Lx15dr3sOlCxLs4TBafIV",
-        "name": "id",
-        "comment": "",
-        "dataType": "uuid",
-        "default": "",
-        "options": 10,
-        "ui": {
-          "keys": 1,
-          "widthName": 60,
-          "widthComment": 60,
-          "widthDataType": 60,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1713856605402,
-          "createAt": 1713855770557
-        }
-      },
-      "TJDurpuYrT7AqNwI5Ycev": {
-        "id": "TJDurpuYrT7AqNwI5Ycev",
-        "tableId": "Lx15dr3sOlCxLs4TBafIV",
-        "name": "Customer_ID",
-        "comment": "",
-        "dataType": "uuid",
-        "default": "",
-        "options": 8,
-        "ui": {
-          "keys": 0,
-          "widthName": 70,
-          "widthComment": 60,
-          "widthDataType": 60,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1713856643919,
-          "createAt": 1713855834343
-        }
-      },
-      "OwSKUzfbc5NV6aDR95u6v": {
-        "id": "OwSKUzfbc5NV6aDR95u6v",
-        "tableId": "Lx15dr3sOlCxLs4TBafIV",
-        "name": "address_id",
-        "comment": "",
-        "dataType": "uuid",
-        "default": "",
-        "options": 8,
-        "ui": {
-          "keys": 0,
-          "widthName": 60,
-          "widthComment": 60,
-          "widthDataType": 60,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1713856643919,
-          "createAt": 1713855870848
-        }
-      },
       "KqiGmPDac8uPTo0ysJTx-": {
         "id": "KqiGmPDac8uPTo0ysJTx-",
         "tableId": "upXF93xHD10b9-JcSYGL-",
@@ -2267,6 +2189,7 @@
           "createAt": 1714007264856
         }
       },
+
       "beeiZI8JHvQ51Hj514QHM": {
         "id": "beeiZI8JHvQ51Hj514QHM",
         "tableId": "vtn2UEYO_kOcFFMMPFwFq",
@@ -2588,6 +2511,7 @@
         }
       }
     },
+
     "relationshipEntities": {
       "R8DO4tVFljj6RtO1Qdk2N": {
         "id": "R8DO4tVFljj6RtO1Qdk2N",
