@@ -1,3 +1,4 @@
+using Azure;
 using Store.Models.User;
 
 namespace Store.Application.Services.Users
@@ -12,9 +13,9 @@ namespace Store.Application.Services.Users
             new(){UserId = Guid.Parse("a080f42b-db4b-4246-8f20-ec52cc35667e"), Email = "IbrahimBurayk.ALHarbi@integrify.io", PhoneNumber = "0540000000", FirstName = "Ibrahim", LastName = "ALHarbi", DateOfBirth = new DateTime(), Role = 0},
         ];
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers(int Page, int limit)
         {
-            return await Task.FromResult(_users.AsEnumerable());
+            return await Task.FromResult(_users[((Page - 1) * limit)..(_users.Count > (Page * limit) ? Page * limit : _users.Count)].AsEnumerable());
         }
 
         public async Task<User?> GetUserById(Guid userId)
