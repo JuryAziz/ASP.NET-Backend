@@ -11,7 +11,7 @@ namespace Store.Application.Services.PaymentMethods
                 UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
                 Type = "jcb",
                 CardNumber = 3529302130289644,
-                CardHolderName = "Jury ALHarbi",
+                CardHolderName = "Jury Alharbi",
                 CardExpirationDate = new DateTime(2024-04),
                 CardCCV = 657,
                 IsDefault = false
@@ -21,7 +21,7 @@ namespace Store.Application.Services.PaymentMethods
                 UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
                 Type = "jcb",
                 CardNumber = 3585865165102396,
-                CardHolderName = "Jury ALHarbi",
+                CardHolderName = "Jury Alharbi",
                 CardExpirationDate = new DateTime(2024-04),
                 CardCCV = 553,
                 IsDefault = true

@@ -6,15 +6,9 @@ namespace Store.API.Controllers.Addresses
 {
     [ApiController]
     [Route("/api/addresses")]
-    public class AddressesController : ControllerBase
+    public class AddressesController(AddressService addressService) : ControllerBase
     {
-        private readonly AddressService _addressController;
-
-        public AddressesController()
-        {
-            _addressController = new AddressService();
-        }
-
+        private readonly AddressService _addressController = addressService;
 
         [HttpGet]
         public async Task<IActionResult> GetAddresses()

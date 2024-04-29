@@ -6,15 +6,9 @@ namespace Store.API.Controllers.PaymentMethods
 {
     [ApiController]
     [Route("/api/paymentmethods")]
-    public class PaymentMethodsController : ControllerBase
+    public class PaymentMethodsController(PaymentMethodService paymentMethodService) : ControllerBase
     {
-        private readonly PaymentMethodService _paymentMethods;
-
-        public PaymentMethodsController()
-        {
-            _paymentMethods = new PaymentMethodService();
-        }
-
+        private readonly PaymentMethodService _paymentMethods = paymentMethodService;
 
         [HttpGet]
         public async Task<IActionResult> GetPaymentMethods()
@@ -53,7 +47,6 @@ namespace Store.API.Controllers.PaymentMethods
             if (paymentMethodToDelete == null) return NotFound();
             if (!await _paymentMethods.DeletePaymentMethod(paymentMethodId)) return NotFound();
             return Ok($"Payment Method with the ID of ({paymentMethodId}) was deleted!");
-
         }
     }
 }

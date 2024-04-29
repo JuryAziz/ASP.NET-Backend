@@ -10,19 +10,11 @@ namespace Store.API.Controllers.Users
 {
     [ApiController]
     [Route("/api/users")]
-    public class UsersController : ControllerBase
+    public class UsersController(UserService userService, AddressService addressService, PaymentMethodService paymentMethodService) : ControllerBase
     {
-        private readonly UserService _userService;
-        private readonly AddressService _addressService;
-        private readonly PaymentMethodService _paymentMethodService;
-
-        public UsersController()
-        {
-            _userService = new UserService();
-            _addressService = new AddressService();
-            _paymentMethodService = new PaymentMethodService();
-        }
-
+        private readonly UserService _userService = userService;
+        private readonly AddressService _addressService = addressService;
+        private readonly PaymentMethodService _paymentMethodService = paymentMethodService;
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()

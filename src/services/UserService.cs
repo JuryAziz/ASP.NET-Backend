@@ -4,7 +4,6 @@ namespace Store.Application.Services.Users
 {
     public class UserService
     {
-
         private readonly static List<User> _users = [
             new(){UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"), Email = "JuriAbdulaziz.Alsubhi@integrify.io", PhoneNumber = "0540000000", FirstName = "Jury", LastName = "ALHarbi", DateOfBirth = new DateTime(), Role = 0},
             new(){UserId = Guid.Parse("0ad0d823-4b20-4514-8e75-0fd6a908450c"), Email = "ammarsalim.banigetah@integrify.io", PhoneNumber = "0540000000", FirstName = "Ammar", LastName = "Banigetah", DateOfBirth = new DateTime(), Role = 0},
@@ -43,7 +42,6 @@ namespace Store.Application.Services.Users
                 userToUpdate.DateOfBirth = user.DateOfBirth;
                 userToUpdate.Role = user.Role;
             };
-
             return await Task.FromResult(userToUpdate);
         }
 
