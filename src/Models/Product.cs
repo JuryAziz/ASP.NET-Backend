@@ -1,16 +1,16 @@
-namespace Store.Models.Product;
+namespace Store.Models;
 
 public class Product
 {
     public required Guid ProductId { get; set; }
-    public required Guid CategoryId { get; set; }
-    public required Guid MerchantId { get; set; }
-    public required string Name { get; set; }
-    public string Description { get; set; } = string.Empty;
-    public required float Price { get; set; }
-    public float Discount { get; set; }
-    public int Stock { get; set; }
-    public int Sold { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-}
 
+    public required string Title { get; set; }
+    public required Decimal Price { get; set; }
+    public required int TotalQuantity { get; set; }
+    public string Description { get; set; } = string.Empty;
+
+    public string? Thumbnail { get; set; }
+
+    public List<Category>? CategoryEntity { get; set; }
+    public List<ProductCategory>? ProductCategoryItems { get; set; }
+}
