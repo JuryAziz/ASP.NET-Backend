@@ -108,9 +108,9 @@ namespace Store.Application.Services.PaymentMethods
             }
         ];
 
-        public async Task<IEnumerable<PaymentMethod>> GetPaymentMethods()
+        public async Task<IEnumerable<PaymentMethod>> GetPaymentMethods(int page, int limit)
         {
-            return await Task.FromResult(_paymentMethods.AsEnumerable());
+            return await Task.FromResult(_paymentMethods[((page - 1) * limit)..(_paymentMethods.Count > (page * limit) ? page * limit : _paymentMethods.Count)].AsEnumerable());
         }
 
         public async Task<IEnumerable<PaymentMethod>> GetUserPaymentMethods(Guid userId)
