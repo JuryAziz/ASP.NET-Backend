@@ -1,13 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Store.Application.Services.Users;
-using Store.Application.Services.Addresses;
-using Store.Application.Services.PaymentMethods;
-
-using Store.Models.User;
-using Store.Models.Address;
-using Store.Models.PaymentMethod;
-
+using Store.Application.Services;
+using Store.Models;
 using Store.Helpers.Reponses;
 
 namespace Store.API.Controllers.Users

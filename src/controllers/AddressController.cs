@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Store.Application.Services.Addresses;
-
-using Store.Models.Address;
-
+using Store.Application.Services;
+using Store.Models;
 using Store.Helpers.Reponses;
 
 namespace Store.API.Controllers.Addresses

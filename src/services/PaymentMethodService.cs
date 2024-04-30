@@ -1,6 +1,6 @@
-using Store.Models.PaymentMethod;
+using Store.Models;
 
-namespace Store.Application.Services.PaymentMethods
+namespace Store.Application.Services
 {
     public class PaymentMethodService
     {

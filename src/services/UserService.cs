@@ -1,7 +1,6 @@
-using Azure;
-using Store.Models.User;
+using Store.Models;
 
-namespace Store.Application.Services.Users
+namespace Store.Application.Services
 {
     public class UserService
     {

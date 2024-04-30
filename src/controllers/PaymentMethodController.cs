@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Store.Application.Services.PaymentMethods;
-
-using Store.Models.PaymentMethod;
-
+using Store.Application.Services;
+using Store.Models;
 using Store.Helpers.Reponses;
 
 namespace Store.API.Controllers.PaymentMethods

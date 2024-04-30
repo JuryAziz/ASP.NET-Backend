@@ -1,6 +1,6 @@
-using Store.Models.Address;
+using Store.Models;
 
-namespace Store.Application.Services.Addresses
+namespace Store.Application.Services
 {
     public class AddressService
     {
