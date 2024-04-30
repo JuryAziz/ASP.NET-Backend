@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models.ProductReview;
+namespace Store.Models;
 
-public class ProductReview 
+public class ProductReviewModel
 {
     [Required(ErrorMessage = "Review Id is required.")]
     public required Guid ReviewId { get; set;}

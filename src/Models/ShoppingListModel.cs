@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models.ShoppingList;
+namespace Store.Models;
 
-public class ShoppingList
+public class ShoppingListModel
 {
     [Required(ErrorMessage = "Shopping list Id is required.")]
     public required Guid ShoppingListId { get; set;}

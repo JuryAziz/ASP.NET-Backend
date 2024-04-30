@@ -1,6 +1,6 @@
-namespace Store.Models.Address;
+namespace Store.Models;
 
-public class Address
+public class AddressModel
 {
     public required Guid AddressId { get; set; }
     public required Guid UserId { get; set; }

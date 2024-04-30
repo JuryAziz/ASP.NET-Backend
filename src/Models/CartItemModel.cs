@@ -1,6 +1,6 @@
-namespace Store.Models.CartItem;
+namespace Store.Models;
 
-public class CartItem
+public class CartItemModel
 {
     public required Guid CartItemId { get; set; }
     public required Guid Item { get; set; }

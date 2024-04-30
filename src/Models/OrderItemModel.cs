@@ -1,6 +1,6 @@
-namespace Store.Models.OrderItem;
+namespace Store.Models;
 
-public class OrderItem
+public class OrderItemModel
 {
     public required Guid OrderItemId { get; set; }
     public required Guid OrderId { get; set; }

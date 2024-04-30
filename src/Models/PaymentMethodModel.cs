@@ -1,6 +1,6 @@
-namespace Store.Models.PaymentMethod;
+namespace Store.Models;
 
-public class PaymentMethod
+public class PaymentMethodModel
 {
     public required Guid PaymentMethodId { get; set; }
     public required Guid UserId { get; set; }

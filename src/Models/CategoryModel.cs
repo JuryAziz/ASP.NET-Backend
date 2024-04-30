@@ -1,6 +1,6 @@
-namespace Store.Models.Category;
+namespace Store.Models;
 
-public class Category
+public class CategoryModel
 {
     public required Guid CategoryId { get; set; }
     public required string Name { get; set; }

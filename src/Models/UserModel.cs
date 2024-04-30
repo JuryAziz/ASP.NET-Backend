@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models.User;
+namespace Store.Models;
 
-public class User
+public class UserModel
 {
     [Required(ErrorMessage = "ID is required.")]
     public required Guid UserId { get; set; }
