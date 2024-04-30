@@ -14,6 +14,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<PaymentMethodService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoriesService>();
+
 
 var app = builder.Build();
 
