@@ -8,8 +8,6 @@ public class CategoryModel
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;
 
-
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<ProductModel>? ProductEntity { get; set; }
-
 }

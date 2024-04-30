@@ -17,20 +17,3 @@ public class ProductModel
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IEnumerable<CategoryModel>? CategoryEntityList { get; set; }
 }
-
-
-
-
-/**
-
-product_id     uuid DEFAULT gen_random_uuid() NOT NULL,
-title          varchar NOT NULL,
-price          float4  NOT NULL,
-total_quantity integer NOT NULL,
-description    text    NOT NULL,
-thumbnail      varchar NOT NULL,
-PRIMARY KEY (product_id)
-**/
-// !!
-//public required Guid CategoryId { get; set; }
-//public required Guid MerchantId { get; set; }
