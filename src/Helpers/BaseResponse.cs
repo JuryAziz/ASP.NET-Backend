@@ -1,12 +1,52 @@
 using System.Text.Json.Serialization;
 
-public class BaseResponse<T>(bool success, T? data, string? msg = null)
+namespace Store.Helpers;
+public class BaseResponse<T> where T : class
 {
-    public required bool Success { get; set; } = success;
+    public bool Success { get; set; }
 
-    [JsonIgnore]
-    public string? Message { get; set; } = msg;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Message { get; set; }
 
-    [JsonIgnore]
-    public T? Data { get; set; } = data;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public T? Data { get; set; }
+
+    public BaseResponse(bool success, string? msg = null)
+    {
+        Success = success;
+        Message = msg;
+    }
+    public BaseResponse(T? data = null, bool success = true, string? msg = null)
+    {
+        Data = data;
+        Success = success;
+        Message = msg;
+    }
+}
+
+
+public class BaseResponseList<T> where T : class
+{
+    public bool Success { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Message { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IEnumerable<T>? Data { get; set; }
+
+
+
+    public BaseResponseList(bool success, string? msg = null)
+    {
+        Success = success;
+        Message = msg;
+    }
+    public BaseResponseList(IEnumerable<T>? data = null, bool success = true, string? msg = null)
+    {
+        Data = data;
+        Success = success;
+        Message = msg;
+    }
+
 }
