@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Store.Application.Services;
-using Store.Dto.Product;
+
 using Store.Helpers;
 using Store.Models;
 
@@ -38,7 +38,7 @@ public class ProductsController(ProductService productService) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProduct([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] CreateProductDto newProduct)
+    public async Task<IActionResult> CreateProduct([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Default)] ProductModel newProduct)
     {
         var createdProduct = await _productService.CreateProductService(newProduct);
 
@@ -47,35 +47,25 @@ public class ProductsController(ProductService productService) : ControllerBase
         return CreatedAtAction(nameof(GetProduct), new { productId = createdProduct.ProductId }, createdProduct);
     }
 
-    public static List<string> GetPropertiesNameOfClass(object pObject)
-    {
-        List<string> propertyList = new List<string>();
-        if (pObject != null)
-        {
-            foreach (var prop in pObject.GetType().GetProperties())
-            {
-                propertyList.Add(prop.Name);
-            }
-        }
-        return propertyList;
-    }
+
 
     [HttpPut("{productId}")]
-    public async Task<IActionResult> UpdateProduct(string productId, [FromBody] CreateProductDto updateProduct)
+    public async Task<IActionResult> UpdateProduct(string productId, [FromBody] ProductModel updateProduct)
     {
 
 
         if (!Guid.TryParse(productId, out Guid productIdGuid))
         {
-            return BadRequest("Invalid product ID Format");
+            return BadRequest(new BaseResponse<object>(null, false, "Invalid product ID Format"));
         }
 
         if (updateProduct == null)
-            return BadRequest(ModelState);
+            return BadRequest();
 
         var product = await _productService.UpdateProductService(productIdGuid, updateProduct);
         if (product == null)
         {
+            //
             return NotFound();
         }
         return Ok(product);

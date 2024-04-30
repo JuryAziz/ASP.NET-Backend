@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Store.Application.Services;
-using Store.Dto.Category;
+
 using Store.Helpers;
 using Store.Models;
 
@@ -44,7 +44,7 @@ public class CategoriesController(CategoriesService categoriesService) : Control
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] CreateCategoryDto newCategory)
+    public async Task<IActionResult> CreateCategory([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] CategoryModel newCategory)
     {
         var createdCategory = await _categoriesService.CreateCategoryService(newCategory);
 
@@ -54,7 +54,7 @@ public class CategoriesController(CategoriesService categoriesService) : Control
     }
 
     [HttpPut("{categoryId}")]
-    public async Task<IActionResult> UpdateCategory(string categoryId, [FromBody] CreateCategoryDto updateCategory)
+    public async Task<IActionResult> UpdateCategory(string categoryId, [FromBody] CategoryModel updateCategory)
     {
 
 

@@ -1,8 +1,3 @@
-
-
-
-using Store.Dto.Category;
-
 using Store.Models;
 
 namespace Store.Application.Services;
@@ -13,7 +8,8 @@ public class CategoriesService
     public readonly static List<CategoryModel> _categories = [
          new CategoryModel
             {
-                CategoryId = Guid.Parse("74ddc01e-5bef-410a-a0cd-bbbbdfa6e90c"),
+                _categoryId = Guid.Parse("74ddc01e-5bef-410a-a0cd-bbbbdfa6e90c"),
+                //CategoryId = Guid.Parse("74ddc01e-5bef-410a-a0cd-bbbbdfa6e90c"),
                 Name = "a1",
                  Description = " a1 a1 "
 
@@ -21,7 +17,7 @@ public class CategoriesService
             },
             new CategoryModel
             {
-                CategoryId = Guid.Parse("917371ce-4ebb-4123-b8da-3e3db9290bbb"),
+                _categoryId = Guid.Parse("917371ce-4ebb-4123-b8da-3e3db9290bbb"),
                 Name = "a2",
                  Description = " a2 a2 "
 
@@ -29,7 +25,7 @@ public class CategoriesService
             },
             new CategoryModel
             {
-                CategoryId = Guid.Parse("e5806bcb-6e7f-4ac2-a0d5-251dfe7265ea"),
+                _categoryId = Guid.Parse("e5806bcb-6e7f-4ac2-a0d5-251dfe7265ea"),
                 Name = "a3",
                  Description = " a3 a3 "
 
@@ -38,15 +34,15 @@ public class CategoriesService
 
             new CategoryModel
             {
-                CategoryId = Guid.Parse("733a602e-4496-4cb3-98b9-dfef76220e7d"),
+                _categoryId = Guid.Parse("733a602e-4496-4cb3-98b9-dfef76220e7d"),
                 Name = "a4",
                  Description = " a4 a4 "
 
 
             },
-new CategoryModel
+        new CategoryModel
             {
-                CategoryId = Guid.Parse("7238a64d-6b6f-4221-b79b-45395cf4def1"),
+                _categoryId = Guid.Parse("7238a64d-6b6f-4221-b79b-45395cf4def1"),
                 Name = "a5",
                  Description = " a5 a5 "
 
@@ -72,14 +68,14 @@ new CategoryModel
     }
 
 
-    public async Task<CategoryModel> CreateCategoryService(CreateCategoryDto newCategory)
+    public async Task<CategoryModel> CreateCategoryService(CategoryModel newCategory)
     {
         await Task.Delay(1500); // simulate delay
 
         CategoryModel categoryTemplet = new()
         {
 
-            CategoryId = Guid.NewGuid(),
+            _categoryId = Guid.NewGuid(),
             Name = newCategory.Name,
             Description = newCategory.Description
 
@@ -94,7 +90,7 @@ new CategoryModel
 
 
 
-    public async Task<CategoryModel?> UpdateCategoryService(Guid categoryId, CreateCategoryDto newCategory)
+    public async Task<CategoryModel?> UpdateCategoryService(Guid categoryId, CategoryModel newCategory)
     {
 
 
