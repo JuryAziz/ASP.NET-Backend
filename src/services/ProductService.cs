@@ -1,7 +1,6 @@
 using Store.Models;
 namespace Store.Application.Services;
 
-
 public class ProductService
 {
 
@@ -102,11 +101,9 @@ public class ProductService
         return _products.Find(product => product.ProductId == productId);
     }
 
-
     public async Task<ProductModel> CreateProductService(ProductModel newProduct)
     {
         await Task.Delay(1500); // simulate delay
-
         ProductModel productTemplet = new ProductModel
         {
             _productId = Guid.NewGuid(),
@@ -114,10 +111,7 @@ public class ProductService
             Price = newProduct.Price,
             Stock = newProduct.Stock,
             Description = newProduct.Description
-
         };
-
-
 
         _products.Add(productTemplet);
         return productTemplet;
@@ -127,14 +121,8 @@ public class ProductService
 
     public async Task<ProductModel?> UpdateProductService(Guid productId, ProductModel updateProduct)
     {
-
-
-
-
         await Task.Delay(1500); // simulate delay
         var existingProduct = _products.FirstOrDefault(u => u.ProductId == productId);
-
-
 
         if (existingProduct != null)
         {
@@ -144,21 +132,16 @@ public class ProductService
             existingProduct.Description = updateProduct.Description;
         }
 
-
         return existingProduct;
     }
 
-
-
     public async Task<bool> DeleteProductService(Guid productId)
     {
-
-
         await Task.Delay(1500); // simulate delay
-        var removeingProduct = _products.FirstOrDefault(u => u.ProductId == productId);
-        if (removeingProduct != null)
+        var removingProduct = _products.FirstOrDefault(u => u.ProductId == productId);
+        if (removingProduct != null)
         {
-            _products.Remove(removeingProduct);
+            _products.Remove(removingProduct);
             return true;
         }
         return false;

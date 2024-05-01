@@ -44,8 +44,9 @@ public class ProductModel
         }
     }
 
+    // * please keep it for future use -> transferring entity to model.
     /*
-    :/ 
+    :/
     public static ProductModel FromEntity(Product product)
     {
         return new ProductModel

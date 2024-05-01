@@ -27,6 +27,7 @@ public class AddressModel
 
     [Required(ErrorMessage = "Address 1 is required.")]
     public required string Address1 { get; set; }
+    
     public string Address2 { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Postal Code is required.")]

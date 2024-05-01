@@ -5,10 +5,10 @@ namespace Store.Models;
 public class ShoppingListModel
 {
     [Required(ErrorMessage = "Shopping list Id is required.")]
-    public required Guid ShoppingListId { get; set;}
+    public required Guid ShoppingListId { get; set; }
 
     [Required(ErrorMessage = "User ID is required.")]
-    public required Guid UserId { get; set;}
+    public required Guid UserId { get; set; }
 
     [Required(ErrorMessage = "List name is required.")]
     [MinLength(2, ErrorMessage = "Name must be at least 2 characters long.")]
@@ -20,6 +20,8 @@ public class ShoppingListModel
     public string Description { get; set; } = string.Empty;
 
     public List<Guid> Items { get; set; } = [];
+
     public bool IsPublic { get; set; } = true;
+
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

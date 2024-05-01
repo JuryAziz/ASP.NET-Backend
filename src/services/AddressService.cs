@@ -1,12 +1,11 @@
 using Store.Models;
 
-namespace Store.Application.Services
-{
-    public class AddressService
-    {
+namespace Store.Application.Services;
 
-        private readonly static List<Address> _addresses = [
-            new() {
+public class AddressService
+{
+    private readonly static List<AddressModel> _addresses = [
+        new() {
                 AddressId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8f43"),
                 UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
                 Country = "United States",
@@ -118,55 +117,54 @@ namespace Store.Application.Services
             },
         ];
 
-        public async Task<IEnumerable<Address>> GetAddresses(int page, int limit)
-        {
-            return await Task.FromResult(_addresses[((page - 1) * limit)..(_addresses.Count > (page * limit) ? page * limit : _addresses.Count)].AsEnumerable());
-        }
+    public async Task<IEnumerable<AddressModel>> GetAddresses(int page, int limit)
+    {
+        return await Task.FromResult(_addresses[((page - 1) * limit)..(_addresses.Count > (page * limit) ? page * limit : _addresses.Count)].AsEnumerable());
+    }
 
-        public async Task<IEnumerable<Address>> GetUserAddresses(Guid userId)
-        {
-            return await Task.FromResult(_addresses.FindAll(address => address.UserId == userId));
-        }
+    public async Task<IEnumerable<AddressModel>> GetUserAddresses(Guid userId)
+    {
+        return await Task.FromResult(_addresses.FindAll(address => address.UserId == userId));
+    }
 
-        public async Task<Address?> GetAddressById(Guid addressId)
-        {
-            return await Task.FromResult(_addresses.FirstOrDefault(address => address.AddressId == addressId));
-        }
+    public async Task<AddressModel?> GetAddressById(Guid addressId)
+    {
+        return await Task.FromResult(_addresses.FirstOrDefault(address => address.AddressId == addressId));
+    }
 
-        public async Task<Address?> CreateAddress(Address newAddress)
-        {
-            newAddress.AddressId = Guid.NewGuid();
-            newAddress.CreatedAt = DateTime.Now;
-            _addresses.Add(newAddress);
-            return await Task.FromResult(newAddress);
-        }
+    public async Task<AddressModel?> CreateAddress(AddressModel newAddress)
+    {
+        newAddress.AddressId = Guid.NewGuid();
+        newAddress.CreatedAt = DateTime.Now;
+        _addresses.Add(newAddress);
+        return await Task.FromResult(newAddress);
+    }
 
-        public async Task<Address?> UpdateAddress(Guid addressId, Address address)
+    public async Task<AddressModel?> UpdateAddress(Guid addressId, AddressModel address)
+    {
+        var addressToUpdate = _addresses.FirstOrDefault(address => address.AddressId == addressId);
+        if (addressToUpdate != null)
         {
-            var addressToUpdate = _addresses.FirstOrDefault(address => address.AddressId == addressId);
-            if (addressToUpdate != null)
-            {
-                addressToUpdate.Country = address.Country;
-                addressToUpdate.State = address.State;
-                addressToUpdate.City = address.City;
-                addressToUpdate.Address1 = address.Address1;
-                addressToUpdate.Address2 = address.Address2;
-                addressToUpdate.PostalCode = address.PostalCode;
-                addressToUpdate.IsDefault = address.IsDefault;
-            };
+            addressToUpdate.Country = address.Country;
+            addressToUpdate.State = address.State;
+            addressToUpdate.City = address.City;
+            addressToUpdate.Address1 = address.Address1;
+            addressToUpdate.Address2 = address.Address2;
+            addressToUpdate.PostalCode = address.PostalCode;
+            addressToUpdate.IsDefault = address.IsDefault;
+        };
 
-            return await Task.FromResult(addressToUpdate);
-        }
+        return await Task.FromResult(addressToUpdate);
+    }
 
-        public async Task<bool> DeleteAddress(Guid addressId)
+    public async Task<bool> DeleteAddress(Guid addressId)
+    {
+        var addressToDelete = _addresses.FirstOrDefault(address => address.AddressId == addressId);
+        if (addressToDelete != null)
         {
-            var addressToDelete = _addresses.FirstOrDefault(address => address.AddressId == addressId);
-            if (addressToDelete != null)
-            {
-                _addresses.Remove(addressToDelete);
-                return await Task.FromResult(true);
-            };
-            return await Task.FromResult(false);
-        }
+            _addresses.Remove(addressToDelete);
+            return await Task.FromResult(true);
+        };
+        return await Task.FromResult(false);
     }
 }

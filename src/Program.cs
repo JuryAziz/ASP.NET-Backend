@@ -1,6 +1,3 @@
-using Store.Application.Services.Users;
-using Store.Application.Services.Addresses;
-using Store.Application.Services.PaymentMethods;
 using Store.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);

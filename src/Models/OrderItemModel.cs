@@ -20,6 +20,6 @@ public class OrderItemModel
     [Required(ErrorMessage = "Quantity is required.")]
     [Range(0, 10000, ErrorMessage = "Stock must be between 1 and 10000")]
     public required int Quantity { get; set; }
-    
+
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

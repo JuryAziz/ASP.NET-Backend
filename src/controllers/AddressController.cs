@@ -19,7 +19,7 @@ namespace Store.API.Controllers.Addresses
             {
                 if (limit > 20) limit = 20;
                 var addresses = await _addressController.GetAddresses(page, limit);
-                return Ok(new SuccessResponse<IEnumerable<Address>>() { Message = $"Addresses fetched! page: {page}  limit: {limit}", Data = addresses });
+                return Ok(new SuccessResponse<IEnumerable<PaymentMethodModel>>() { Message = $"Addresses fetched! page: {page}  limit: {limit}", Data = addresses });
             }
             catch (Exception ex)
             {
@@ -35,8 +35,8 @@ namespace Store.API.Controllers.Addresses
             {
                 if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return StatusCode(500, new ErrorResponse() { Message = "Invalid Guid Format" });
                 var foundAddress = await _addressController.GetAddressById(addressIdGuid);
-                if (foundAddress == null) return StatusCode(404, new SuccessResponse<string>() { Data = "Not Found" });
-                return Ok(new SuccessResponse<Address>() { Message = $"PaymentMethod found with Guid {foundAddress.AddressId}", Data = foundAddress });
+                if (foundAddress is null) return StatusCode(404, new SuccessResponse<string>() { Data = "Not Found" });
+                return Ok(new SuccessResponse<AddressModel>() { Message = $"PaymentMethod found with Guid {foundAddress.AddressId}", Data = foundAddress });
 
             }
             catch (Exception ex)
@@ -47,7 +47,7 @@ namespace Store.API.Controllers.Addresses
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAddress(Address newAddress)
+        public async Task<IActionResult> CreateAddress(AddressModel newAddress)
         {
             try
             {
@@ -56,21 +56,21 @@ namespace Store.API.Controllers.Addresses
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occured while 'CreateUser'");
+                Console.WriteLine($"An error occurred while 'CreateUser'");
                 return StatusCode(500, new ErrorResponse() { Message = ex.Message });
             }
         }
 
         [HttpPut("{addressId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
-        public async Task<IActionResult> UpdateAddress(string addressId, Address address)
+        public async Task<IActionResult> UpdateAddress(string addressId, AddressModel address)
         {
             try
             {
                 if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return StatusCode(500, new ErrorResponse() { Message = "Invalid Guid Format" });
                 var addressToUpdate = await _addressController.GetAddressById(addressIdGuid);
-                if (addressToUpdate == null) return StatusCode(404, new SuccessResponse<string>() { Message = "Not Found" });
+                if (addressToUpdate is null) return StatusCode(404, new SuccessResponse<string>() { Message = "Not Found" });
                 await _addressController.UpdateAddress(addressIdGuid, address);
-                return Ok(new SuccessResponse<Address>() { Message = $"User updated with guid of {addressToUpdate.AddressId}", Data = addressToUpdate });
+                return Ok(new SuccessResponse<AddressModel>() { Message = $"User updated with guid of {addressToUpdate.AddressId}", Data = addressToUpdate });
             }
             catch (Exception ex)
             {
@@ -86,8 +86,8 @@ namespace Store.API.Controllers.Addresses
             {
                 if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return StatusCode(500, new ErrorResponse() { Message = "Invalid Guid Format" });
                 var addressToDelete = await _addressController.GetAddressById(addressIdGuid);
-                if (addressToDelete == null || !await _addressController.DeleteAddress(addressIdGuid)) return StatusCode(404, new SuccessResponse<string>() { Message = "Not Found" });
-                return Ok(new SuccessResponse<Address>() { Message = $"User deleted with the guid of {addressToDelete.AddressId}", Data = addressToDelete });
+                if (addressToDelete is null || !await _addressController.DeleteAddress(addressIdGuid)) return StatusCode(404, new SuccessResponse<string>() { Message = "Not Found" });
+                return Ok(new SuccessResponse<AddressModel>() { Message = $"User deleted with the guid of {addressToDelete.AddressId}", Data = addressToDelete });
             }
             catch (Exception ex)
             {

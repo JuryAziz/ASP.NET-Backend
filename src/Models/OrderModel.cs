@@ -4,6 +4,7 @@ namespace Store.Models;
 
 public class OrderModel
 {
+    // ? needs discussion
     public enum OrderStatus
     {
         Pending,
@@ -12,7 +13,6 @@ public class OrderModel
         Completed,
         Cancelled
     }
-
 
     [Required(ErrorMessage = "Order Id is required.")]
     public required Guid OrderId { get; set; }

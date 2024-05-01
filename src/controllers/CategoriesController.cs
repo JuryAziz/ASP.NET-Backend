@@ -11,16 +11,12 @@ public class CategoriesController(CategoriesService categoriesService) : Control
 {
     private readonly CategoriesService _categoriesService = categoriesService;
 
-
     [HttpGet]
     public async Task<IActionResult> GetAllCategories()
     {
         IEnumerable<CategoryModel> categories = await _categoriesService.GetAllCategoriesService();
         return Ok(new BaseResponseList<CategoryModel>(categories, true));
     }
-
-
-
 
     [HttpGet("{categoryId}")]
     public async Task<IActionResult> GetCategory(string categoryId)
@@ -30,13 +26,12 @@ public class CategoriesController(CategoriesService categoriesService) : Control
             return BadRequest(new BaseResponse<object>(false, "Invalid category ID Format"));
         }
 
-
-
         var category = await _categoriesService.GetCategoryById(categoryIdGuid);
         if (category == null)
         {
             return NotFound();
         }
+
         else
         {
             return Ok(new BaseResponse<CategoryModel>(category, true));
@@ -48,31 +43,22 @@ public class CategoriesController(CategoriesService categoriesService) : Control
     {
         var createdCategory = await _categoriesService.CreateCategoryService(newCategory);
 
-
-
         return CreatedAtAction(nameof(GetCategory), new { categoryId = createdCategory.CategoryId }, createdCategory);
     }
 
     [HttpPut("{categoryId}")]
     public async Task<IActionResult> UpdateCategory(string categoryId, [FromBody] CategoryModel updateCategory)
     {
-
-
         if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
-        {
             return BadRequest("Invalid category ID Format");
-        }
 
         if (updateCategory == null)
             return BadRequest(ModelState);
 
-
-
         var category = await _categoriesService.UpdateCategoryService(categoryIdGuid, updateCategory);
         if (category == null)
-        {
             return NotFound();
-        }
+            
         return Ok(category);
     }
 

@@ -9,5 +9,6 @@ public class CartModel
 
     [Required(ErrorMessage = "User Id is required.")]
     public required Guid UserId { get; set; }
+
     public List<Guid> Items { get; set; } = [];
 }
