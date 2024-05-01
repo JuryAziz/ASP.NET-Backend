@@ -1,6 +1,7 @@
 using Store.Application.Services.Users;
 using Store.Application.Services.Addresses;
 using Store.Application.Services.PaymentMethods;
+using Store.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -12,6 +13,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<PaymentMethodService>();
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoriesService>();
+
 
 var app = builder.Build();
 
