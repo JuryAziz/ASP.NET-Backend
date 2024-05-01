@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models.User;
+namespace Store.Models;
 
-public class User
+public class UserModel
 {
-    [Required(ErrorMessage = "ID is required.")]
+    [Required(ErrorMessage = "User ID is required.")]
     public required Guid UserId { get; set; }
 
     [Required(ErrorMessage = "Email is required.")]
@@ -18,11 +18,11 @@ public class User
 
     [Required(ErrorMessage = "First name is required.")]
     [MinLength(2, ErrorMessage = "Name must be at least 2 characters long.")]
-    [MaxLength(20, ErrorMessage = "Name must be at least 20 characters long.")]
+    [MaxLength(20, ErrorMessage = "Name must be at most 20 characters long.")]
     public required string FirstName { get; set; }
 
     [MinLength(2, ErrorMessage = "Name must be at least 2 characters long.")]
-    [MaxLength(20, ErrorMessage = "Name must be at least 20 characters long.")]
+    [MaxLength(20, ErrorMessage = "Name must be at most 20 characters long.")]
     public string LastName { get; set; } = string.Empty;
 
     public DateTime DateOfBirth { get; set; }

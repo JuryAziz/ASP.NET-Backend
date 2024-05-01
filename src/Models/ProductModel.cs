@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models.Product;
+namespace Store.Models;
 
-public class Product
+public class ProductModel
 {
     [Required(ErrorMessage = "Product Id is required.")]
     public required Guid ProductId { get; set; }
@@ -15,7 +15,7 @@ public class Product
 
     [Required(ErrorMessage = "Name is required.")]
     [MinLength(2, ErrorMessage = "Name must be at least 2 characters long.")]
-    [MaxLength(20, ErrorMessage = "Name must be at least 20 characters long.")]
+    [MaxLength(20, ErrorMessage = "Name must be at most 20 characters long.")]
     public required string Name { get; set; }
 
     [MinLength(10, ErrorMessage = "Description must be at least 10 characters long.")]

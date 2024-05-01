@@ -1,18 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models.ShoppingList;
+namespace Store.Models;
 
-public class ShoppingList
+public class ShoppingListModel
 {
     [Required(ErrorMessage = "Shopping list Id is required.")]
     public required Guid ShoppingListId { get; set;}
 
-    [Required(ErrorMessage = "ID is required.")]
+    [Required(ErrorMessage = "User ID is required.")]
     public required Guid UserId { get; set;}
 
     [Required(ErrorMessage = "List name is required.")]
     [MinLength(2, ErrorMessage = "Name must be at least 2 characters long.")]
-    [MaxLength(20, ErrorMessage = "Name must be at least 20 characters long.")]
+    [MaxLength(20, ErrorMessage = "Name must be at most 20 characters long.")]
     public required string Name { get; set; }
 
     [MinLength(10, ErrorMessage = "Description must be at least 10 characters long.")]
