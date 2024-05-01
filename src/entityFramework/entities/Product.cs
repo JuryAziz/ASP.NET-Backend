@@ -1,7 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using System.Text.Json.Serialization;
-
 namespace Store.EntityFramework.Entities;
 
 public class Product
