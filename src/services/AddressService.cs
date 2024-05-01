@@ -1,6 +1,6 @@
-using Store.Models.Address;
+using Store.Models;
 
-namespace Store.Application.Services.Addresses
+namespace Store.Application.Services
 {
     public class AddressService
     {
@@ -50,10 +50,6 @@ namespace Store.Application.Services.Addresses
                 PostalCode = 99790,
                 IsDefault = false
             },
-
-
-
-
             new() {
                 AddressId = Guid.Parse("e4bc5d0b-56a5-4815-aa57-8e2d4e4eca38"),
                 UserId = Guid.Parse("49e4b1ef-483c-48f7-ad70-01226369542d"),
@@ -122,9 +118,9 @@ namespace Store.Application.Services.Addresses
             },
         ];
 
-        public async Task<IEnumerable<Address>> GetAddresses()
+        public async Task<IEnumerable<Address>> GetAddresses(int page, int limit)
         {
-            return await Task.FromResult(_addresses.AsEnumerable());
+            return await Task.FromResult(_addresses[((page - 1) * limit)..(_addresses.Count > (page * limit) ? page * limit : _addresses.Count)].AsEnumerable());
         }
 
         public async Task<IEnumerable<Address>> GetUserAddresses(Guid userId)

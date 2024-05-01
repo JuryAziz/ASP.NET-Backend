@@ -10,7 +10,6 @@ public class ProductModel
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     public Guid? _productId = null;
 
-
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     private IEnumerable<CategoryModel>? _categoryEntityList { get; set; }
 
@@ -36,8 +35,6 @@ public class ProductModel
     [MaxLength(500, ErrorMessage = "Description can be at most 500 characters long.")]
     public string? Description { get; set; }
 
-
-
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public virtual IEnumerable<CategoryModel>? CategoryEntityList
     {
@@ -46,8 +43,6 @@ public class ProductModel
             return _categoryEntityList;
         }
     }
-
-
 
     /*
     :/ 
