@@ -5,7 +5,7 @@ namespace Store.Application.Services;
 public class CategoriesService
 {
     public readonly static List<CategoryModel> _categories = [
-         new CategoryModel
+            new CategoryModel
             {
                 _categoryId = Guid.Parse("74ddc01e-5bef-410a-a0cd-bbbbdfa6e90c"),
                 //CategoryId = Guid.Parse("74ddc01e-5bef-410a-a0cd-bbbbdfa6e90c"),

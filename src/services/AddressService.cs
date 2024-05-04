@@ -5,7 +5,7 @@ namespace Store.Application.Services;
 public class AddressService
 {
     private readonly static List<AddressModel> _addresses = [
-        new() {
+            new() {
                 AddressId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8f43"),
                 UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
                 Country = "United States",

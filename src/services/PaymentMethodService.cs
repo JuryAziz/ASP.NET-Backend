@@ -5,7 +5,7 @@ public class PaymentMethodService
 {
 
     private readonly static List<PaymentMethodModel> _paymentMethods = [
-        new(){
+            new(){
                 PaymentMethodId = Guid.Parse("3fcb9f36-4cb1-451e-9562-4c4d915a2c24"),
                 UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
                 Type = "jcb",

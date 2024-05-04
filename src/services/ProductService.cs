@@ -5,7 +5,7 @@ public class ProductService
 {
 
     public readonly static List<ProductModel> _products = [
-         new ProductModel
+            new ProductModel
             {
                 _productId = Guid.Parse("0bb2fb13-dfe1-497d-a6f8-2d71f3640013"),
                 Name = "Product 1",
