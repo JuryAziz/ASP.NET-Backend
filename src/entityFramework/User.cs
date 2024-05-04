@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework.Entities;
 
@@ -15,10 +16,18 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 
-    public List<Address>? Addresses { get; set; }
     
-    // public Cart Cart { get; set;} = new Cart();
-    // public List<PaymentMethod>? PaymentMethods { get; set; }
-    // public List<ShoppingList>? ShoppingLists { get; set; }
-    // public List<Order>? Orders { get; set; }
+
+/******************************************************************************/
+    // Those lists I'm not usre if they are supposed to lists of GUIDs or the entities themselves!!
+    // So I made them lists of Guids, it can be altered as needed!
+
+
+    public Guid? Cart { get; set;}
+
+    public List<Guid>? Addresses { get; set; }
+
+    public List<Guid>? PaymentMethods { get; set; }
+    public List<Guid>? ShoppingLists { get; set; }
+    public List<Guid>? Orders { get; set; }
 }
