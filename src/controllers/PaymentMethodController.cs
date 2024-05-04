@@ -40,7 +40,7 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'GetUserById'");
+            Console.WriteLine($"An error occured while 'GetPaymentMethodById'");
             return StatusCode(500, ex.Message );
         }
     }
@@ -55,7 +55,7 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'CreateUser'");
+            Console.WriteLine($"An error occured while 'CreatePaymentMethod'");
             return StatusCode(500, ex.Message );
         }
     }
@@ -73,7 +73,7 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'UpdateUser'");
+            Console.WriteLine($"An error occured while 'UpdatePaymentMethod'");
             return StatusCode(500, ex.Message );
         }
     }
@@ -90,7 +90,7 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'DeleteUser'");
+            Console.WriteLine($"An error occured while 'DeletePaymentMethod'");
             return StatusCode(500, ex.Message );
         }
     }

@@ -40,7 +40,7 @@ public class AddressesController(AddressService addressService) : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'GetUserById'");
+            Console.WriteLine($"An error occured while 'GetAddressById'");
             return StatusCode(500, ex.Message );
         }
     }
@@ -55,7 +55,7 @@ public class AddressesController(AddressService addressService) : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred while 'CreateUser'");
+            Console.WriteLine($"An error occurred while 'CreateAddress'");
             return StatusCode(500, ex.Message );
         }
     }
@@ -73,7 +73,7 @@ public class AddressesController(AddressService addressService) : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'UpdateUser'");
+            Console.WriteLine($"An error occured while 'UpdateAddress'");
             return StatusCode(500, ex.Message );
         }
     }
@@ -90,7 +90,7 @@ public class AddressesController(AddressService addressService) : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'DeleteUser'");
+            Console.WriteLine($"An error occured while 'DeleteAddress'");
             return StatusCode(500, ex.Message );
         }
     }
