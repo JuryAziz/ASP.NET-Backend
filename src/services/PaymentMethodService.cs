@@ -130,17 +130,17 @@ public class PaymentMethodService
         return await Task.FromResult(newPaymentMethod);
     }
 
-    public async Task<PaymentMethodModel?> UpdatePaymentMethod(Guid paymentMethodId, PaymentMethodModel paymentMethod)
+    public async Task<PaymentMethodModel?> UpdatePaymentMethod(Guid paymentMethodId, PaymentMethodModel updatedPaymentMethod)
     {
         var paymentMethodToUpdate = _paymentMethods.FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId);
         if (paymentMethodToUpdate != null)
         {
-            paymentMethodToUpdate.Type = paymentMethod.Type;
-            paymentMethodToUpdate.CardNumber = paymentMethod.CardNumber;
-            paymentMethodToUpdate.CardHolderName = paymentMethod.CardHolderName;
-            paymentMethodToUpdate.CardExpirationDate = paymentMethod.CardExpirationDate;
-            paymentMethodToUpdate.CardCCV = paymentMethod.CardCCV;
-            paymentMethodToUpdate.IsDefault = paymentMethod.IsDefault;
+            paymentMethodToUpdate.Type = updatedPaymentMethod.Type;
+            paymentMethodToUpdate.CardNumber = updatedPaymentMethod.CardNumber;
+            paymentMethodToUpdate.CardHolderName = updatedPaymentMethod.CardHolderName;
+            paymentMethodToUpdate.CardExpirationDate = updatedPaymentMethod.CardExpirationDate;
+            paymentMethodToUpdate.CardCCV = updatedPaymentMethod.CardCCV;
+            paymentMethodToUpdate.IsDefault = updatedPaymentMethod.IsDefault;
         };
 
         return await Task.FromResult(paymentMethodToUpdate);

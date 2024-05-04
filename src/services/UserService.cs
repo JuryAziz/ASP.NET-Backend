@@ -29,17 +29,17 @@ public class UserService
         return await Task.FromResult(newUser);
     }
 
-    public async Task<UserModel?> UpdateUser(Guid userId, UserModel user)
+    public async Task<UserModel?> UpdateUser(Guid userId, UserModel updatedUser)
     {
         var userToUpdate = _users.FirstOrDefault(user => user.UserId == userId);
         if (userToUpdate != null)
         {
-            userToUpdate.Email = user.Email;
-            userToUpdate.PhoneNumber = user.PhoneNumber;
-            userToUpdate.FirstName = user.FirstName;
-            userToUpdate.LastName = user.LastName;
-            userToUpdate.DateOfBirth = user.DateOfBirth;
-            userToUpdate.Role = user.Role;
+            userToUpdate.Email = updatedUser.Email;
+            userToUpdate.PhoneNumber = updatedUser.PhoneNumber;
+            userToUpdate.FirstName = updatedUser.FirstName;
+            userToUpdate.LastName = updatedUser.LastName;
+            userToUpdate.DateOfBirth = updatedUser.DateOfBirth;
+            userToUpdate.Role = updatedUser.Role;
         };
         return await Task.FromResult(userToUpdate);
     }

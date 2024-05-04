@@ -140,18 +140,18 @@ public class AddressService
         return await Task.FromResult(newAddress);
     }
 
-    public async Task<AddressModel?> UpdateAddress(Guid addressId, AddressModel address)
+    public async Task<AddressModel?> UpdateAddress(Guid addressId, AddressModel updatedAddress)
     {
         var addressToUpdate = _addresses.FirstOrDefault(address => address.AddressId == addressId);
         if (addressToUpdate != null)
         {
-            addressToUpdate.Country = address.Country;
-            addressToUpdate.State = address.State;
-            addressToUpdate.City = address.City;
-            addressToUpdate.Address1 = address.Address1;
-            addressToUpdate.Address2 = address.Address2;
-            addressToUpdate.PostalCode = address.PostalCode;
-            addressToUpdate.IsDefault = address.IsDefault;
+            addressToUpdate.Country = updatedAddress.Country;
+            addressToUpdate.State = updatedAddress.State;
+            addressToUpdate.City = updatedAddress.City;
+            addressToUpdate.Address1 = updatedAddress.Address1;
+            addressToUpdate.Address2 = updatedAddress.Address2;
+            addressToUpdate.PostalCode = updatedAddress.PostalCode;
+            addressToUpdate.IsDefault = updatedAddress.IsDefault;
         };
 
         return await Task.FromResult(addressToUpdate);
