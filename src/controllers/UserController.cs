@@ -97,14 +97,14 @@ public class UsersController(UserService userService, AddressService addressServ
     }
 
     [HttpPut("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
-    public async Task<IActionResult> UpdateUser(string userId, UserModel user)
+    public async Task<IActionResult> UpdateUser(string userId, UserModel rawUpdatedUser)
     {
         try
         {
             if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
-            var userToUpdate = await _userService.GetUserById(userIdGuid);
+            UserModel? userToUpdate = await _userService.GetUserById(userIdGuid);
             if (userToUpdate == null) return BadRequest(ModelState);
-            UserModel? updatedUser = await _userService.UpdateUser(userIdGuid, userToUpdate);
+            UserModel? updatedUser = await _userService.UpdateUser(userIdGuid, rawUpdatedUser);
             return Ok(new BaseResponse<UserModel>(updatedUser, true));
         }
         catch (Exception ex)

@@ -61,14 +61,14 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
     }
 
     [HttpPut("{paymentMethodId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
-    public async Task<IActionResult> UpdatePaymentMethod(string paymentMethodId, PaymentMethodModel paymentMethod)
+    public async Task<IActionResult> UpdatePaymentMethod(string paymentMethodId, PaymentMethodModel rawUpdatedPaymentMethod)
     {
         try
         {
             if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
             PaymentMethodModel? paymentMethodToUpdate = await _paymentMethods.GetPaymentMethodById(paymentMethodIdGuid);
             if (paymentMethodToUpdate == null) return NotFound();;
-            await _paymentMethods.UpdatePaymentMethod(paymentMethodIdGuid, paymentMethod);
+            await _paymentMethods.UpdatePaymentMethod(paymentMethodIdGuid, rawUpdatedPaymentMethod);
             return Ok(new BaseResponse<PaymentMethodModel>(paymentMethodToUpdate, true));
         }
         catch (Exception ex)

@@ -61,14 +61,14 @@ public class AddressesController(AddressService addressService) : ControllerBase
     }
 
     [HttpPut("{addressId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
-    public async Task<IActionResult> UpdateAddress(string addressId, AddressModel address)
+    public async Task<IActionResult> UpdateAddress(string addressId, AddressModel rawUpdatedAddress)
     {
         try
         {
             if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
             AddressModel? addressToUpdate = await _addressController.GetAddressById(addressIdGuid);
             if (addressToUpdate is null) return NotFound();
-            await _addressController.UpdateAddress(addressIdGuid, address);
+            await _addressController.UpdateAddress(addressIdGuid, rawUpdatedAddress);
             return Ok(new BaseResponse<AddressModel>(addressToUpdate, true));
         }
         catch (Exception ex)
