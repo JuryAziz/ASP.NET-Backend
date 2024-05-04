@@ -15,10 +15,10 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 
-    public List<Address>? Addresses { get; set; } = [];
+    public List<Address>? Addresses { get; set; }
     
     // public Cart Cart { get; set;} = new Cart();
-    // public List<PaymentMethod>? PaymentMethods { get; set; } = [];
-    // public List<ShoppingList>? ShoppingLists { get; set; } = [];
-    // public List<Order>? Orders { get; set; } = [];
+    // public List<PaymentMethod>? PaymentMethods { get; set; }
+    // public List<ShoppingList>? ShoppingLists { get; set; }
+    // public List<Order>? Orders { get; set; }
 }
