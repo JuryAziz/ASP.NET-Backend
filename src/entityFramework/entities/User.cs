@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework.Entities;
 
@@ -15,8 +14,6 @@ public class User
     public int Role { get; set; } = 0;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-
-    
 
 /******************************************************************************/
     // Those lists I'm not usre if they are supposed to lists of GUIDs or the entities themselves!!

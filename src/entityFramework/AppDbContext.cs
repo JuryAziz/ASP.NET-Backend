@@ -8,7 +8,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions options)
         : base(options) { }
 
-    // public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     // public DbSet<Address> Profiles { get; set; }
     // public DbSet<PaymentMethod> Orders { get; set; }
 
@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        
         // modelBuilder.Entity<User>()
         // .HasKey(user => user.UserId);
 

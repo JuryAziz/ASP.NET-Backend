@@ -1,26 +1,30 @@
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Metadata.Builders;
-// using Store.EntityFramework.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Store.EntityFramework.Entities;
 
-// namespace Store.EntityFramework.Configurations;
+namespace Store.EntityFramework.Configurations;
 
-// public class UserConfiguration : IEntityTypeConfiguration<User>
-// {
-//     public void Configure(EntityTypeBuilder<User> builder)
-//     {
-//         ///#####################
-//         //TableBuilder
-//         //######################
+public class UserConfiguration : IEntityTypeConfiguration<User>
+{
+    public void Configure(EntityTypeBuilder<User> builder)
+    {
+        //###########################
+        //      TableBuilder
+        //###########################
 
-//         //builder.ToTable("TableName");
-//         //builder.Property(c => c.ClomenName).
+        builder.ToTable("Users");
+        builder.HasKey(c => c.UserId);
 
-//         ///#####################
-//         //Table Relation
-//         ///#####################
+        builder.Property(c => c.UserId)
+        .IsRequired();
 
-//         //builder.HasMany(c => c.ClomenName)
-//         // .WithOne(o => o.ClomenName)
-//         // .HasForeignKey(o => o.ClomenName);
-//     }
-// }
+
+        ///#####################
+        //Table Relation
+        ///#####################
+
+        //builder.HasMany(c => c.ClomenName)
+        // .WithOne(o => o.ClomenName)
+        // .HasForeignKey(o => o.ClomenName);
+    }
+}
