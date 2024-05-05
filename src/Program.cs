@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Store.Application.Services;
+using Store.entityFramework;
 using Store.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);

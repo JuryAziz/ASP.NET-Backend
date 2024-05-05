@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework.Entities;
 
-namespace Store.EntityFramework;
+namespace Store.entityFramework;
 
 public class AppDbContext : DbContext
 {
@@ -9,8 +9,8 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public DbSet<User> Users { get; set; }
-    // public DbSet<Address> Profiles { get; set; }
-    // public DbSet<PaymentMethod> Orders { get; set; }
+    public DbSet<Address> Profiles { get; set; }
+    public DbSet<PaymentMethod> PaymentMethod { get; set; }
 
     // use Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)

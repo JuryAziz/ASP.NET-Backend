@@ -1,27 +1,62 @@
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Metadata.Builders;
-// //using Store.EntityFramework.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Store.EntityFramework.Entities;
 // using Store.Models;
 
-// namespace Store.EntityFramework.Configurations;
+namespace Store.entityFramework.Configurations;
 
-// public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod>
-// {
-//     public void Configure(EntityTypeBuilder<PaymentMethod> builder)
-//     {
-//         ///#####################
-//         //TableBuilder
-//         //######################
+public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod>
+{
+    public void Configure(EntityTypeBuilder<PaymentMethod> builder)
+    {
+        ///#####################
+        //TableBuilder
+        //######################
 
-//         //builder.ToTable("TableName");
-//         //builder.Property(c => c.ClomenName).
+        builder.HasKey(pm => pm.PaymentMethodId);
 
-//         ///#####################
-//         //Table Relation
-//         ///#####################
+        // primary key is required and auto genrate
+        builder.Property(pm => pm.PaymentMethodId)
+        .IsRequired()
+        .ValueGeneratedOnAdd();
 
-//         //builder.HasMany(c => c.ClomenName)
-//         // .WithOne(o => o.ClomenName)
-//         // .HasForeignKey(o => o.ClomenName);
-//     }
-// }
+        // setting user id as required
+        builder.Property(u => u.UserId)
+        .IsRequired();
+
+        builder.Property(pm => pm.Type)
+        .IsRequired()
+        .HasMaxLength(20);
+
+        builder.Property(pm => pm.CardNumber)
+        .IsRequired()
+        .HasColumnType("decimal(16,0)");
+
+        builder.Property(pm => pm.CardHolderName)
+        .IsRequired()
+        .HasMaxLength(50);
+
+        builder.Property(pm => pm.CardExpirationDate)
+        .IsRequired();
+
+        builder.Property(pm => pm.CardCCV)
+        .IsRequired()
+        .HasMaxLength(3);
+
+        builder.Property(pm => pm.CreatedAt)
+        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        // relation to Order
+
+        //builder.ToTable("TableName");
+        //builder.Property(c => c.ClomenName).
+
+        ///#####################
+        //Table Relation
+        ///#####################
+
+        //builder.HasMany(c => c.ClomenName)
+        // .WithOne(o => o.ClomenName)
+        // .HasForeignKey(o => o.ClomenName);
+    }
+}
