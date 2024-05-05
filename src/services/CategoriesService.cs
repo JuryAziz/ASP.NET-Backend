@@ -1,7 +1,6 @@
 using Store.Models;
 
 namespace Store.Application.Services;
-
 public class CategoriesService
 {
     public readonly static List<CategoryModel> _categories = [

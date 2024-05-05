@@ -1,6 +1,6 @@
 using Store.Models;
-namespace Store.Application.Services;
 
+namespace Store.Application.Services;
 public class ProductService
 {
 
