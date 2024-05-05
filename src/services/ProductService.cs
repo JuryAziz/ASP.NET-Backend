@@ -1,11 +1,11 @@
 using Store.Models;
-namespace Store.Application.Services;
 
+namespace Store.Application.Services;
 public class ProductService
 {
 
     public readonly static List<ProductModel> _products = [
-         new ProductModel
+            new ProductModel
             {
                 _productId = Guid.Parse("0bb2fb13-dfe1-497d-a6f8-2d71f3640013"),
                 Name = "Product 1",
@@ -145,5 +145,12 @@ public class ProductService
             return true;
         }
         return false;
+    }
+
+    // added search functionality, search by name or description
+    public async Task<List<ProductModel>> SearchProductByNameOrDescription(string keywords)
+    {
+        var foundProduct = _products.FindAll(product => product.Name.ToUpper().Contains(keywords.ToUpper()) || product.Description.ToUpper().Contains(keywords.ToUpper()));
+        return await Task.FromResult(foundProduct);
     }
 }

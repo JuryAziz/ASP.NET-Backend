@@ -1,11 +1,10 @@
 using Store.Models;
 
 namespace Store.Application.Services;
-
 public class AddressService
 {
     private readonly static List<AddressModel> _addresses = [
-        new() {
+            new() {
                 AddressId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8f43"),
                 UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
                 Country = "United States",
@@ -140,18 +139,18 @@ public class AddressService
         return await Task.FromResult(newAddress);
     }
 
-    public async Task<AddressModel?> UpdateAddress(Guid addressId, AddressModel address)
+    public async Task<AddressModel?> UpdateAddress(Guid addressId, AddressModel updatedAddress)
     {
         var addressToUpdate = _addresses.FirstOrDefault(address => address.AddressId == addressId);
         if (addressToUpdate != null)
         {
-            addressToUpdate.Country = address.Country;
-            addressToUpdate.State = address.State;
-            addressToUpdate.City = address.City;
-            addressToUpdate.Address1 = address.Address1;
-            addressToUpdate.Address2 = address.Address2;
-            addressToUpdate.PostalCode = address.PostalCode;
-            addressToUpdate.IsDefault = address.IsDefault;
+            addressToUpdate.Country = updatedAddress.Country;
+            addressToUpdate.State = updatedAddress.State;
+            addressToUpdate.City = updatedAddress.City;
+            addressToUpdate.Address1 = updatedAddress.Address1;
+            addressToUpdate.Address2 = updatedAddress.Address2;
+            addressToUpdate.PostalCode = updatedAddress.PostalCode;
+            addressToUpdate.IsDefault = updatedAddress.IsDefault;
         };
 
         return await Task.FromResult(addressToUpdate);

@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Store.EntityFramework;
+
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions options) : base(options) { }
+    public AppDbContext(DbContextOptions options)
+        : base(options) { }
 
     // public DbSet<User> Users { get; set; }
     // public DbSet<Profile> Profiles { get; set; }
@@ -16,6 +18,7 @@ public class AppDbContext : DbContext
     // use Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         // modelBuilder.Entity<User>()
         // .HasKey(user => user.UserId);
 
@@ -50,6 +53,5 @@ public class AppDbContext : DbContext
 
         // modelBuilder.Entity<Order>()
         // .HasKey(e => e.OrderId);
-
     }
 }

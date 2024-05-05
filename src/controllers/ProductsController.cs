@@ -5,6 +5,7 @@ using Store.Application.Services;
 using Store.Helpers;
 using Store.Models;
 
+namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/products")]
 public class ProductsController(ProductService productService) : ControllerBase
@@ -84,5 +85,14 @@ public class ProductsController(ProductService productService) : ControllerBase
             return NotFound();
         }
         return NoContent();
+    }
+
+    // added search function
+    [HttpGet("search/{keywords}")]
+    public async Task<IActionResult> SearchProductByNameOrDescription(string keywords)
+    {
+        var result = await _productService.SearchProductByNameOrDescription(keywords);
+        if (result == null) return NotFound();
+        return Ok(new BaseResponseList<ProductModel>(result, true));
     }
 }
