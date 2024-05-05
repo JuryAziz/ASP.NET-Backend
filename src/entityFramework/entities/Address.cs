@@ -15,4 +15,6 @@ public class Address
     public required int PostalCode { get; set; }
     public bool IsDefault { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    public User? User { get; set; }
 }

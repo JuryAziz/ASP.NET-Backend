@@ -22,7 +22,7 @@ public class User
 
     public Guid? Cart { get; set;}
 
-    public List<Guid>? Addresses { get; set; }
+    public List<Address>? Addresses { get; set; }
 
     public List<Guid>? PaymentMethods { get; set; }
     public List<Guid>? ShoppingLists { get; set; }
