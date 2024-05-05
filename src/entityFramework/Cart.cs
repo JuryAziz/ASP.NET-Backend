@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Store.EntityFramework;
+namespace Store.EntityFramework.Entities;
 
+[Table("Carts")]
 public class Cart
 {
-    // comment
+    public required Guid CartId { get; set; }
+    public required Guid UserId { get; set; }
+    public List<Guid>? Items { get; set; }
 }
