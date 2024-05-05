@@ -1,27 +1,27 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using Store.EntityFramework.Entities;
-using Store.Models;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.EntityFrameworkCore.Metadata.Builders;
+// //using Store.EntityFramework.Entities;
+// using Store.Models;
 
-namespace Store.EntityFramework.Configurations;
+// namespace Store.EntityFramework.Configurations;
 
-public class ProductConfiguration : IEntityTypeConfiguration<ProductModel>
-{
-    public void Configure(EntityTypeBuilder<ProductModel> builder)
-    {
-        ///#####################
-        //TableBuilder
-        //######################
+// public class ProductConfiguration : IEntityTypeConfiguration<Product>
+// {
+//     public void Configure(EntityTypeBuilder<Product> builder)
+//     {
+//         ///#####################
+//         //TableBuilder
+//         //######################
 
-        //builder.ToTable("TableName");
-        //builder.Property(c => c.ClomenName).
+//         //builder.ToTable("TableName");
+//         //builder.Property(c => c.ClomenName).
 
-        ///#####################
-        //Table Relation
-        ///#####################
+//         ///#####################
+//         //Table Relation
+//         ///#####################
 
-        //builder.HasMany(c => c.ClomenName)
-        // .WithOne(o => o.ClomenName)
-        // .HasForeignKey(o => o.ClomenName);
-    }
-}
+//         //builder.HasMany(c => c.ClomenName)
+//         // .WithOne(o => o.ClomenName)
+//         // .HasForeignKey(o => o.ClomenName);
+//     }
+// }

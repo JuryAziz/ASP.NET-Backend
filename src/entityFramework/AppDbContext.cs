@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework;
 
@@ -12,8 +9,8 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     // public DbSet<User> Users { get; set; }
-    // public DbSet<Profile> Profiles { get; set; }
-    // public DbSet<Order> Orders { get; set; }
+    // public DbSet<Address> Profiles { get; set; }
+    // public DbSet<PaymentMethod> Orders { get; set; }
 
     // use Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,27 +1,26 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using Store.EntityFramework.Entities;
-using Store.Models;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.EntityFrameworkCore.Metadata.Builders;
+// using Store.EntityFramework.Entities;
 
-namespace Store.EntityFramework.Configurations;
+// namespace Store.EntityFramework.Configurations;
 
-public class AddressConfiguration : IEntityTypeConfiguration<AddressModel>
-{
-    public void Configure(EntityTypeBuilder<AddressModel> builder)
-    {
-        ///#####################
-        //TableBuilder
-        //######################
+// public class AddressConfiguration : IEntityTypeConfiguration<Address>
+// {
+//     public void Configure(EntityTypeBuilder<Address> builder)
+//     {
+//         ///#####################
+//         //TableBuilder
+//         //######################
 
-        //builder.ToTable("TableName");
-        //builder.Property(c => c.ClomenName).
+//         //builder.ToTable("TableName");
+//         //builder.Property(c => c.ClomenName).
 
-        ///#####################
-        //Table Relation
-        ///#####################
+//         ///#####################
+//         //Table Relation
+//         ///#####################
 
-        //builder.HasMany(c => c.ClomenName)
-        // .WithOne(o => o.ClomenName)
-        // .HasForeignKey(o => o.ClomenName);
-    }
-}
+//         //builder.HasMany(c => c.ClomenName)
+//         // .WithOne(o => o.ClomenName)
+//         // .HasForeignKey(o => o.ClomenName);
+//     }
+// }
