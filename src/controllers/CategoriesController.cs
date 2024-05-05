@@ -5,6 +5,7 @@ using Store.Application.Services;
 using Store.Helpers;
 using Store.Models;
 
+namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/categories")]
 public class CategoriesController(CategoriesService categoriesService) : ControllerBase

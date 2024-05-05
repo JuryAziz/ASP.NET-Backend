@@ -5,6 +5,7 @@ using Store.Application.Services;
 using Store.Helpers;
 using Store.Models;
 
+namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/products")]
 public class ProductsController(ProductService productService) : ControllerBase

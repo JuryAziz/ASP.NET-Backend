@@ -1,7 +1,6 @@
 using Store.Models;
 
 namespace Store.Application.Services;
-
 public class AddressService
 {
     private readonly static List<AddressModel> _addresses = [
