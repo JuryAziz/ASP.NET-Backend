@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Address> Profiles { get; set; }
     public DbSet<PaymentMethod> PaymentMethod { get; set; }
+    public DbSet<Order> Order { get; set; }
 
     // use Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)

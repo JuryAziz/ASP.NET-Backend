@@ -12,6 +12,7 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
         ///#####################
         //TableBuilder
         //######################
+        builder.ToTable("PaymentMethod");
 
         builder.HasKey(pm => pm.PaymentMethodId);
 
