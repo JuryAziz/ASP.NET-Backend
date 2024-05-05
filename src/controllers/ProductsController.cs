@@ -85,4 +85,13 @@ public class ProductsController(ProductService productService) : ControllerBase
         }
         return NoContent();
     }
+
+    // added search function
+    [HttpGet("search/{keywords}")]
+    public async Task<IActionResult> SearchProductByNameOrDescription(string keywords)
+    {
+        var result = await _productService.SearchProductByNameOrDescription(keywords);
+        if (result == null) return NotFound();
+        return Ok(new BaseResponseList<ProductModel>(result, true));
+    }
 }

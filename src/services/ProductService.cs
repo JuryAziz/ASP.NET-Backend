@@ -146,4 +146,11 @@ public class ProductService
         }
         return false;
     }
+
+    // added search functionality, search by name or description
+    public async Task<List<ProductModel>> SearchProductByNameOrDescription(string keywords)
+    {
+        var foundProduct = _products.FindAll(product => product.Name.ToUpper().Contains(keywords.ToUpper()) || product.Description.ToUpper().Contains(keywords.ToUpper()));
+        return await Task.FromResult(foundProduct);
+    }
 }
