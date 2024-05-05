@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 using Store.Application.Services;
+using Store.EntityFramework;
+using Store.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -12,7 +16,11 @@ builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<PaymentMethodService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoriesService>();
+builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<ShoppingListService>();
 
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

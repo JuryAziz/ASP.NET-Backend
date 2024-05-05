@@ -16,14 +16,15 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 
-    
+
 
 /******************************************************************************/
-    // Those lists I'm not usre if they are supposed to lists of GUIDs or the entities themselves!!
-    // So I made them lists of Guids, it can be altered as needed!
+    // ? Those lists I'm not sure if they are supposed to lists of GUIDs or the entities themselves!!
+    // ? So I made them lists of Guids, it can be altered as needed!
+    // * Answer: it's both like the cart one
 
-
-    public Guid? Cart { get; set;}
+    public Guid? CartId { get; set; }
+    public Cart? Cart { get; set; }
 
     public List<Guid>? Addresses { get; set; }
 

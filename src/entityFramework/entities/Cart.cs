@@ -7,5 +7,6 @@ public class Cart
 {
     public required Guid CartId { get; set; }
     public required Guid UserId { get; set; }
+    public required User User { get; set; }
     public List<Guid>? Items { get; set; }
 }

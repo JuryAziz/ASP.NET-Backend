@@ -1,27 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using Store.EntityFramework.Entities;
-using Store.Models;
+using Store.EntityFramework.Entities;
+// using Store.Models;
 
 namespace Store.EntityFramework.Configurations;
 
-public class CartConfiguration : IEntityTypeConfiguration<CartModel>
+public class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
-    public void Configure(EntityTypeBuilder<CartModel> builder)
+    public void Configure(EntityTypeBuilder<Cart> entityBuilder)
     {
-        ///#####################
-        //TableBuilder
-        //######################
+        entityBuilder.ToTable("Cart");
 
-        //builder.ToTable("TableName");
-        //builder.Property(c => c.ClomenName).
+        entityBuilder.HasKey(cart => cart.CartId);
 
-        ///#####################
-        //Table Relation
-        ///#####################
+        entityBuilder.Property(cart => cart.CartId)
+        .IsRequired()
+        .ValueGeneratedOnAdd();
 
-        //builder.HasMany(c => c.ClomenName)
-        // .WithOne(o => o.ClomenName)
-        // .HasForeignKey(o => o.ClomenName);
+        entityBuilder.HasOne(cart => cart.User)
+                     .WithOne(user => user.Cart)
+                     .HasForeignKey<User>(user => user.UserId);
     }
 }
