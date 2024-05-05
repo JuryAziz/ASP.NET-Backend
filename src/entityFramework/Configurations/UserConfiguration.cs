@@ -1,20 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using Store.EntityFramework.Entities;
-using Store.Models;
+using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework.Configurations;
 
-public class UserConfiguration : IEntityTypeConfiguration<UserModel>
+public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<UserModel> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        ///#####################
-        //TableBuilder
-        //######################
+        //###########################
+        //      TableBuilder
+        //###########################
 
-        //builder.ToTable("TableName");
-        //builder.Property(c => c.ClomenName).
+        builder.ToTable("Users");
+        builder.HasKey(c => c.UserId);
+
+        builder.Property(c => c.UserId)
+        .IsRequired();
+
 
         ///#####################
         //Table Relation
