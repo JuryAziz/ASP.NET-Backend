@@ -92,6 +92,6 @@ public class ProductsController(ProductService productService) : ControllerBase
     {
         var result = await _productService.SearchProductByNameOrDescription(keywords);
         if (result == null) return NotFound();
-        return Ok(result);
+        return Ok(new BaseResponseList<ProductModel>(result, true));
     }
 }
