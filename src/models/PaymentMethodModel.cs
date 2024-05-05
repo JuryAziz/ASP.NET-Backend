@@ -36,7 +36,7 @@ public class PaymentMethodModel
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     // method for card expire date
-    public static ValidationResult ValidateCardExpirationDate(DateTime expirationDate, ValidationContext context)
+    public static ValidationResult? ValidateCardExpirationDate(DateTime expirationDate, ValidationContext context)
     {
         if (expirationDate <= DateTime.Today)
             return new ValidationResult("Expiration date must be in the future.");

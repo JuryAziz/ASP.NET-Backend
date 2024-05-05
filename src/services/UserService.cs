@@ -4,7 +4,7 @@ namespace Store.Application.Services;
 public class UserService
 {
     private readonly static List<UserModel> _users = [
-        new(){UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"), Email = "JuriAbdulaziz.Alsubhi@integrify.io", PhoneNumber = "0540000000", FirstName = "Jury", LastName = "ALHarbi", DateOfBirth = new DateTime(), Role = 0},
+            new(){UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"), Email = "JuriAbdulaziz.Alsubhi@integrify.io", PhoneNumber = "0540000000", FirstName = "Jury", LastName = "ALHarbi", DateOfBirth = new DateTime(), Role = 0},
             new(){UserId = Guid.Parse("0ad0d823-4b20-4514-8e75-0fd6a908450c"), Email = "ammarsalim.banigetah@integrify.io", PhoneNumber = "0540000000", FirstName = "Ammar", LastName = "Banigetah", DateOfBirth = new DateTime(), Role = 0},
             new(){UserId = Guid.Parse("49e4b1ef-483c-48f7-ad70-01226369542d"), Email = "AbdulhadiSaeed.Basulaiman@integrify.io", PhoneNumber = "0540000000", FirstName = "Abdulhadi", LastName = "Saeed", DateOfBirth = new DateTime(), Role = 0},
             new(){UserId = Guid.Parse("bc0ab7fd-d613-4aa6-bbb2-99725746e90e"), Email = "AymanAli.Bahatheg@integrify.io", PhoneNumber = "0540000000", FirstName = "Ayman", LastName = "Bahatheg", DateOfBirth = new DateTime(), Role = 0},
@@ -29,17 +29,17 @@ public class UserService
         return await Task.FromResult(newUser);
     }
 
-    public async Task<UserModel?> UpdateUser(Guid userId, UserModel user)
+    public async Task<UserModel?> UpdateUser(Guid userId, UserModel updatedUser)
     {
         var userToUpdate = _users.FirstOrDefault(user => user.UserId == userId);
         if (userToUpdate != null)
         {
-            userToUpdate.Email = user.Email;
-            userToUpdate.PhoneNumber = user.PhoneNumber;
-            userToUpdate.FirstName = user.FirstName;
-            userToUpdate.LastName = user.LastName;
-            userToUpdate.DateOfBirth = user.DateOfBirth;
-            userToUpdate.Role = user.Role;
+            userToUpdate.Email = updatedUser.Email;
+            userToUpdate.PhoneNumber = updatedUser.PhoneNumber;
+            userToUpdate.FirstName = updatedUser.FirstName;
+            userToUpdate.LastName = updatedUser.LastName;
+            userToUpdate.DateOfBirth = updatedUser.DateOfBirth;
+            userToUpdate.Role = updatedUser.Role;
         };
         return await Task.FromResult(userToUpdate);
     }
