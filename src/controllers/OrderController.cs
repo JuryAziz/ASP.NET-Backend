@@ -14,7 +14,7 @@ public class OrderController(OrderService orderService) : ControllerBase
     private readonly OrderService _Orders = orderService;
 
     [HttpGet]
-    public async Task<IActionResult> GetOrders([FromQuery] int page =1, [FromQuery] int limit = 20)
+    public async Task<IActionResult> GetOrders([FromQuery] int page = 1, [FromQuery] int limit = 20)
     {
         try
         {
@@ -29,7 +29,7 @@ public class OrderController(OrderService orderService) : ControllerBase
         }
     }
 
-    [HttpGet("{paymentMethodId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    [HttpGet("{orderId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> GetOrdersById(string orderId)
     {
         try
@@ -52,7 +52,7 @@ public class OrderController(OrderService orderService) : ControllerBase
         try
         {
             OrderModel? createdOrder = await _Orders.CreateOrders(newOrder);
-            return CreatedAtAction(nameof(GetOrdersById), new { createdOrder?.OrderId}, createdOrder);
+            return CreatedAtAction(nameof(GetOrdersById), new { createdOrder?.OrderId }, createdOrder);
         }
         catch (Exception ex)
         {
@@ -61,7 +61,7 @@ public class OrderController(OrderService orderService) : ControllerBase
         }
     }
 
-    [HttpPut("{paymentMethodId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    [HttpPut("{orderId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> UpdateOrder(string orderId, OrderModel newOrder)
     {
         try
@@ -79,7 +79,7 @@ public class OrderController(OrderService orderService) : ControllerBase
         }
     }
 
-    [HttpDelete("{paymentMethodId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    [HttpDelete("{orderId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> DeleteOrder(string orderId)
     {
         try
