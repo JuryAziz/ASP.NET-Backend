@@ -24,7 +24,7 @@ public class User
 
     public List<Address>? Addresses { get; set; }
 
-    public List<Guid>? PaymentMethods { get; set; }
-    public List<Guid>? ShoppingLists { get; set; }
-    public List<Guid>? Orders { get; set; }
+    // public List<PaymentMethod>? PaymentMethods { get; set; }
+    // public List<ShoppingList>? ShoppingLists { get; set; }
+    // public List<Order>? Orders { get; set; }
 }
