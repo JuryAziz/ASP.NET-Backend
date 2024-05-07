@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Store.Application.Services;
+using Store.EntityFramework.Entities;
 using Store.Helpers;
 using Store.Models;
+
+namespace Store.API.Controllers;
 
 [ApiController]
 [Route("/api/reviews")]
@@ -21,13 +21,34 @@ public class ProductReviewController : ControllerBase
     {
         try
         {
-            var reviews = await _productReviewService.GetProductReviews();
-            return Ok(reviews);
+            IEnumerable<ProductReview> reviews = await _productReviewService.GetProductReviews();
+            return Ok(new BaseResponseList<ProductReview>(reviews, true));
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while 'GetProductReviews'");
-            return StatusCode(500, new BaseResponse<ProductReviewModel> { Message = ex.Message });
+            return StatusCode(500, new BaseResponse<ProductReview> { Message = ex.Message });
+        }
+    }
+
+    [HttpGet("{reviewId::regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    public async Task<IActionResult> GetProductReviewById(string reviewId)
+    {
+        if (Guid.TryParse(reviewId, out Guid reviewIdGuid))
+        {
+            var review = await _productReviewService.GetProductReviewById(reviewIdGuid);
+            if (review is not null)
+            {
+                return Ok(new BaseResponse<ProductReview>(review, true));
+            }
+            else
+            {
+                return NotFound("Review not found, Nothing to show");
+            }
+        }
+        else
+        {
+            return BadRequest("Something went wrong");
         }
     }
 
@@ -43,11 +64,9 @@ public class ProductReviewController : ControllerBase
             await _productReviewService.AddProductReview(newReview);
             return Ok("review added successfully");
         }
-
         catch (Exception e)
         {
-
-            return BadRequest(e);
+            return StatusCode(500, e.Message);
         }
     }
 
@@ -60,9 +79,8 @@ public class ProductReviewController : ControllerBase
         }
         else
         {
-            return BadRequest("ops");
+            return BadRequest("Could not update the review");
         }
-
     }
 
     [HttpDelete]
@@ -74,7 +92,7 @@ public class ProductReviewController : ControllerBase
         }
         else
         {
-            return BadRequest("deletion failed");
+            return BadRequest("Could not delete the review");
         }
     }
 }

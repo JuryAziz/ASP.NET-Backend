@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework;
+using Store.EntityFramework.Entities;
 using Store.Models;
+
+namespace Store.Application.Services;
 
 public class ProductReviewService
 {
@@ -19,14 +22,19 @@ public class ProductReviewService
         return await _appDbContext.ProductReviews.ToListAsync();
     }
 
+    public async Task<ProductReview?> GetProductReviewById(Guid reviewId)
+    {
+        return await _appDbContext.ProductReviews.FirstOrDefaultAsync(review => review.ReviewId == reviewId);
+    }
+
     public async Task<ProductReview?> AddProductReview(ProductReviewModel newReview)
     {
         var productReview = new ProductReview
         {
             ReviewId = Guid.NewGuid(),
-            UserId = Guid.NewGuid(),
-            OrderId = Guid.NewGuid(),
-            ProductId = Guid.NewGuid(),
+            // UserId = Guid.NewGuid(),
+            // OrderId = Guid.NewGuid(),
+            // ProductId = Guid.NewGuid(),
             Rating = newReview.Rating,
             Title = newReview.Title,
             Description = newReview.Description,
