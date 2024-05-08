@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework;
+
 using Store.EntityFramework.Entities;
 using Store.Models;
 
@@ -8,7 +9,7 @@ public class UserService(AppDbContext appDbContext)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
 
-    public async Task<List<User>> GetUsers(int Page, int limit)
+    public async Task<List<User>> GetUsers()
     {
         return await _appDbContext.Users
             .Include(user => user.Addresses)

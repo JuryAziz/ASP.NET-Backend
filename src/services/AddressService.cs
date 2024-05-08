@@ -8,9 +8,11 @@ public class AddressService(AppDbContext appDbContext)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
 
-    public async Task<List<Address>> GetAddresses(int page, int limit)
+    public async Task<List<Address>> GetAddresses()
     {
-        return await _appDbContext.Addresses.ToListAsync();
+        return await _appDbContext
+            .Addresses
+            .ToListAsync();
     }
 
     public async Task<List<Address>> GetUserAddresses(Guid userId)
