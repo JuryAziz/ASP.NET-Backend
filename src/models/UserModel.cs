@@ -29,5 +29,5 @@ public class UserModel
 
     public int Role { get; set; } = 0;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

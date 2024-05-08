@@ -33,7 +33,7 @@ public class PaymentMethodModel
 
     public bool IsDefault { get; set; } = true;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // method for card expire date
     public static ValidationResult? ValidateCardExpirationDate(DateTime expirationDate, ValidationContext context)
