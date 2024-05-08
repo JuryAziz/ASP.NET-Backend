@@ -20,11 +20,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(u => u.OrderId)
         .ValueGeneratedOnAdd();
 
-        builder.Property(u => u.UserId)
-        .IsRequired();
+        // builder.Property(u => u.UserId)
+        // .IsRequired();
 
-        builder.Property(ad => ad.AddressId)
-        .IsRequired();
+        // builder.Property(ad => ad.AddressId)
+        // .IsRequired();
 
         builder.Property(pm => pm.PaymentMethodId)
         .IsRequired();

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
+using Store.entityFramework;
 using Store.Helpers;
 using Store.Models;
 
@@ -9,9 +10,15 @@ namespace Store.API.Controllers;
 
 [ApiController]
 [Route("/api/Orders")]
-public class OrderController(OrderService orderService) : ControllerBase
+public class OrderController : ControllerBase
 {
-    private readonly OrderService _Orders = orderService;
+    private readonly OrderService _OrderService;
+
+    public OrderController(AppDbContext appDbContext)
+    {
+        _OrderService = new OrderService(appDbContext);
+    }
+
 
     [HttpGet]
     public async Task<IActionResult> GetOrders([FromQuery] int page = 1, [FromQuery] int limit = 20)
@@ -19,8 +26,9 @@ public class OrderController(OrderService orderService) : ControllerBase
         try
         {
             if (limit > 20) limit = 20;
-            IEnumerable<OrderModel>? Orders = await _Orders.GetOrders(page, limit);
-            return Ok(new BaseResponseList<OrderModel>(Orders, true));
+            IEnumerable<Order>? Orders = await _OrderService.GetOrders(page, limit);
+            var response = new BaseResponseList<Order>(Orders, true);
+            return Ok(response);
         }
         catch (Exception ex)
         {
@@ -35,9 +43,10 @@ public class OrderController(OrderService orderService) : ControllerBase
         try
         {
             if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
-            OrderModel? foundOrders = await _Orders.GetOrderById(orderIdGuid);
+
+            Order? foundOrders = await _OrderService.GetOrderById(orderIdGuid);
             if (foundOrders is null) return NotFound();
-            return Ok(new BaseResponse<OrderModel>(foundOrders, true));
+            return Ok(new BaseResponse<Order>(foundOrders, true));
         }
         catch (Exception ex)
         {
@@ -51,7 +60,7 @@ public class OrderController(OrderService orderService) : ControllerBase
     {
         try
         {
-            OrderModel? createdOrder = await _Orders.CreateOrders(newOrder);
+            Order? createdOrder = await _OrderService.CreateOrders(newOrder);
             return CreatedAtAction(nameof(GetOrdersById), new { createdOrder?.OrderId }, createdOrder);
         }
         catch (Exception ex)
@@ -67,10 +76,11 @@ public class OrderController(OrderService orderService) : ControllerBase
         try
         {
             if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
-            OrderModel? OrderToBeUpdated = await _Orders.GetOrderById(orderIdGuid);
+
+            Order? OrderToBeUpdated = await _OrderService.GetOrderById(orderIdGuid);
             if (OrderToBeUpdated is null) return NotFound();
-            await _Orders.UpdateOrders(orderIdGuid, newOrder);
-            return Ok(new BaseResponse<OrderModel>(OrderToBeUpdated, true));
+            await _OrderService.UpdateOrders(orderIdGuid, newOrder);
+            return Ok(new BaseResponse<Order>(OrderToBeUpdated, true));
         }
         catch (Exception ex)
         {
@@ -85,9 +95,9 @@ public class OrderController(OrderService orderService) : ControllerBase
         try
         {
             if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
-            OrderModel? orderToDelete = await _Orders.GetOrderById(orderIdGuid);
-            if (orderToDelete is null || !await _Orders.DeleteOrder(orderIdGuid)) return NotFound();
-            return Ok(new BaseResponse<OrderModel>(orderToDelete, true));
+            Order? orderToDelete = await _OrderService.GetOrderById(orderIdGuid);
+            if (orderToDelete is null || !await _OrderService.DeleteOrder(orderIdGuid)) return NotFound();
+            return Ok(new BaseResponse<Order>(orderToDelete, true));
         }
         catch (Exception ex)
         {
