@@ -5,7 +5,7 @@ namespace Store.Models;
 public class UserModel
 {
     [Required(ErrorMessage = "User ID is required.")]
-    public required Guid UserId { get; set; }
+    public Guid UserId { get; set; }
 
     [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]

@@ -5,7 +5,7 @@ namespace Store.Models;
 public class AddressModel
 {
     [Required(ErrorMessage = "Address Id is required.")]
-    public required Guid AddressId { get; set; }
+    public Guid AddressId { get; set; }
 
     [Required(ErrorMessage = "User Id is required.")]
     public required Guid UserId { get; set; }
