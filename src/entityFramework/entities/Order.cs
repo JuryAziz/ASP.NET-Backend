@@ -36,5 +36,4 @@ public class Order
     public PaymentMethod? PaymentMethod { get; set; }
 
     public virtual List<OrderItem>? OrderItem { get; set; }
-
 }

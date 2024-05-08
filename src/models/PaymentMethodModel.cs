@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-// done for now 
 namespace Store.Models;
 
 public class PaymentMethodModel

@@ -43,11 +43,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.CreatedAt)
         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-
-
-
-
-
         //builder.ToTable("TableName");
         //builder.Property(c => c.ClomenName).
 

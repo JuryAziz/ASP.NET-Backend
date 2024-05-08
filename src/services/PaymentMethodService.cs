@@ -4,14 +4,11 @@ using Store.entityFramework;
 using Store.EntityFramework.Entities;
 using Store.Models;
 
-// done for now 
-
 namespace Store.Application.Services;
 
 public class PaymentMethodService
 {
     private readonly AppDbContext _appDbContext;
-
 
     public PaymentMethodService(AppDbContext appDbContext)
     {
@@ -34,37 +31,17 @@ public class PaymentMethodService
     //         .FindAll(pm => pm.UserId == userId)
     //         );
 
-    //     // var userPaymentMethods = await _appDbContext.PaymentMethods
-    //     //     .Where(pm => pm.UserId == userId)
-    //     //     .ToListAsync();
-
-    //     // return userPaymentMethods;
-
     // }
 
     public async Task<PaymentMethod?> GetPaymentMethodById(Guid paymentMethodId)
     {
-        // return await Task.FromResult(_paymentMethods.FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId));
-
         return await Task.FromResult(
             await _appDbContext.PaymentMethods
             .FirstOrDefaultAsync(pm => pm.PaymentMethodId == paymentMethodId));
-
     }
 
     public async Task<PaymentMethod?> CreatePaymentMethod(PaymentMethodModel newPaymentMethod)
     {
-        // newPaymentMethod.PaymentMethodId = Guid.NewGuid();
-        // newPaymentMethod.CreatedAt = DateTime.Now;
-        // _paymentMethods.Add(newPaymentMethod);
-        // return await Task.FromResult(newPaymentMethod);
-
-
-        // newPaymentMethod.PaymentMethodId = Guid.NewGuid();
-        // newPaymentMethod.CreatedAt = DateTime.Now;
-        // _appDbContext.Add(newPaymentMethod);
-        // return await Task.FromResult(newPaymentMethod);
-
         var paymentMethod = new PaymentMethod
         {
             PaymentMethodId = Guid.NewGuid(),
@@ -86,19 +63,6 @@ public class PaymentMethodService
 
     public async Task<PaymentMethod?> UpdatePaymentMethod(Guid paymentMethodId, PaymentMethodModel updatedPaymentMethod)
     {
-        // var paymentMethodToUpdate = _paymentMethods.FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId);
-        // if (paymentMethodToUpdate != null)
-        // {
-        //     paymentMethodToUpdate.Type = updatedPaymentMethod.Type;
-        //     paymentMethodToUpdate.CardNumber = updatedPaymentMethod.CardNumber;
-        //     paymentMethodToUpdate.CardHolderName = updatedPaymentMethod.CardHolderName;
-        //     paymentMethodToUpdate.CardExpirationDate = updatedPaymentMethod.CardExpirationDate;
-        //     paymentMethodToUpdate.CardCCV = updatedPaymentMethod.CardCCV;
-        //     paymentMethodToUpdate.IsDefault = updatedPaymentMethod.IsDefault;
-        // };
-
-        // return await Task.FromResult(paymentMethodToUpdate);
-
         var paymentMethodToUpdate = await _appDbContext.PaymentMethods
         .FirstOrDefaultAsync(pm => pm.PaymentMethodId == paymentMethodId);
         if (paymentMethodToUpdate is not null)
@@ -118,14 +82,6 @@ public class PaymentMethodService
 
     public async Task<bool> DeletePaymentMethod(Guid paymentMethodId)
     {
-        // var paymentMethodToDelete = _paymentMethods.FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId);
-        // if (paymentMethodToDelete != null)
-        // {
-        //     _paymentMethods.Remove(paymentMethodToDelete);
-        //     return await Task.FromResult(true);
-        // };
-        // return await Task.FromResult(false);
-
         var paymentMethodToDelete = await _appDbContext.PaymentMethods
         .FirstOrDefaultAsync(pm => pm.PaymentMethodId == paymentMethodId);
         if (paymentMethodToDelete is not null)

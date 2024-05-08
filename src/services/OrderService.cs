@@ -10,39 +10,6 @@ namespace Store.Application.Services;
 
 public class OrderService
 {
-    // private readonly static List<OrderModel> _Orders = [
-    //         new() {
-    //             OrderId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8100"),
-    //             UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
-    //             AddressId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8f43"),
-    //             PaymentMethodId = Guid.Parse("3fcb9f36-4cb1-451e-9562-4c4d915a2c24"),
-    //             TransactionId = Guid.Empty, // Not set yet
-    //             ShipmentId = Guid.Empty,
-    //             Status = OrderModel.OrderStatus.Pending,
-    //             CreatedAt = DateTime.UtcNow
-    //         },
-    //         new() {
-    //             OrderId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8101"),
-    //             UserId = Guid.Parse("180b142e-7026-4c25-b441-f6745da9d7f6"),
-    //             AddressId = Guid.Parse("d0bc5b89-2303-49c6-bc99-1fa7ef18c313"),
-    //             PaymentMethodId = Guid.Parse("dfc68e6e-3025-4fef-946a-9ac1385234fa"),
-    //             TransactionId = Guid.Empty, // Not set yet
-    //             ShipmentId = Guid.Empty,
-    //             Status = OrderModel.OrderStatus.Pending,
-    //             CreatedAt = DateTime.UtcNow
-    //         },
-    //         new() {
-    //             OrderId = Guid.Parse("dc3f7087-3e07-469a-a361-f0c7240c8102"),
-    //             UserId = Guid.Parse("0ad0d823-4b20-4514-8e75-0fd6a908450c"),
-    //             AddressId = Guid.Parse("046a584e-d497-487b-aaad-f4e3cfb5b6f0"),
-    //             PaymentMethodId = Guid.Parse("f22248fb-d5b2-4829-ae96-75ab59f3ff22"),
-    //             TransactionId = Guid.Empty, // Not set yet
-    //             ShipmentId = Guid.Empty,
-    //             Status = OrderModel.OrderStatus.Pending,
-    //             CreatedAt = DateTime.UtcNow
-    //         }
-    //     ];
-
     private readonly AppDbContext _appDbContext;
 
     public OrderService(AppDbContext appDbContext)
@@ -70,7 +37,6 @@ public class OrderService
 
     public async Task<Order?> GetOrderById(Guid orderId)
     {
-        // return await Task.FromResult(_Orders.FirstOrDefault(order => order.OrderId == orderId));
          return await Task.FromResult(
             await _appDbContext.Order
             .FirstOrDefaultAsync(o => o.OrderId == orderId));
@@ -78,11 +44,6 @@ public class OrderService
 
     public async Task<Order?> CreateOrders(OrderModel newOrder)
     {
-        // newOrder.OrderId = Guid.NewGuid();
-        // newOrder.CreatedAt = DateTime.Now;
-        // _Orders.Add(newOrder);
-        // return await Task.FromResult(newOrder);
-
         var order = new Order
         {
             OrderId = Guid.NewGuid(),
@@ -109,7 +70,6 @@ public class OrderService
             orderToUpdate.Status = updatedOrder.Status;
             await _appDbContext.SaveChangesAsync();
         };
-
         return await Task.FromResult(orderToUpdate);
     }
 
