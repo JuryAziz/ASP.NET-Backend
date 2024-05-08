@@ -15,7 +15,7 @@ public class PaymentMethod
 
     public required string Type { get; set; }
 
-    public required double CardNumber { get; set; }
+    public required decimal CardNumber { get; set; }
 
     public required string CardHolderName { get; set; }
 
@@ -26,4 +26,6 @@ public class PaymentMethod
     public bool IsDefault { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public List<Order>? Orders { get; set; } = new List<Order>();
 }

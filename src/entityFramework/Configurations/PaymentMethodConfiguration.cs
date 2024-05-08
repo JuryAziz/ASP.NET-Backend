@@ -19,7 +19,8 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
         // primary key is required and auto genrate
         builder.Property(pm => pm.PaymentMethodId)
         .IsRequired()
-        .ValueGeneratedOnAdd();
+        .ValueGeneratedOnAdd()
+        .HasDefaultValueSql("gen_random_uuid()");
 
         // setting user id as required
         builder.Property(u => u.UserId)
@@ -42,10 +43,15 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
 
         builder.Property(pm => pm.CardCCV)
         .IsRequired()
-        .HasMaxLength(3);
+        .HasColumnType("decimal(3,0)");
 
         builder.Property(pm => pm.CreatedAt)
         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        // one to many from PaymentMethod to Orders
+        builder.HasMany(pm => pm.Orders)
+        .WithOne(o => o.PaymentMethod)
+        .HasForeignKey(o => o.PaymentMethodId); // Foreign key in Order
 
         // relation to Order
 

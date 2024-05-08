@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+// done for now 
 namespace Store.Models;
 
 public class PaymentMethodModel
@@ -15,8 +16,8 @@ public class PaymentMethodModel
     public required string Type { get; set; }
 
     [Required(ErrorMessage = "Card number is required.")]
-    [CreditCard(ErrorMessage = "Invalid card number.")]
-    public required double CardNumber { get; set; }
+    [Range(100000000000, 9999999999999999, ErrorMessage = "Card number must be between 12 to 16 digits")]
+    public required decimal CardNumber { get; set; }
 
     [Required(ErrorMessage = "Cardholder name is required.")]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Cardholder name can only contain letters and spaces.")]
@@ -33,7 +34,9 @@ public class PaymentMethodModel
 
     public bool IsDefault { get; set; } = true;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public List<OrderModel>? Orders { get; set; } = new List<OrderModel>();
 
     // method for card expire date
     public static ValidationResult? ValidateCardExpirationDate(DateTime expirationDate, ValidationContext context)
@@ -43,4 +46,5 @@ public class PaymentMethodModel
 
         return ValidationResult.Success;
     }
+
 }
