@@ -11,12 +11,15 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     // public DbSet<Address> Profiles { get; set; }
     // public DbSet<PaymentMethod> Orders { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
 
     // use Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-        
+
         // modelBuilder.Entity<User>()
         // .HasKey(user => user.UserId);
 
