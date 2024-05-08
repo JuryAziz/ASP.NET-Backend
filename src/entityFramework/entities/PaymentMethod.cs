@@ -11,7 +11,7 @@ public class PaymentMethod
 {
     public required Guid PaymentMethodId { get; set; }
 
-    public required Guid UserId { get; set; }
+    // public required Guid UserId { get; set; }
 
     public required string Type { get; set; }
 
@@ -27,5 +27,5 @@ public class PaymentMethod
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public List<Order>? Orders { get; set; } = new List<Order>();
+    public virtual List<Order>? Orders { get; set; }
 }

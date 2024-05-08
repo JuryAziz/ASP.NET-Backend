@@ -27,26 +27,28 @@ public class PaymentMethodService
 
     }
 
-    public async Task<IEnumerable<PaymentMethod>> GetUserPaymentMethods(Guid userId)
-    {
-        // return await Task.FromResult(_paymentMethods.FindAll(pm => pm.UserId == userId));
+    // public async Task<IEnumerable<PaymentMethod>> GetUserPaymentMethods(Guid userId)
+    // {
+    //     return await Task.FromResult(
+    //         (await _appDbContext.PaymentMethods.ToListAsync())
+    //         .FindAll(pm => pm.UserId == userId)
+    //         );
 
-        var userPaymentMethods = await _appDbContext.PaymentMethods
-            .Where(pm => pm.UserId == userId)
-            .ToListAsync();
+    //     // var userPaymentMethods = await _appDbContext.PaymentMethods
+    //     //     .Where(pm => pm.UserId == userId)
+    //     //     .ToListAsync();
 
-        return userPaymentMethods;
+    //     // return userPaymentMethods;
 
-    }
+    // }
 
     public async Task<PaymentMethod?> GetPaymentMethodById(Guid paymentMethodId)
     {
         // return await Task.FromResult(_paymentMethods.FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId));
 
-        var paymentMethods = await _appDbContext.PaymentMethods
-        .FirstOrDefaultAsync(pm => pm.PaymentMethodId == paymentMethodId);
-
-        return paymentMethods;
+        return await Task.FromResult(
+            await _appDbContext.PaymentMethods
+            .FirstOrDefaultAsync(pm => pm.PaymentMethodId == paymentMethodId));
 
     }
 
@@ -66,7 +68,7 @@ public class PaymentMethodService
         var paymentMethod = new PaymentMethod
         {
             PaymentMethodId = Guid.NewGuid(),
-            UserId = newPaymentMethod.UserId,
+            // UserId = newPaymentMethod.UserId,
             Type = newPaymentMethod.Type,
             CardNumber = newPaymentMethod.CardNumber,
             CardHolderName = newPaymentMethod.CardHolderName,
@@ -79,17 +81,6 @@ public class PaymentMethodService
         await _appDbContext.PaymentMethods.AddAsync(paymentMethod);
         await _appDbContext.SaveChangesAsync();
         return await Task.FromResult(paymentMethod);
-
-        // paymentId
-        // UserId
-        // type
-        // CardNumber
-        // cardName
-        // card expire 
-        // ccv
-        // isDefault
-        // CreatedAt 
-        // ?? orders array ??
 
     }
 
@@ -145,6 +136,4 @@ public class PaymentMethodService
         };
         return await Task.FromResult(false);
     }
-
-
 }

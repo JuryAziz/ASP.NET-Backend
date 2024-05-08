@@ -45,7 +45,7 @@ public class PaymentMethodsController : Controller
         {
             if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
             PaymentMethod? foundPaymentMethod = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
-            if (foundPaymentMethod == null) return NotFound(); ;
+            if (foundPaymentMethod is null) return NotFound(); ;
             return Ok(new BaseResponse<PaymentMethod>(foundPaymentMethod, true));
 
         }

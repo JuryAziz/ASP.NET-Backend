@@ -9,8 +9,8 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Address> Profiles { get; set; }
-    public DbSet<PaymentMethod> PaymentMethod { get; set; }
+    public DbSet<Address> Address { get; set; }
+    public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Order> Order { get; set; }
 
     // use Fluent API

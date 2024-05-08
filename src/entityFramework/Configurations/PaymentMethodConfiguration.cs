@@ -23,8 +23,8 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
         .HasDefaultValueSql("gen_random_uuid()");
 
         // setting user id as required
-        builder.Property(u => u.UserId)
-        .IsRequired();
+        // builder.Property(u => u.UserId)
+        // .IsRequired();
 
         builder.Property(pm => pm.Type)
         .IsRequired()

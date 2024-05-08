@@ -8,8 +8,8 @@ public class PaymentMethodModel
     [Required(ErrorMessage = "Payment Method ID is required.")]
     public required Guid PaymentMethodId { get; set; }
 
-    [Required(ErrorMessage = "User ID is required.")]
-    public required Guid UserId { get; set; }
+    // [Required(ErrorMessage = "User ID is required.")]
+    // public required Guid UserId { get; set; }
 
     [Required(ErrorMessage = "Type is required.")]
     [MaxLength(20, ErrorMessage = "Type can be at most 20 characters long.")]
