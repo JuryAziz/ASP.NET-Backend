@@ -3,13 +3,10 @@ using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions options)
-        : base(options) { }
-
     public DbSet<User> Users { get; set; }
-    // public DbSet<Address> Profiles { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     // public DbSet<PaymentMethod> Orders { get; set; }
 
     // use Fluent API
