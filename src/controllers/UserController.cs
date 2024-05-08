@@ -15,92 +15,51 @@ public class UsersController(AppDbContext appDbContext) : ControllerBase
     private readonly UserService _userService = new (appDbContext);
 
     [HttpGet]
-    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 20)
+    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 50)
     {
-        try
-        {
-            if (limit > 20) limit = 20;
-            List<User> users = await _userService.GetUsers(page, limit > 20 ? 20 : limit);
-            return Ok(new BaseResponseList<User>(users, true));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while 'GetUsers' page {page} limit {limit}");
-            return StatusCode(500, ex.Message );
-        }
+        List<User> users = await _userService.GetUsers();
+        List<User> paginatedUsers = Paginate.Function(users, page, limit);
+        return Ok(new BaseResponseList<User>(paginatedUsers, true));
     }
 
     [HttpGet("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> GetUserById(string userId)
     {
-        try
-        {
-            if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid User ID Format"));
+        if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid User ID Format"));
 
-            User? foundUser = await _userService.GetUserById(userIdGuid);
-            if (foundUser == null) return NotFound();
+        User? foundUser = await _userService.GetUserById(userIdGuid);
+        if (foundUser == null) return NotFound();
 
-            return Ok(new BaseResponse<User>(foundUser, true));
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while 'GetUserById'");
-            return StatusCode(500, ex.Message );
-        }
+        return Ok(new BaseResponse<User>(foundUser, true));
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateUser(UserModel newUser)
     {
-        try
-        {
-            User? createdUser = await _userService.CreateUser(newUser);
-            return CreatedAtAction(nameof(GetUserById), new { createdUser?.UserId }, createdUser);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while 'CreateUser'");
-            return StatusCode(500, ex.Message);
-        }
+        User? createdUser = await _userService.CreateUser(newUser);
+        return CreatedAtAction(nameof(GetUserById), new { createdUser?.UserId }, createdUser);
     }
 
     [HttpPut("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> UpdateUser(string userId, UserModel rawUpdatedUser)
     {
-        try
-        {
-            if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
+        if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
 
-            User? userToUpdate = await _userService.GetUserById(userIdGuid);
-            if (userToUpdate == null) return BadRequest(ModelState);
-            User? updatedUser = await _userService.UpdateUser(userIdGuid, rawUpdatedUser);
+        User? userToUpdate = await _userService.GetUserById(userIdGuid);
+        if (userToUpdate == null) return BadRequest(ModelState);
+        User? updatedUser = await _userService.UpdateUser(userIdGuid, rawUpdatedUser);
 
-            return Ok(new BaseResponse<User>(updatedUser, true));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while 'UpdateUser'");
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(new BaseResponse<User>(updatedUser, true));
     }
 
     [HttpDelete("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> DeleteUser(string userId)
     {
-        try
-        {
-            if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
+        if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
 
-            User? userToDelete = await _userService.GetUserById(userIdGuid);
-            if (userToDelete == null || !await _userService.DeleteUser(userIdGuid)) return NotFound();
+        User? userToDelete = await _userService.GetUserById(userIdGuid);
+        if (userToDelete == null || !await _userService.DeleteUser(userIdGuid)) return NotFound();
 
-            return Ok(new BaseResponse<User>(userToDelete, true));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while 'DeleteUser'");
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(new BaseResponse<User>(userToDelete, true));
     }
 }
