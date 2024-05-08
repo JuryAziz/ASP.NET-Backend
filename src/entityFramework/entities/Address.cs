@@ -5,7 +5,7 @@ namespace Store.EntityFramework.Entities;
 [Table("Addresses")]
 public class Address
 {
-    public required Guid AddressId { get; set; }
+    public Guid AddressId { get; set; }
     public required Guid UserId { get; set; }
     public required string Country { get; set; }
     public required string State { get; set; }
@@ -16,5 +16,5 @@ public class Address
     public bool IsDefault { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public User? User { get; set; }
+    public virtual User? User { get; set; }
 }
