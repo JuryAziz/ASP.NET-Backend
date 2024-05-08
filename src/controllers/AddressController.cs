@@ -1,27 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
+using Store.EntityFramework;
+using Store.EntityFramework.Entities;
 using Store.Helpers;
 using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/addresses")]
-public class AddressesController(AddressService addressService) : ControllerBase
+public class AddressesController(AppDbContext appDbContext) : ControllerBase
 {
-    private readonly AddressService _addressController = addressService;
+    private readonly AddressService _addressService = new (appDbContext);
 
     [HttpGet]
     public async Task<IActionResult> GetAddresses([FromQuery] int page = 1, [FromQuery] int limit = 20)
     {
         try
         {
-            if (limit > 20) limit = 20;
-            IEnumerable<AddressModel>? addresses = await _addressController.GetAddresses(page, limit);
-            return Ok(new BaseResponseList<AddressModel>(addresses, true));
+            List<Address>? addresses = await _addressService.GetAddresses(page, limit > 20 ? 20 : limit);
+            return Ok(new BaseResponseList<Address>(addresses, true));
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             Console.WriteLine($"An error occured while 'GetPaymentMethods' page {page} limit {limit}");
             return StatusCode(500, ex.Message );
         }
@@ -33,9 +35,11 @@ public class AddressesController(AddressService addressService) : ControllerBase
         try
         {
             if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
-            AddressModel? foundAddress = await _addressController.GetAddressById(addressIdGuid);
+
+            Address? foundAddress = await _addressService.GetAddressById(addressIdGuid);
             if (foundAddress is null) return NotFound();
-            return Ok(new BaseResponse<AddressModel>(foundAddress, true));
+
+            return Ok(new BaseResponse<Address>(foundAddress, true));
 
         }
         catch (Exception ex)
@@ -50,7 +54,7 @@ public class AddressesController(AddressService addressService) : ControllerBase
     {
         try
         {
-            AddressModel? createdAddress = await _addressController.CreateAddress(newAddress);
+            Address? createdAddress = await _addressService.CreateAddress(newAddress);
             return CreatedAtAction(nameof(GetAddressById), new { createdAddress?.AddressId }, createdAddress);
         }
         catch (Exception ex)
@@ -66,10 +70,12 @@ public class AddressesController(AddressService addressService) : ControllerBase
         try
         {
             if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
-            AddressModel? addressToUpdate = await _addressController.GetAddressById(addressIdGuid);
+
+            Address? addressToUpdate = await _addressService.GetAddressById(addressIdGuid);
             if (addressToUpdate is null) return NotFound();
-            await _addressController.UpdateAddress(addressIdGuid, rawUpdatedAddress);
-            return Ok(new BaseResponse<AddressModel>(addressToUpdate, true));
+            await _addressService.UpdateAddress(addressIdGuid, rawUpdatedAddress);
+
+            return Ok(new BaseResponse<Address>(addressToUpdate, true));
         }
         catch (Exception ex)
         {
@@ -84,9 +90,11 @@ public class AddressesController(AddressService addressService) : ControllerBase
         try
         {
             if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
-            AddressModel? addressToDelete = await _addressController.GetAddressById(addressIdGuid);
-            if (addressToDelete is null || !await _addressController.DeleteAddress(addressIdGuid)) return NotFound();
-            return Ok(new BaseResponse<AddressModel>(addressToDelete, true));
+
+            Address? addressToDelete = await _addressService.GetAddressById(addressIdGuid);
+            if (addressToDelete is null || !await _addressService.DeleteAddress(addressIdGuid)) return NotFound();
+
+            return Ok(new BaseResponse<Address>(addressToDelete, true));
         }
         catch (Exception ex)
         {
@@ -94,5 +102,4 @@ public class AddressesController(AddressService addressService) : ControllerBase
             return StatusCode(500, ex.Message );
         }
     }
-
 }

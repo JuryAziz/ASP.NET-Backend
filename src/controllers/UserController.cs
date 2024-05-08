@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
+using Store.EntityFramework.Entities;
+using Store.EntityFramework;
 using Store.Helpers;
 using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/users")]
-public class UsersController(UserService userService, AddressService addressService, PaymentMethodService paymentMethodService) : ControllerBase
+public class UsersController(AppDbContext appDbContext) : ControllerBase
 {
-    private readonly UserService _userService = userService;
-    private readonly AddressService _addressService = addressService;
-    private readonly PaymentMethodService _paymentMethodService = paymentMethodService;
+
+    private readonly UserService _userService = new (appDbContext);
 
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 20)
@@ -19,8 +20,8 @@ public class UsersController(UserService userService, AddressService addressServ
         try
         {
             if (limit > 20) limit = 20;
-            IEnumerable<UserModel> users = await _userService.GetUsers(page, limit);
-            return Ok(new BaseResponseList<UserModel>(users, true));
+            List<User> users = await _userService.GetUsers(page, limit > 20 ? 20 : limit);
+            return Ok(new BaseResponseList<User>(users, true));
         }
         catch (Exception ex)
         {
@@ -35,9 +36,11 @@ public class UsersController(UserService userService, AddressService addressServ
         try
         {
             if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid User ID Format"));
-            UserModel? foundUser = await _userService.GetUserById(userIdGuid);
+
+            User? foundUser = await _userService.GetUserById(userIdGuid);
             if (foundUser == null) return NotFound();
-            return Ok(new BaseResponse<UserModel>(foundUser, true));
+
+            return Ok(new BaseResponse<User>(foundUser, true));
 
         }
         catch (Exception ex)
@@ -47,46 +50,12 @@ public class UsersController(UserService userService, AddressService addressServ
         }
     }
 
-    // [HttpGet("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}/addresses")]
-    // public async Task<IActionResult> GetUserAddresses(string userId)
-    // {
-    //     try
-    //     {
-    //         if (!Guid.TryParse(userId, out Guid userIdGuid)) return StatusCode(500, new ErrorResponse() { Message = "Invalid Guid Format" });
-    //         var foundUserAddress = await _addressService.GetUserAddresses(userIdGuid);
-    //         if (foundUserAddress == null) return StatusCode(404, new SuccessResponse<string>() { Data = "Not Found" });
-    //         return Ok(new SuccessResponse<IEnumerable<UserModel>>() { Message = $"User address found belonding to Guid {userIdGuid}", Data = foundUserAddress });
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"An error occured while 'GetUserAddresses'");
-    //         return StatusCode(500, new ErrorResponse() { Message = ex.Message });
-    //     }
-    // }
-
-    // [HttpGet("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}/paymentmethods")]
-    // public async Task<IActionResult> GetUserPaymentMethods(string userId)
-    // {
-    //     try
-    //     {
-    //         if (!Guid.TryParse(userId, out Guid userIdGuid)) return StatusCode(500, new ErrorResponse() { Message = "Invalid Guid Format" });
-    //         var foundUserPaymentMethods = await _paymentMethodService.GetUserPaymentMethods(userIdGuid);
-    //         if (foundUserPaymentMethods == null) return StatusCode(404, new SuccessResponse<string>() { Message = "Not Found" });
-    //         return Ok(new SuccessResponse<IEnumerable<UserModel>>() { Message = $"User payment methods found belonding to Guid {userIdGuid}", Data = foundUserPaymentMethods });
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"An error occured while 'GetUserPaymentMethods'");
-    //         return StatusCode(500, new ErrorResponse() { Message = ex.Message });
-    //     }
-    // }
-
     [HttpPost]
     public async Task<IActionResult> CreateUser(UserModel newUser)
     {
         try
         {
-            UserModel? createdUser = await _userService.CreateUser(newUser);
+            User? createdUser = await _userService.CreateUser(newUser);
             return CreatedAtAction(nameof(GetUserById), new { createdUser?.UserId }, createdUser);
         }
         catch (Exception ex)
@@ -102,10 +71,12 @@ public class UsersController(UserService userService, AddressService addressServ
         try
         {
             if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
-            UserModel? userToUpdate = await _userService.GetUserById(userIdGuid);
+
+            User? userToUpdate = await _userService.GetUserById(userIdGuid);
             if (userToUpdate == null) return BadRequest(ModelState);
-            UserModel? updatedUser = await _userService.UpdateUser(userIdGuid, rawUpdatedUser);
-            return Ok(new BaseResponse<UserModel>(updatedUser, true));
+            User? updatedUser = await _userService.UpdateUser(userIdGuid, rawUpdatedUser);
+
+            return Ok(new BaseResponse<User>(updatedUser, true));
         }
         catch (Exception ex)
         {
@@ -120,9 +91,11 @@ public class UsersController(UserService userService, AddressService addressServ
         try
         {
             if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
-            UserModel? userToDelete = await _userService.GetUserById(userIdGuid);
+
+            User? userToDelete = await _userService.GetUserById(userIdGuid);
             if (userToDelete == null || !await _userService.DeleteUser(userIdGuid)) return NotFound();
-            return Ok(new BaseResponse<UserModel>(userToDelete, true));
+
+            return Ok(new BaseResponse<User>(userToDelete, true));
         }
         catch (Exception ex)
         {
@@ -130,5 +103,4 @@ public class UsersController(UserService userService, AddressService addressServ
             return StatusCode(500, ex.Message);
         }
     }
-
 }
