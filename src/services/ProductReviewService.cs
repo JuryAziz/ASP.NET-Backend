@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework;
 using Store.EntityFramework.Entities;
@@ -48,10 +44,8 @@ public class ProductReviewService
     public async Task<ProductReview?> UpdateProductReview(Guid reviewId, ProductReviewModel updatedReview)
     {
         var reviewToBeUpdated = await _appDbContext.ProductReviews.FindAsync(reviewId);
-        if (reviewToBeUpdated is null)
-        {
-            return null;
-        }
+        if (reviewToBeUpdated is null) return null;
+
         reviewToBeUpdated.Rating = updatedReview.Rating;
         reviewToBeUpdated.Title = updatedReview.Title;
         reviewToBeUpdated.Description = updatedReview.Description;
@@ -63,7 +57,8 @@ public class ProductReviewService
 
     public async Task<ProductReview?> DeleteProductReview(Guid reviewId)
     {
-        var reviewToBeDeleted = await _appDbContext.ProductReviews.FindAsync(reviewId);
+        var reviewToBeDeleted = await GetProductReviewById(reviewId);
+        if (reviewToBeDeleted is null) return null;
         _appDbContext.ProductReviews.Remove(reviewToBeDeleted!);
         await _appDbContext.SaveChangesAsync();
         return reviewToBeDeleted;

@@ -26,7 +26,7 @@ public class ProductReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occured while 'GetProductReviews'");
+            Console.WriteLine($"An error occured could not get the reviews");
             return StatusCode(500, new BaseResponse<ProductReview> { Message = ex.Message });
         }
     }
@@ -34,31 +34,16 @@ public class ProductReviewController : ControllerBase
     [HttpGet("{reviewId::regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
     public async Task<IActionResult> GetProductReviewById(string reviewId)
     {
-        if (Guid.TryParse(reviewId, out Guid reviewIdGuid))
-        {
-            var review = await _productReviewService.GetProductReviewById(reviewIdGuid);
-            if (review is not null)
-            {
-                return Ok(new BaseResponse<ProductReview>(review, true));
-            }
-            else
-            {
-                return NotFound("Review not found, Nothing to show");
-            }
-        }
-        else
-        {
-            return BadRequest("Something went wrong");
-        }
+        if (!Guid.TryParse(reviewId, out Guid reviewIdGuid)) return BadRequest("Something went wrong");
+        var review = await _productReviewService.GetProductReviewById(reviewIdGuid);
+        if (review is null) return NotFound("Review not found, Nothing to show");
+        return Ok(new BaseResponse<ProductReview>(review, true));
     }
 
     [HttpPost]
     public async Task<IActionResult> AddProductReview([FromBody] ProductReviewModel newReview)
     {
-        if (newReview is null)
-        {
-            return BadRequest("add a review");
-        }
+        if (newReview is null) return BadRequest("add a review");
         try
         {
             await _productReviewService.AddProductReview(newReview);
@@ -73,26 +58,17 @@ public class ProductReviewController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateProductReview(string reviewId, [FromBody] ProductReviewModel updatedReview)
     {
-        if (Guid.TryParse(reviewId, out Guid reviewIdGuid))
-        {
-            return Ok(await _productReviewService.UpdateProductReview(reviewIdGuid, updatedReview));
-        }
-        else
-        {
-            return BadRequest("Could not update the review");
-        }
+        if (!Guid.TryParse(reviewId, out Guid reviewIdGuid)) return BadRequest("Could not update the review");
+        return Ok(await _productReviewService.UpdateProductReview(reviewIdGuid, updatedReview));
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeleteProductReview(string reviewId)
     {
-        if (Guid.TryParse(reviewId, out Guid reviewIdGuid))
-        {
-            return Ok(await _productReviewService.DeleteProductReview(reviewIdGuid));
-        }
-        else
-        {
-            return BadRequest("Could not delete the review");
-        }
+        if (reviewId is null) return BadRequest("please add an ID");
+        if (!Guid.TryParse(reviewId, out Guid reviewIdGuid)) return BadRequest("Something went wrong, could not delete, the review, make the sure the ID is valid");
+        var reviewToBeDeleted = await _productReviewService.DeleteProductReview(reviewIdGuid);
+        if (reviewToBeDeleted is null) return NotFound("review not found, could not delete");
+        return Ok(new BaseResponse<ProductReview>(reviewToBeDeleted, true));
     }
 }
