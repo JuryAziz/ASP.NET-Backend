@@ -28,9 +28,9 @@ public class ProductReviewService
         var productReview = new ProductReview
         {
             ReviewId = Guid.NewGuid(),
-            // UserId = Guid.NewGuid(),
-            // OrderId = Guid.NewGuid(),
-            // ProductId = Guid.NewGuid(),
+            UserId = Guid.NewGuid(),
+            OrderId = Guid.NewGuid(),
+            ProductId = Guid.NewGuid(),
             Rating = newReview.Rating,
             Title = newReview.Title,
             Description = newReview.Description,
