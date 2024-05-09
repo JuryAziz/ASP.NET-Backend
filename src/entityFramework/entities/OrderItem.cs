@@ -7,11 +7,11 @@ namespace Store.entityFramework;
 [Table("OrderItem")]
 public class OrderItem
 {
-    public required Guid OrderItemId { get; set; }
+    public Guid OrderItemId { get; set; }
 
-    public required Guid OrderId { get; set; }
+    // public Guid? OrderId { get; set; }
 
-    public required Guid ProductId { get; set; }
+    // public required Guid ProductId { get; set; }
 
     public required float Price { get; set; }
 

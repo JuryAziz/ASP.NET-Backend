@@ -19,13 +19,14 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 
         builder.Property(oi => oi.OrderItemId)
         .IsRequired()
-        .ValueGeneratedOnAdd();
+        .ValueGeneratedOnAdd()
+        .HasDefaultValueSql("gen_random_uuid()");
 
-        builder.Property(o => o.OrderId)
-        .IsRequired();
+        // builder.Property(o => o.OrderId)
+        // .IsRequired();
 
-        builder.Property(p => p.ProductId)
-        .IsRequired();
+        // builder.Property(p => p.ProductId)
+        // .IsRequired();
 
         builder.Property(oi => oi.Price)
         .IsRequired();

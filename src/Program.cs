@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<OrderItemService>();
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<PaymentMethodService>();
 builder.Services.AddScoped<ProductService>();
