@@ -9,7 +9,7 @@ namespace Store.API.Controllers;
 
 [ApiController]
 [Route("/api/paymentmethods")]
-public class PaymentMethodsController : Controller
+public class PaymentMethodsController : ControllerBase
 {
     private readonly PaymentMethodService _paymentMethodService;
 
