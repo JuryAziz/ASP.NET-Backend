@@ -3,11 +3,8 @@ using Store.EntityFramework.Entities;
 
 namespace Store.entityFramework;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions options)
-        : base(options) { }
-
     public DbSet<User> Users { get; set; }
     public DbSet<Address> Address { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }

@@ -5,7 +5,7 @@ namespace Store.Models;
 public class UserModel
 {
     [Required(ErrorMessage = "User ID is required.")]
-    public required Guid UserId { get; set; }
+    public Guid UserId { get; set; }
 
     [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]
@@ -29,5 +29,5 @@ public class UserModel
 
     public int Role { get; set; } = 0;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

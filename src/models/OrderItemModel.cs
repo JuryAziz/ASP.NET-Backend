@@ -21,5 +21,5 @@ public class OrderItemModel
     [Range(0, 10000, ErrorMessage = "Stock must be between 1 and 10000")]
     public required int Quantity { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
