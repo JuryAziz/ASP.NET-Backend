@@ -1,13 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework.Entities;
 
-namespace Store.entityFramework;
+namespace Store.EntityFramework;
 
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
-    public DbSet<Address> Address { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
+
+    public DbSet<Product> Products{ get; set; }
+    public DbSet<ProductReview> ProductReviews { get; set; }
+
     public DbSet<Order> Order { get; set; }
     public DbSet<OrderItem> OrderItem { get; set; }
 
