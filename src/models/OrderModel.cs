@@ -1,9 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Store.EntityFramework;
 
 namespace Store.Models;
-
 public class OrderModel
 {
     // ? needs discussion
@@ -19,11 +16,11 @@ public class OrderModel
     [Required(ErrorMessage = "Order Id is required.")]
     public required Guid OrderId { get; set; }
 
-    // [Required(ErrorMessage = "User Id is required.")]
-    // public required Guid UserId { get; set; }
+    [Required(ErrorMessage = "User Id is required.")]
+    public required Guid UserId { get; set; }
 
-    // [Required(ErrorMessage = "Address Id is required.")]
-    // public required Guid AddressId { get; set; }
+    [Required(ErrorMessage = "Address Id is required.")]
+    public required Guid AddressId { get; set; }
 
     [Required(ErrorMessage = "Payment Method Id is required.")]
     public required Guid PaymentMethodId { get; set; }
@@ -37,10 +34,5 @@ public class OrderModel
     [Required(ErrorMessage = "Status is required.")]
     public required int Status { get; set; }
 
-    // public List<OrderItem>? OrderItem { get; set; }
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    // [ForeignKey("PaymentMethodId")]
-    // public PaymentMethodModel? PaymentMethod { get; set; }
 }

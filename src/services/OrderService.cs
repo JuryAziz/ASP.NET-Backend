@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework;
+
+using Store.EntityFramework.Entities;
 using Store.Models;
 
 namespace Store.Application.Services;
@@ -47,8 +45,8 @@ public class OrderService
         var order = new Order
         {
             OrderId = Guid.NewGuid(),
-            // UserId = newOrder.UserId,
-            // AddressId = newOrder.AddressId,
+            UserId = newOrder.UserId,
+            AddressId = newOrder.AddressId,
             PaymentMethodId = newOrder.PaymentMethodId,
             TransactionId = newOrder.TransactionId,
             ShipmentId = newOrder.ShipmentId,

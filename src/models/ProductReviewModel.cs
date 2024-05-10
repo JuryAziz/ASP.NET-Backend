@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Models;
-
 public class ProductReviewModel
 {
     [Required(ErrorMessage = "Review Id is required.")]

@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework;
+
+using Store.EntityFramework.Entities;
 using Store.Models;
 
 namespace Store.Application.Services;
@@ -45,8 +43,8 @@ public class OrderItemService
         var orderItem = new OrderItem
         {
             OrderItemId = Guid.NewGuid(),
-            // OrderId = newOrderItem.OrderId,
-            // ProductId = newOrderItem.ProductId,
+            OrderId = newOrderItem.OrderId,
+            ProductId = newOrderItem.ProductId,
             Price = newOrderItem.Price,
             Quantity = newOrderItem.Quantity,
             CreatedAt = DateTime.UtcNow,

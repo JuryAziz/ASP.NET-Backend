@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Store.Models;
-
 public class ProductModel
 {
 

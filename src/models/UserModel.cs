@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Models;
-
 public class UserModel
 {
     [Required(ErrorMessage = "User ID is required.")]

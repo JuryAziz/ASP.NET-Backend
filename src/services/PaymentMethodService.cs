@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework;
+
 using Store.EntityFramework.Entities;
 using Store.Models;
 
@@ -45,7 +45,7 @@ public class PaymentMethodService
         var paymentMethod = new PaymentMethod
         {
             PaymentMethodId = Guid.NewGuid(),
-            // UserId = newPaymentMethod.UserId,
+            UserId = newPaymentMethod.UserId,
             Type = newPaymentMethod.Type,
             CardNumber = newPaymentMethod.CardNumber,
             CardHolderName = newPaymentMethod.CardHolderName,
