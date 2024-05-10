@@ -11,7 +11,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         //      TableBuilder
         //###########################
 
-        builder.ToTable("Addresses");
+        builder.ToTable("Address");
         builder.HasKey(a => a.AddressId);
 
         builder

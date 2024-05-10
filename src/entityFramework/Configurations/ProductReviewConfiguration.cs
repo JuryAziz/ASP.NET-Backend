@@ -12,7 +12,7 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
         //Table Builder
         //######################
 
-        builder.ToTable("ProductReviews");
+        builder.ToTable("ProductReview");
 
         builder.HasKey(pr => pr.ReviewId);
 
