@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Store.entityFramework;
+using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 using Store.Models;
 

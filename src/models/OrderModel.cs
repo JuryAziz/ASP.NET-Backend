@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Store.entityFramework;
+using Store.EntityFramework;
 
 namespace Store.Models;
 
