@@ -6,7 +6,7 @@ public class ProductReview
 {
     public Guid ReviewId { get; set; }
     public Guid UserId { get; set; } // foreign key of User
-    public Guid OrderId { get; set; } // foreign key of Order
+    public Guid OrderItemId { get; set; } // foreign key of Order
     public Guid ProductId { get; set; } // foreign key of Product
 
     public int Rating { get; set; }
@@ -15,7 +15,7 @@ public class ProductReview
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
-    public virtual Order? Order { get; set; } // added navigation property
+    public virtual OrderItem? OrderItem { get; set; } // added navigation property
     public virtual Product? Product { get; set; } // added navigation property 
     public virtual User? User { get; set; } // added navigation property
 
