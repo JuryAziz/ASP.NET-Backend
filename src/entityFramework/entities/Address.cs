@@ -7,6 +7,7 @@ public class Address
 {
     public Guid AddressId { get; set; }
     public required Guid UserId { get; set; }
+    
     public required string Country { get; set; }
     public required string State { get; set; }
     public required string City { get; set; }

@@ -6,6 +6,7 @@ namespace Store.EntityFramework.Entities;
 public class User
 {
     public Guid UserId { get; set; }
+    
     public required string Email { get; set; }
     public required string PhoneNumber { get; set; }
     public required string FirstName { get; set; }
@@ -15,16 +16,9 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 
-/******************************************************************************/
-    // Those lists I'm not usre if they are supposed to lists of GUIDs or the entities themselves!!
-    // So I made them lists of Guids, it can be altered as needed!
-
-
-    public virtual Guid? Cart { get; set;}
-
+    public virtual Cart? Cart { get; set;}
     public virtual List<Address>? Addresses { get; set; }
-
-    // public List<PaymentMethod>? PaymentMethods { get; set; }
+    public virtual List<PaymentMethod>? PaymentMethods { get; set; }
+    public virtual List<Order>? Orders { get; set; }
     // public List<ShoppingList>? ShoppingLists { get; set; }
-    // public List<Order>? Orders { get; set; }
 }

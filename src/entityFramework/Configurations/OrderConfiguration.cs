@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Store.entityFramework;
+using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 // using Store.Models;
 
