@@ -16,7 +16,6 @@ public class PaymentMethodsController(AppDbContext appDbContext) : ControllerBas
     [HttpGet]
     public async Task<IActionResult> GetPaymentMethods([FromQuery] int page = 1, [FromQuery] int limit = 50)
     {
-        if (limit > 20) limit = 20;
         List<PaymentMethod> paymentMethods = await _paymentMethodService.GetPaymentMethods();
         List<PaymentMethod> paginatedPaymentMethods = Paginate.Function(paymentMethods, page, limit);
         return Ok(new BaseResponseList<PaymentMethod>(paginatedPaymentMethods, true));
