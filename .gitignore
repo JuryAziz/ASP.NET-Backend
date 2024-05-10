@@ -5,5 +5,4 @@ obj
 *.http
 .mono
 
-/Migrations
-appsettings.json
+Migrations

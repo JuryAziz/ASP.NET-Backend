@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Store.Application.Services;
+using Store.entityFramework;
 using Store.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder
 
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<OrderItemService>();
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<PaymentMethodService>();
 builder.Services.AddScoped<ProductService>();
