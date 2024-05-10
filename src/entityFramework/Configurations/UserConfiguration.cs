@@ -11,24 +11,24 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         //      TableBuilder
         //###########################
 
-        builder.ToTable("Users");
-        builder.HasKey(c => c.UserId);
+        builder.ToTable("User");
+        builder.HasKey(u => u.UserId);
 
         builder
-        .Property(c => c.UserId)
+        .Property(u => u.UserId)
         .IsRequired()
         .ValueGeneratedOnAdd();
 
         builder
-        .HasIndex(c => c.Email)
+        .HasIndex(u => u.Email)
         .IsUnique();
 
         builder
-        .HasIndex(c => c.PhoneNumber)
+        .HasIndex(u => u.PhoneNumber)
         .IsUnique();
 
         builder
-        .Property(c => c.FirstName)
+        .Property(u => u.FirstName)
         .IsRequired();
 
         //###########################
