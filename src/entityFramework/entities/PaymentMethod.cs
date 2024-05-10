@@ -9,7 +9,7 @@ namespace Store.EntityFramework;
 [Table("PaymentMethod")]
 public class PaymentMethod
 {
-    public required Guid PaymentMethodId { get; set; }
+    public Guid PaymentMethodId { get; set; }
     public required Guid UserId { get; set; }
     
     public required string Type { get; set; }
