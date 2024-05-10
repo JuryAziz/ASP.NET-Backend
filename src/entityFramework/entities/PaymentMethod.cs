@@ -15,6 +15,5 @@ public class PaymentMethod
     public bool IsDefault { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-
-    public virtual List<Order>? Orders { get; set; }
+    public virtual User? User { get; set; }
 }
