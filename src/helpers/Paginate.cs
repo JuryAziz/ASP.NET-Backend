@@ -10,6 +10,11 @@ public static class Paginate {
         } else {
             limit = page * limit;
         };
-        return itemsList[((page - 1) * limit)..limit];
+
+        return itemsList[
+            ((page - 1) * limit)
+            ..
+            (page * limit)
+        ];
     }
 }
