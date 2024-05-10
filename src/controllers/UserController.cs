@@ -11,7 +11,6 @@ namespace Store.API.Controllers;
 [Route("/api/users")]
 public class UsersController(AppDbContext appDbContext) : ControllerBase
 {
-
     private readonly UserService _userService = new (appDbContext);
 
     [HttpGet]
@@ -22,13 +21,13 @@ public class UsersController(AppDbContext appDbContext) : ControllerBase
         return Ok(new BaseResponseList<User>(paginatedUsers, true));
     }
 
-    [HttpGet("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    [HttpGet("{userId}")]
     public async Task<IActionResult> GetUserById(string userId)
     {
         if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid User ID Format"));
 
         User? foundUser = await _userService.GetUserById(userIdGuid);
-        if (foundUser == null) return NotFound();
+        if (foundUser is null) return NotFound();
 
         return Ok(new BaseResponse<User>(foundUser, true));
     }
@@ -40,25 +39,25 @@ public class UsersController(AppDbContext appDbContext) : ControllerBase
         return CreatedAtAction(nameof(GetUserById), new { createdUser?.UserId }, createdUser);
     }
 
-    [HttpPut("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    [HttpPut("{userId}")]
     public async Task<IActionResult> UpdateUser(string userId, UserModel rawUpdatedUser)
     {
         if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
 
         User? userToUpdate = await _userService.GetUserById(userIdGuid);
-        if (userToUpdate == null) return BadRequest(ModelState);
+        if (userToUpdate is null) return BadRequest(ModelState);
         User? updatedUser = await _userService.UpdateUser(userIdGuid, rawUpdatedUser);
 
         return Ok(new BaseResponse<User>(updatedUser, true));
     }
 
-    [HttpDelete("{userId:regex(^[[0-9a-f]]{{8}}-[[0-9a-f]]{{4}}-[[0-5]][[0-9a-f]]{{3}}-[[089ab]][[0-9a-f]]{{3}}-[[0-9a-f]]{{12}}$)}")]
+    [HttpDelete("{userId}")]
     public async Task<IActionResult> DeleteUser(string userId)
     {
         if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
 
         User? userToDelete = await _userService.GetUserById(userIdGuid);
-        if (userToDelete == null || !await _userService.DeleteUser(userIdGuid)) return NotFound();
+        if (userToDelete is null || !await _userService.DeleteUser(userIdGuid)) return NotFound();
 
         return Ok(new BaseResponse<User>(userToDelete, true));
     }

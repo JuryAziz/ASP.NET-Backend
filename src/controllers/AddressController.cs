@@ -46,9 +46,9 @@ public class AddressesController(AppDbContext appDbContext) : ControllerBase
 
         Address? addressToUpdate = await _addressService.GetAddressById(addressIdGuid);
         if (addressToUpdate is null) return NotFound();
-        await _addressService.UpdateAddress(addressIdGuid, rawUpdatedAddress);
+        Address? updatedAddress = await _addressService.UpdateAddress(addressIdGuid, rawUpdatedAddress);
 
-        return Ok(new BaseResponse<Address>(addressToUpdate, true));
+        return Ok(new BaseResponse<Address>(updatedAddress, true));
     }
 
     [HttpDelete("{addressId}")]
