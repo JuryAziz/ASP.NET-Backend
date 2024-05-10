@@ -30,8 +30,9 @@ public class UserService(AppDbContext appDbContext)
                 .ThenInclude(orderItem => orderItem.Product)
             // .Include(user => user.ShoppingLists)
             .Include(user => user.ProductReviews)
-                    .ThenInclude(productReview => productReview.Product)
-                    // .ThenInclude(productReview => productReview.OrderItem)
+                .ThenInclude(productReview => productReview.Product)
+            .Include(user => user.ProductReviews)
+                .ThenInclude(productReview => productReview.OrderItem)
             .FirstOrDefaultAsync(u => u.UserId == userId);
         #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
     }   
