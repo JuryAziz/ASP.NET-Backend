@@ -5,46 +5,30 @@ using Store.EntityFramework.Entities;
 using Store.Models;
 
 namespace Store.Application.Services;
-
-public class OrderService
+public class OrderService(AppDbContext appDbContext)
 {
-    private readonly AppDbContext _appDbContext;
+    private readonly AppDbContext _appDbContext = appDbContext;
 
-    public OrderService(AppDbContext appDbContext)
+    public async Task<List<Order>> GetOrders()
     {
-        _appDbContext = appDbContext;
+        return await _appDbContext.Orders
+            .Include(o => o.User)
+            .Include(o => o.Address)
+            .Include(o => o.PaymentMethod)
+            .Include(o => o.Items)
+            .ToListAsync();
     }
 
-    public async Task<IEnumerable<Order>> GetOrders(int page, int limit)
-    {
-        var orders = _appDbContext.Order.ToList();
-        var pagedOrder = orders[((page - 1) * limit)..(_appDbContext.Order.Count() > (page * limit) ? page * limit : _appDbContext.Order.Count())];
-        return await Task.FromResult(pagedOrder.AsEnumerable());
-
-        // return await Task.FromResult(_Orders[((page - 1) * limit)..(_Orders.Count > (page * limit) ? page * limit : _Orders.Count)].AsEnumerable());
-    }
-
-    // public async Task<IEnumerable<Order>> GetUserOrders(Guid userId)
-    // {
-    //     // return await Task.FromResult(_Orders.FindAll(order => order.UserId == userId));
-    //     return await Task.FromResult(
-    //         (await _appDbContext.Order.ToListAsync())
-    //         .FindAll(o => o.UserId == userId)
-    //     );
-    // }
 
     public async Task<Order?> GetOrderById(Guid orderId)
     {
-         return await Task.FromResult(
-            await _appDbContext.Order
-            .FirstOrDefaultAsync(o => o.OrderId == orderId));
+        return await Task.FromResult((await GetOrders()).FirstOrDefault(o => o.OrderId == orderId));
     }
 
     public async Task<Order?> CreateOrders(OrderModel newOrder)
     {
         var order = new Order
         {
-            OrderId = Guid.NewGuid(),
             UserId = newOrder.UserId,
             AddressId = newOrder.AddressId,
             PaymentMethodId = newOrder.PaymentMethodId,
@@ -54,18 +38,19 @@ public class OrderService
             CreatedAt = DateTime.UtcNow,
         };
 
-        await _appDbContext.Order.AddAsync(order);
+        await _appDbContext.Orders.AddAsync(order);
         await _appDbContext.SaveChangesAsync();
+
         return await Task.FromResult(order);
     }
 
     public async Task<Order?> UpdateOrders(Guid orderId, OrderModel updatedOrder)
     {
-        var orderToUpdate = await _appDbContext.Order
-        .FirstOrDefaultAsync(o => o.OrderId == orderId);
+        var orderToUpdate = await GetOrderById(orderId);
         if (orderToUpdate is not null)
         {
             orderToUpdate.Status = updatedOrder.Status;
+
             await _appDbContext.SaveChangesAsync();
         };
         return await Task.FromResult(orderToUpdate);
@@ -73,14 +58,12 @@ public class OrderService
 
     public async Task<bool> DeleteOrder(Guid orderId)
     {
-        var orderToDelete = await _appDbContext.Order
-        .FirstOrDefaultAsync(o => o.OrderId == orderId);
-        if (orderToDelete is not null)
-        {
-            _appDbContext.Order.Remove(orderToDelete);
-            await _appDbContext.SaveChangesAsync();
-            return await Task.FromResult(true);
-        };
-        return await Task.FromResult(false);
+        var orderToDelete = await GetOrderById(orderId);
+        if (orderToDelete is null) return await Task.FromResult(false);
+
+        _appDbContext.Orders.Remove(orderToDelete);
+        await _appDbContext.SaveChangesAsync();
+
+        return await Task.FromResult(true);
     }
 }

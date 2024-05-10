@@ -18,11 +18,7 @@ public class UserService(AppDbContext appDbContext)
 
     public async Task<User?> GetUserById(Guid userId)
     {
-        return await Task.FromResult(
-            await _appDbContext.Users
-                .Include(user => user.Addresses)
-                .FirstOrDefaultAsync(user => user.UserId == userId)
-        );
+        return await Task.FromResult((await GetUsers()).FirstOrDefault(user => user.UserId == userId));
     }
 
     public async Task<User?> CreateUser(UserModel newUser)
@@ -47,17 +43,16 @@ public class UserService(AppDbContext appDbContext)
     public async Task<User?> UpdateUser(Guid userId, UserModel updatedUser)
     {
         var userToUpdate = await GetUserById(userId);
-        if (userToUpdate != null)
-        {
-            userToUpdate.Email = updatedUser.Email;
-            userToUpdate.PhoneNumber = updatedUser.PhoneNumber;
-            userToUpdate.FirstName = updatedUser.FirstName;
-            userToUpdate.LastName = updatedUser.LastName;
-            userToUpdate.DateOfBirth = updatedUser.DateOfBirth;
-            userToUpdate.Role = updatedUser.Role;
+        if (userToUpdate is null) return null;
 
-            await _appDbContext.SaveChangesAsync();
-        };
+        userToUpdate.Email = updatedUser.Email;
+        userToUpdate.PhoneNumber = updatedUser.PhoneNumber;
+        userToUpdate.FirstName = updatedUser.FirstName;
+        userToUpdate.LastName = updatedUser.LastName;
+        userToUpdate.DateOfBirth = updatedUser.DateOfBirth;
+        userToUpdate.Role = updatedUser.Role;
+
+        await _appDbContext.SaveChangesAsync();
         
         return await Task.FromResult(userToUpdate);
     }
@@ -65,7 +60,7 @@ public class UserService(AppDbContext appDbContext)
     public async Task<bool> DeleteUser(Guid userId)
     {
         var userToDelete = await GetUserById(userId);
-        if (userToDelete == null) return await Task.FromResult(false);
+        if (userToDelete is null) return await Task.FromResult(false);
 
         _appDbContext.Users.Remove(userToDelete);
         await _appDbContext.SaveChangesAsync();

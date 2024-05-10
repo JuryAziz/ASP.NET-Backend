@@ -64,12 +64,11 @@ public class PaymentMethodService(AppDbContext appDbContext)
     public async Task<bool> DeletePaymentMethod(Guid paymentMethodId)
     {
         var paymentMethodToDelete = await GetPaymentMethodById(paymentMethodId);
-        if (paymentMethodToDelete is not null) return await Task.FromResult(false);
+        if (paymentMethodToDelete is null) return await Task.FromResult(false);
 
         _appDbContext.PaymentMethods.Remove(paymentMethodToDelete);
         await _appDbContext.SaveChangesAsync();
-        
+
         return await Task.FromResult(true);
-        
     }
 }

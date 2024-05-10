@@ -6,36 +6,21 @@ using Store.Models;
 
 namespace Store.Application.Services;
 
-public class OrderItemService
+public class OrderItemService(AppDbContext appDbContext)
 {
-    private readonly AppDbContext _appDbContext;
+    private readonly AppDbContext _appDbContext = appDbContext;
 
-    public OrderItemService(AppDbContext appDbContext)
+    public async Task<List<OrderItem>> GetOrderItems()
     {
-        _appDbContext = appDbContext;
+        return await _appDbContext.OrderItems
+            .Include(oi => oi.Order)
+            .Include(oi => oi.Product)
+            .ToListAsync();
     }
-
-    public async Task<IEnumerable<OrderItem>> GetOrderItems(int page, int limit)
-    {
-        var orderItems = _appDbContext.OrderItem.ToList();
-        var pagedOrderItem = orderItems[((page - 1) * limit)..(_appDbContext.OrderItem.Count() > (page * limit) ? page * limit : _appDbContext.OrderItem.Count())];
-        return await Task.FromResult(pagedOrderItem.AsEnumerable());
-
-        // return await Task.FromResult(_OrderItems[((page - 1) * limit)..(_OrderItems.Count > (page * limit) ? page * limit : _OrderItems.Count)].AsEnumerable());
-    }
-
-    // public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrder(Guid orderId)
-    // {
-    //     return await Task.FromResult(
-    //         (await _appDbContext.OrderItem.ToListAsync())
-    //         .FindAll(oi => oi.OrderId == orderId));
-    // }
 
     public async Task<OrderItem?> GetOrderItemById(Guid orderItemId)
     {
-         return await Task.FromResult(
-            await _appDbContext.OrderItem
-            .FirstOrDefaultAsync(oi => oi.OrderItemId == orderItemId));
+        return await Task.FromResult((await GetOrderItems()).FirstOrDefault(oi => oi.OrderItemId == orderItemId));
     }
 
     public async Task<OrderItem?> CreateOrderItems(OrderItemModel newOrderItem)
@@ -50,34 +35,32 @@ public class OrderItemService
             CreatedAt = DateTime.UtcNow,
         };
 
-        await _appDbContext.OrderItem.AddAsync(orderItem);
+        await _appDbContext.OrderItems.AddAsync(orderItem);
         await _appDbContext.SaveChangesAsync();
+
         return await Task.FromResult(orderItem);
     }
 
     public async Task<OrderItem?> UpdateOrderItems(Guid orderItemId, OrderItemModel updatedOrderItem)
     {
-        var orderItemToUpdate = await _appDbContext.OrderItem
-        .FirstOrDefaultAsync(oi => oi.OrderItemId == orderItemId);
-        if (orderItemToUpdate is not null)
-        {
-            orderItemToUpdate.Price = updatedOrderItem.Price;
-            orderItemToUpdate.Quantity = updatedOrderItem.Quantity;
-            await _appDbContext.SaveChangesAsync();
-        };
+        var orderItemToUpdate = await GetOrderItemById(orderItemId);
+        if (orderItemToUpdate is null) return null;
+
+        orderItemToUpdate.Price = updatedOrderItem.Price;
+        orderItemToUpdate.Quantity = updatedOrderItem.Quantity;
+        await _appDbContext.SaveChangesAsync();
+
         return await Task.FromResult(orderItemToUpdate);
     }
 
     public async Task<bool> DeleteOrderItem(Guid orderItemId)
     {
-        var orderItemToDelete = await _appDbContext.OrderItem
-        .FirstOrDefaultAsync(oi => oi.OrderItemId == orderItemId);
-        if (orderItemToDelete is not null)
-        {
-            _appDbContext.OrderItem.Remove(orderItemToDelete);
-            await _appDbContext.SaveChangesAsync();
-            return await Task.FromResult(true);
-        };
-        return await Task.FromResult(false);
+        var orderItemToDelete = await GetOrderItemById(orderItemId);
+        if (orderItemToDelete is null) return await Task.FromResult(false);
+
+        _appDbContext.OrderItems.Remove(orderItemToDelete);
+        await _appDbContext.SaveChangesAsync();
+
+        return await Task.FromResult(true);
     }
 }
