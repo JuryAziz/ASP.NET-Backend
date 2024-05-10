@@ -34,8 +34,6 @@ public class PaymentMethodModel
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public List<OrderModel>? Orders { get; set; } = new List<OrderModel>();
-
     // method for card expire date
     public static ValidationResult? ValidateCardExpirationDate(DateTime expirationDate, ValidationContext context)
     {
