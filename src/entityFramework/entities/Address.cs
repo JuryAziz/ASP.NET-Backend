@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.EntityFramework.Entities;
-
 [Table("Address")]
 public class Address
 {

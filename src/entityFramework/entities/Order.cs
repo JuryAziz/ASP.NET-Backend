@@ -1,9 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
-namespace Store.EntityFramework;
-
+namespace Store.EntityFramework.Entities;
 [Table("Order")]
 public class Order
 {
@@ -27,6 +24,9 @@ public class Order
     public required int Status { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public PaymentMethod? PaymentMethod { get; set; }
-    public virtual List<OrderItem>? OrderItem { get; set; }
+
+    public virtual User? User { get; set; }
+    public virtual Address? Address  { get; set; }
+    public virtual PaymentMethod? PaymentMethod { get; set; }
+    public virtual List<OrderItem>? Items { get; set; }
 }

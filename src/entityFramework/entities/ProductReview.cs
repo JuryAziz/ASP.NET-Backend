@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.EntityFramework.Entities;
-
 [Table("ProductReview")]
 public class ProductReview
 {

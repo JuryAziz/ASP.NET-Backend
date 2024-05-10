@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.EntityFramework.Entities;
-
 [Table("User")]
 public class User
 {
@@ -16,7 +15,7 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
-    public virtual Cart? Cart { get; set;} = new ();
+    public virtual Cart? Cart { get; set;}
     public virtual List<Address>? Addresses { get; set; } = [];
     public virtual List<PaymentMethod>? PaymentMethods { get; set; } = [];
     public virtual List<Order>? Orders { get; set; } = [];
