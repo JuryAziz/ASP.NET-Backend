@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Store.Application.Services;
 using Store.EntityFramework;
-using Store.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
