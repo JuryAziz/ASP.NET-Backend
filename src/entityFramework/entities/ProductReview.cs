@@ -14,7 +14,6 @@ public class ProductReview
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-
     public virtual OrderItem? OrderItem { get; set; } // added navigation property
     public virtual Product? Product { get; set; } // added navigation property 
     public virtual User? User { get; set; } // added navigation property

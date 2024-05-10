@@ -14,7 +14,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     // public DbSet<ShoppingList> ShoppingLists { get; set; }
 
 
-
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products{ get; set; }
     public DbSet<ProductReview> ProductReviews { get; set; }

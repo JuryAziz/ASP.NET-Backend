@@ -24,10 +24,10 @@ public class AddressesController(AppDbContext appDbContext) : ControllerBase
     [HttpGet("{addressId}")]
     public async Task<IActionResult> GetAddressById(string addressId)
     {
-        if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return NotFound(new BaseResponse<object>(false, "Invalid Address ID Format"));
+        if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
 
         Address? foundAddress = await _addressService.GetAddressById(addressIdGuid);
-        if (foundAddress is null) return NotFound(new BaseResponse<object>(false, "No address found with that ID"));
+        if (foundAddress is null) return NotFound();
 
         return Ok(new BaseResponse<Address>(foundAddress, true));
     }
