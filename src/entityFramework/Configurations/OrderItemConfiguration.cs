@@ -9,44 +9,42 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
     public void Configure(EntityTypeBuilder<OrderItem> builder)
     {
-        ///#####################
-        //TableBuilder
-        //######################
+        //###########################
+        //      TableBuilder
+        //###########################
 
         builder.ToTable("OrderItem");
-
         builder.HasKey(oi => oi.OrderItemId);
 
-        builder.Property(oi => oi.OrderItemId)
-        .IsRequired()
-        .ValueGeneratedOnAdd()
-        .HasDefaultValueSql("gen_random_uuid()");
+        builder
+            .Property(oi => oi.OrderItemId)
+            .IsRequired()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
-        // builder.Property(o => o.OrderId)
-        // .IsRequired();
+        builder
+            .Property(oi => oi.OrderId)
+            .IsRequired();
 
-        // builder.Property(p => p.ProductId)
-        // .IsRequired();
+        builder
+            .Property(oi => oi.ProductId)
+            .IsRequired();
 
-        builder.Property(oi => oi.Price)
-        .IsRequired();
+        builder
+            .Property(oi => oi.Price)
+            .IsRequired();
 
-        builder.Property(oi => oi.Quantity)
-        .IsRequired();
+        builder
+            .Property(oi => oi.Quantity)
+            .IsRequired();
 
-        builder.Property(oi => oi.CreatedAt)
-        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        builder
+            .Property(oi => oi.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+        //###########################
+        //      TableBuilder
+        //###########################
 
-        //builder.ToTable("TableName");
-        //builder.Property(c => c.ClomenName).
-
-        ///#####################
-        //Table Relation
-        ///#####################
-
-        //builder.HasMany(c => c.ClomenName)
-        // .WithOne(o => o.ClomenName)
-        // .HasForeignKey(o => o.ClomenName);
     }
 }

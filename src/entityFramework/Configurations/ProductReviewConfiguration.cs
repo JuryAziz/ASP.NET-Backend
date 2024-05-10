@@ -8,9 +8,9 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
 {
     public void Configure(EntityTypeBuilder<ProductReview> builder)
     {
-        ///#####################
-        //Table Builder
-        //######################
+        //###########################
+        //      TableBuilder
+        //###########################
 
         builder.ToTable("ProductReview");
 
@@ -29,5 +29,15 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
         builder.Property(pr => pr.Description)
         .HasMaxLength(500)
         .HasAnnotation("MinLength", 10);
+
+        //###########################
+        //      TableBuilder
+        //###########################
+
+        // Address Relation 1:N
+        builder
+            .HasOne(pr => pr.OrderItem)
+            .WithOne(io => io.ProductReview)
+            .HasForeignKey<ProductReview>(oi => oi.OrderItemId);
     }
 }
