@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
-using Store.entityFramework;
+using Store.EntityFramework;
 using Store.Helpers;
 using Store.Models;
 
