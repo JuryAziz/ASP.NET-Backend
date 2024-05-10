@@ -11,15 +11,16 @@ public class OrderService(AppDbContext appDbContext)
 
     public async Task<List<Order>> GetOrders()
     {
+        #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         return await _appDbContext.Orders
             .Include(o => o.User)
             .Include(o => o.Address)
             .Include(o => o.PaymentMethod)
             .Include(o => o.Items)
+                .ThenInclude(oi => oi.Product)
             .ToListAsync();
+        #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
     }
-
-
     public async Task<Order?> GetOrderById(Guid orderId)
     {
         return await Task.FromResult((await GetOrders()).FirstOrDefault(o => o.OrderId == orderId));

@@ -11,9 +11,18 @@ public class UserService(AppDbContext appDbContext)
 
     public async Task<List<User>> GetUsers()
     {
+        #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         return await _appDbContext.Users
+            .Include(user => user.Cart)
+                .ThenInclude(cart => cart.Items)
             .Include(user => user.Addresses)
+            .Include(user => user.PaymentMethods)
+            .Include(user => user.Orders)
+                .ThenInclude(order => order.Items)
+            // .Include(user => user.ShoppingLists)
+            .Include(user => user.ProductReviews)
             .ToListAsync();
+        #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
     }
 
     public async Task<User?> GetUserById(Guid userId)

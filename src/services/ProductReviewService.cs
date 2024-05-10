@@ -14,7 +14,7 @@ public class ProductReviewService(AppDbContext appDbContext)
     {
         return await _appDbContext.ProductReviews
             .Include(pr => pr.User)
-            .Include(pr => pr.Order)
+            .Include(pr => pr.OrderItem)
             .Include(pr => pr.Product)
             .ToListAsync();    
     }
@@ -29,7 +29,7 @@ public class ProductReviewService(AppDbContext appDbContext)
         var productReview = new ProductReview
         {
             UserId = Guid.NewGuid(),
-            OrderId = Guid.NewGuid(),
+            OrderItemId = Guid.NewGuid(),
             ProductId = Guid.NewGuid(),
             Rating = newReview.Rating,
             Title = newReview.Title,

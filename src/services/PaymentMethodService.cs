@@ -14,7 +14,6 @@ public class PaymentMethodService(AppDbContext appDbContext)
     {
         return await _appDbContext.PaymentMethods
             .ToListAsync();
-
     }
 
     public async Task<PaymentMethod?> GetPaymentMethodById(Guid paymentMethodId)
