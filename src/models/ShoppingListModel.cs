@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using Store.EntityFramework.Entities;
 
 namespace Store.Models;
-
 public class ShoppingListModel
 {
     [Required(ErrorMessage = "Shopping list Id is required.")]
@@ -19,9 +19,9 @@ public class ShoppingListModel
     [MaxLength(500, ErrorMessage = "Description can be at most 500 characters long.")]
     public string Description { get; set; } = string.Empty;
 
-    public List<Guid> Items { get; set; } = [];
+    public virtual List<Product>? Items { get; set; } = [];
 
     public bool IsPublic { get; set; } = true;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
