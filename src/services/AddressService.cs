@@ -11,25 +11,13 @@ public class AddressService(AppDbContext appDbContext)
 
     public async Task<List<Address>> GetAddresses()
     {
-        return await _appDbContext
-            .Addresses
+        return await _appDbContext.Addresses
             .ToListAsync();
-    }
-
-    public async Task<List<Address>> GetUserAddresses(Guid userId)
-    {
-        return await Task.FromResult(
-            (await _appDbContext.Addresses.ToListAsync())
-                .FindAll(address => address.UserId == userId)
-        );    
     }
 
     public async Task<Address?> GetAddressById(Guid addressId)
     {
-        return await Task.FromResult(
-            await _appDbContext.Addresses
-                .FirstOrDefaultAsync(address => address.AddressId == addressId)
-        );    
+        return await Task.FromResult((await GetAddresses()).FirstOrDefault(a => a.AddressId == addressId));
     }
 
     public async Task<Address?> CreateAddress(AddressModel newAddress)

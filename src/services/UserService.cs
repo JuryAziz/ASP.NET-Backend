@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Store.API.Controllers;
 using Store.EntityFramework;
 
 using Store.EntityFramework.Entities;
@@ -11,16 +12,10 @@ public class UserService(AppDbContext appDbContext)
 
     public async Task<List<User>> GetUsers()
     {
-        return await _appDbContext.Users
-            .ToListAsync();
-    }
-
-    public async Task<User?> GetUserById(Guid userId)
-    {
-       
         #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+        #pragma warning disable CS8602 // Dereference of a possibly null reference.
         return await _appDbContext.Users
-            .Include(user => user.Cart)
+         .Include(user => user.Cart)
                 .ThenInclude(cart => cart.Items)
                 .ThenInclude(cartItem => cartItem.Product)
             .Include(user => user.Addresses)
@@ -28,13 +23,19 @@ public class UserService(AppDbContext appDbContext)
             .Include(user => user.Orders)
                 .ThenInclude(order => order.Items)
                 .ThenInclude(orderItem => orderItem.Product)
-            // .Include(user => user.ShoppingLists)
+            .Include(user => user.ShoppingLists)
             .Include(user => user.ProductReviews)
                 .ThenInclude(productReview => productReview.Product)
             .Include(user => user.ProductReviews)
                 .ThenInclude(productReview => productReview.OrderItem)
-            .FirstOrDefaultAsync(u => u.UserId == userId);
+            .ToListAsync();
+        #pragma warning restore CS8602 // Dereference of a possibly null reference.
         #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+    }
+
+    public async Task<User?> GetUserById(Guid userId)
+    {
+        return await Task.FromResult((await GetUsers()).FirstOrDefault(u => u.UserId == userId));
     }   
 
     public async Task<User?> CreateUser(UserModel newUser)

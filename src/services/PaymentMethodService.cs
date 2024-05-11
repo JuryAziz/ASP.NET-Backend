@@ -18,9 +18,7 @@ public class PaymentMethodService(AppDbContext appDbContext)
 
     public async Task<PaymentMethod?> GetPaymentMethodById(Guid paymentMethodId)
     {
-        return await Task.FromResult(
-            await _appDbContext.PaymentMethods
-            .FirstOrDefaultAsync(pm => pm.PaymentMethodId == paymentMethodId));
+        return await Task.FromResult((await GetPaymentMethods()).FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId));
     }
 
     public async Task<PaymentMethod?> CreatePaymentMethod(PaymentMethodModel newPaymentMethod)
