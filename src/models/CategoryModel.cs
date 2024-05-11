@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 
 using System.ComponentModel.DataAnnotations;
+using Store.EntityFramework.Entities;
 
 
 namespace Store.Models;
@@ -33,10 +34,10 @@ public class CategoryModel
 
     [MinLength(10, ErrorMessage = "Description must be at least 10 characters long.")]
     [MaxLength(500, ErrorMessage = "Description can be at most 500 characters long.")]
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IEnumerable<ProductModel>? ProductEntityList
+    public virtual IEnumerable<ProductModel>? ProductEntityList
     {
         get
         {
@@ -46,10 +47,37 @@ public class CategoryModel
 
 
 
-    /*
-        public static CategoryModel FromEntity(Category category)
-    */
+    public static CategoryModel Create(string name, string? description)
+    {
+        return new CategoryModel
+        {
+            _categoryId = null,
+            Name = name,
+            Description = description
+        };
+    }
+
+    public static CategoryModel FromEntity(Category category)
+    {
+        return new CategoryModel
+        {
+            _categoryId = category.CategoryId,
+            Name = category.Name,
+            Description = category.Description,
+            _productEntityList = category.ProductList?.Select(x => ProductModel.FromEntityLimited(x))
+        };
+    }
 
 
+    public static CategoryModel FromEntityLimited(Category category, IEnumerable<ProductModel>? productModelList = null)
+    {
+        return new CategoryModel
+        {
+            _categoryId = category.CategoryId,
+            Name = category.Name,
+            Description = category.Description,
+            _productEntityList = productModelList ?? null
+        };
+    }
 
 }

@@ -13,68 +13,128 @@ public class CategoriesController(CategoriesService categoriesService) : Control
     private readonly CategoriesService _categoriesService = categoriesService;
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories([FromQuery] string? q, [FromQuery] int page = 1)
     {
-        IEnumerable<CategoryModel> categories = await _categoriesService.GetAllCategoriesService();
-        return Ok(new BaseResponseList<CategoryModel>(categories, true));
+        try
+        {
+            if (page <= 0)
+            {
+                return BadRequest(
+                    new BaseResponse<object>(success: false, msg: "page most be more then 0 ")
+                );
+            }
+            PaginationResult<CategoryModel> categories = await _categoriesService.GetAllCategories(q, page);
+            return Ok(new BaseResponse<PaginationResult<CategoryModel>>(categories, true));
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
+
     }
 
     [HttpGet("{categoryId}")]
     public async Task<IActionResult> GetCategory(string categoryId)
     {
-        if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
+        try
         {
-            return BadRequest(new BaseResponse<object>(false, "Invalid category ID Format"));
+            if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
+            {
+                return BadRequest(new BaseResponse<object>(false, "Invalid category ID Format"));
+            }
+
+            var category = await _categoriesService.GetCategoryById(categoryIdGuid);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            else
+            {
+                return Ok(new BaseResponse<CategoryModel>(category, true));
+            }
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
         }
 
-        var category = await _categoriesService.GetCategoryById(categoryIdGuid);
-        if (category == null)
-        {
-            return NotFound();
-        }
-
-        else
-        {
-            return Ok(new BaseResponse<CategoryModel>(category, true));
-        }
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateCategory([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] CategoryModel newCategory)
     {
-        var createdCategory = await _categoriesService.CreateCategoryService(newCategory);
+        try
+        {
+            var createdCategory = await _categoriesService.CreateCategory(newCategory);
+            return CreatedAtAction(nameof(GetCategory), new { categoryId = createdCategory.CategoryId }, createdCategory);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
 
-        return CreatedAtAction(nameof(GetCategory), new { categoryId = createdCategory.CategoryId }, createdCategory);
     }
 
     [HttpPut("{categoryId}")]
     public async Task<IActionResult> UpdateCategory(string categoryId, [FromBody] CategoryModel updateCategory)
     {
-        if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
-            return BadRequest("Invalid category ID Format");
+        try
+        {
+            if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
+                return BadRequest("Invalid category ID Format");
 
-        if (updateCategory == null)
-            return BadRequest(ModelState);
+            if (updateCategory == null)
+                return BadRequest(ModelState);
 
-        var category = await _categoriesService.UpdateCategoryService(categoryIdGuid, updateCategory);
-        if (category == null)
-            return NotFound();
-            
-        return Ok(category);
+            var category = await _categoriesService.UpdateCategory(categoryIdGuid, updateCategory);
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
+
     }
 
     [HttpDelete("{categoryId}")]
     public async Task<IActionResult> DeleteCategory(string categoryId)
     {
-        if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
+        try
         {
-            return BadRequest("Invalid category ID Format");
+            if (!Guid.TryParse(categoryId, out Guid categoryIdGuid))
+            {
+                return BadRequest("Invalid category ID Format");
+            }
+            var result = await _categoriesService.DeleteCategory(categoryIdGuid);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
-        var result = await _categoriesService.DeleteCategoryService(categoryIdGuid);
-        if (!result)
+        catch (Exception)
         {
-            return NotFound();
+            return StatusCode(500);
         }
-        return NoContent();
+
+    }
+
+    [HttpPost("seed")]
+    public async Task<IActionResult> Seed()
+    {
+        try
+        {
+            await _categoriesService.Seed();
+            return Created();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
+
     }
 }
