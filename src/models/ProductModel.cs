@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Store.EntityFramework.Entities;
 
 namespace Store.Models;
 
@@ -10,8 +11,8 @@ public class ProductModel
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     public Guid? _productId = null;
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    private IEnumerable<CategoryModel>? _categoryEntityList { get; set; }
+    //[JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+    //private IEnumerable<CategoryModel>? _categoryEntityList { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public Guid ProductId
@@ -36,28 +37,52 @@ public class ProductModel
     public string? Description { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public virtual IEnumerable<CategoryModel>? CategoryEntityList
+    public virtual IEnumerable<CategoryModel>? CategoryList
     {
-        get
+        get;
+        set;
+        /*get
         {
             return _categoryEntityList;
-        }
+        }*/
     }
 
-    // * please keep it for future use -> transferring entity to model.
-    /*
-    :/
+
+    public static ProductModel Create(Product product)
+    {
+        return new ProductModel
+        {
+            _productId = null,
+            Name = product.Name,
+            Price = product.Price,
+            Stock = product.Stock,
+            Description = product.Description,
+        };
+    }
+
+    public static ProductModel FromEntityLimited(Product product, IEnumerable<CategoryModel>? categoryModelList = null)
+    {
+        return new ProductModel
+        {
+            _productId = product.ProductId,
+            Name = product.Name,
+            Price = product.Price,
+            Stock = product.Stock,
+            Description = product.Description,
+            CategoryList = categoryModelList ?? null
+        };
+    }
+
     public static ProductModel FromEntity(Product product)
     {
         return new ProductModel
         {
-            _productId = Guid.NewGuid(),
-            Name = "",
-            Price = 555.5m,
-            Stock = 20,
-            Description = "",
-            _categoryEntityList = []
-
+            _productId = product.ProductId,
+            Name = product.Name,
+            Price = product.Price,
+            Stock = product.Stock,
+            Description = product.Description,
+            CategoryList = (product.CategoryList ?? []).Select(x => CategoryModel.FromEntityLimited(x))
         };
-    }*/
+    }
 }
