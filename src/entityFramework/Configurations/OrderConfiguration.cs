@@ -16,6 +16,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder
             .Property(u => u.OrderId)
+            .IsRequired()
             .ValueGeneratedOnAdd()
             .HasDefaultValueSql("gen_random_uuid()");
 

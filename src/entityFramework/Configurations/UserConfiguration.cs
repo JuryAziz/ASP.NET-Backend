@@ -50,7 +50,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder
             .HasMany(u => u.PaymentMethods)
             .WithOne(pm => pm.User)
-            .HasForeignKey(a => a.UserId);
+            .HasForeignKey(pm => pm.UserId);
 
         // Orders Relation 1:N
         builder

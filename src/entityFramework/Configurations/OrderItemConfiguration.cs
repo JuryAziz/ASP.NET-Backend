@@ -44,5 +44,10 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         //      TableBuilder
         //###########################
 
+        // Address Relation 1:1
+        builder
+            .HasOne(oi => oi.ProductReview)
+            .WithOne(pr => pr.OrderItem);
+
     }
 }

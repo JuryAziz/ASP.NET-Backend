@@ -11,15 +11,16 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         //      TableBuilder
         //###########################
 
-        //builder.ToTable("TableName");
-        //builder.Property(c => c.ClomenName).
+        builder.ToTable("Product");
+        builder.Property(p => p.ProductId);
 
         //###########################
         //      TableBuilder
         //###########################
 
-        //builder.HasMany(c => c.ClomenName)
-        // .WithOne(o => o.ClomenName)
-        // .HasForeignKey(o => o.ClomenName);
+        builder
+            .HasMany(p => p.Reviews)
+            .WithOne(pr => pr.Product)
+            .HasForeignKey(pr => pr.ProductId);
     }
 }

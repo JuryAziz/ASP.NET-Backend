@@ -31,9 +31,12 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
             .HasMaxLength(20);
 
         builder
+            .HasIndex(pm => pm.CardNumber)
+            .IsUnique();
+
+        builder
             .Property(pm => pm.CardNumber)
-            .IsRequired()
-            .HasColumnType("decimal(16,0)");
+            .IsRequired();
 
         builder
             .Property(pm => pm.CardHolderName)

@@ -11,7 +11,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     
-    // public DbSet<ShoppingList> ShoppingLists { get; set; }
+    public DbSet<ShoppingList> ShoppingLists { get; set; }
 
 
     public DbSet<Category> Categories { get; set; }

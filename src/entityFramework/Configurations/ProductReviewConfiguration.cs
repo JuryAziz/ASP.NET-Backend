@@ -15,28 +15,27 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
 
         builder.HasKey(pr => pr.ReviewId);
 
-        builder.Property(pr => pr.ReviewId)
-        .IsRequired();
+        builder
+            .Property(pr => pr.ReviewId)
+            .IsRequired()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
         builder.Property(pr => pr.Title)
-        .IsRequired();
+            .IsRequired();
 
         builder.
-        Property(pr => pr.Rating)
-        .IsRequired();
+            Property(pr => pr.Rating)
+            .IsRequired();
 
-        builder.Property(pr => pr.Description)
-        .HasMaxLength(500)
-        .HasAnnotation("MinLength", 10);
+        builder
+            .Property(pr => pr.Description)
+            .HasMaxLength(500)
+            .HasAnnotation("MinLength", 10);
 
         //###########################
         //      TableBuilder
         //###########################
 
-        // Address Relation 1:N
-        builder
-            .HasOne(pr => pr.OrderItem)
-            .WithOne(io => io.ProductReview)
-            .HasForeignKey<ProductReview>(oi => oi.OrderItemId);
     }
 }
