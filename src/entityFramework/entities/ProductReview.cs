@@ -10,12 +10,11 @@ public class ProductReview
     public Guid ProductId { get; set; } // foreign key of Product
 
     public int Rating { get; set; }
-    public string Title { get; set; } = string.Empty;
+    public required string Title { get; set; }
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public virtual User? User { get; set; } // added navigation property
     public virtual OrderItem? OrderItem { get; set; } // added navigation property
     public virtual Product? Product { get; set; } // added navigation property 
-    public virtual User? User { get; set; } // added navigation property
-
 }

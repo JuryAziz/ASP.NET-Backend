@@ -19,8 +19,7 @@ public class User
     public virtual List<Address>? Addresses { get; set; } = [];
     public virtual List<PaymentMethod>? PaymentMethods { get; set; } = [];
     public virtual List<Order>? Orders { get; set; } = [];
-    // public List<ShoppingList>? ShoppingLists { get; set; } = [];
-
+    public List<ShoppingList>? ShoppingLists { get; set; } = [];
     public virtual List<ProductReview>? ProductReviews { get; set; } = [];
 
 }
