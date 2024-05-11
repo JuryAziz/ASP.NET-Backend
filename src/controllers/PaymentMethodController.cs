@@ -5,20 +5,22 @@ using Store.EntityFramework.Entities;
 using Store.EntityFramework;
 using Store.Helpers;
 using Store.Models;
+using AutoMapper;
+using Store.Dtos;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/paymentmethods")]
-public class PaymentMethodsController(AppDbContext appDbContext) : ControllerBase
+public class PaymentMethodsController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
 {
-    private readonly PaymentMethodService _paymentMethodService = new(appDbContext);
+    private readonly PaymentMethodService _paymentMethodService = new(appDbContext, mapper);
 
     [HttpGet]
     public async Task<IActionResult> GetPaymentMethods([FromQuery] int page = 1, [FromQuery] int limit = 50)
     {
-        List<PaymentMethod> paymentMethods = await _paymentMethodService.GetPaymentMethods();
-        List<PaymentMethod> paginatedPaymentMethods = Paginate.Function(paymentMethods, page, limit);
-        return Ok(new BaseResponseList<PaymentMethod>(paginatedPaymentMethods, true));
+        IEnumerable<PaymentMethodDto> paymentMethods = await _paymentMethodService.GetPaymentMethods();
+        IEnumerable<PaymentMethodDto> paginatedPaymentMethods = Paginate.Function(paymentMethods.ToList(), page, limit);
+        return Ok(new BaseResponseList<PaymentMethodDto>(paginatedPaymentMethods, true));
     }
 
     [HttpGet("{paymentMethodId}")]
@@ -26,29 +28,29 @@ public class PaymentMethodsController(AppDbContext appDbContext) : ControllerBas
     {
         if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
        
-        PaymentMethod? foundPaymentMethod = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
+        PaymentMethodDto? foundPaymentMethod = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
         if (foundPaymentMethod is null) return NotFound();
 
-        return Ok(new BaseResponse<PaymentMethod>(foundPaymentMethod, true));
+        return Ok(new BaseResponse<PaymentMethodDto>(foundPaymentMethod, true));
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePaymentMethod(PaymentMethodModel newPaymentMethod)
+    public async Task<IActionResult> CreatePaymentMethod(CreatePaymentMethodDto newPaymentMethod)
     {
-        PaymentMethod? createdPaymentMethod = await _paymentMethodService.CreatePaymentMethod(newPaymentMethod);
+        PaymentMethodDto? createdPaymentMethod = await _paymentMethodService.CreatePaymentMethod(newPaymentMethod);
         return CreatedAtAction(nameof(GetPaymentMethodById), new { createdPaymentMethod?.PaymentMethodId }, createdPaymentMethod);
     }
 
     [HttpPut("{paymentMethodId}")]
-    public async Task<IActionResult> UpdatePaymentMethod(string paymentMethodId, PaymentMethodModel rawUpdatedPaymentMethod)
+    public async Task<IActionResult> UpdatePaymentMethod(string paymentMethodId, UpdatePaymentMethodDto rawUpdatedPaymentMethod)
     {
         if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
       
-        PaymentMethod? paymentMethodToUpdate = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
+        PaymentMethodDto? paymentMethodToUpdate = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
         if (paymentMethodToUpdate is null) return NotFound(); ;
-        PaymentMethod? updatedPaymentMethod = await _paymentMethodService.UpdatePaymentMethod(paymentMethodIdGuid, rawUpdatedPaymentMethod);
+        PaymentMethodDto? updatedPaymentMethod = await _paymentMethodService.UpdatePaymentMethod(paymentMethodIdGuid, rawUpdatedPaymentMethod);
 
-        return Ok(new BaseResponse<PaymentMethod>(updatedPaymentMethod, true));
+        return Ok(new BaseResponse<PaymentMethodDto>(updatedPaymentMethod, true));
     }
 
     [HttpDelete("{paymentMethodId}")]
@@ -56,9 +58,11 @@ public class PaymentMethodsController(AppDbContext appDbContext) : ControllerBas
     {
         if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
 
-        PaymentMethod? paymentMethodToDelete = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
-        if (paymentMethodToDelete is null || !await _paymentMethodService.DeletePaymentMethod(paymentMethodIdGuid)) return NotFound();
+        PaymentMethodDto? paymentMethodToDelete = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
+        if (paymentMethodToDelete is null) return NotFound();
+        DeletePaymentMethodDto? deletedPaymentMethod = await _paymentMethodService.DeletePaymentMethod(paymentMethodIdGuid);
+        if(deletedPaymentMethod is null) return NotFound();
 
-        return Ok(new BaseResponse<PaymentMethod>(paymentMethodToDelete, true));
+        return Ok(new BaseResponse<DeletePaymentMethodDto>(deletedPaymentMethod, true));
     }
 }

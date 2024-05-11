@@ -1,24 +1,24 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
+using Store.Dtos;
 using Store.EntityFramework;
-using Store.EntityFramework.Entities;
 using Store.Helpers;
-using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/addresses")]
-public class AddressesController(AppDbContext appDbContext) : ControllerBase
+public class AddressesController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
 {
-    private readonly AddressService _addressService = new (appDbContext);
+    private readonly AddressService _addressService = new (appDbContext, mapper);
 
     [HttpGet]
     public async Task<IActionResult> GetAddresses([FromQuery] int page = 1, [FromQuery] int limit = 25)
     {
-        List<Address>? addresses = await _addressService.GetAddresses();
-        List<Address> paginatedAddresses = Paginate.Function(addresses, page, limit);
-        return Ok(new BaseResponseList<Address>(paginatedAddresses, true));
+        IEnumerable<AddressDto>? addresses = await _addressService.GetAddresses();
+        IEnumerable<AddressDto> paginatedAddresses = Paginate.Function(addresses.ToList(), page, limit);
+        return Ok(new BaseResponseList<AddressDto>(paginatedAddresses, true));
     }
 
     [HttpGet("{addressId}")]
@@ -26,29 +26,29 @@ public class AddressesController(AppDbContext appDbContext) : ControllerBase
     {
         if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
 
-        Address? foundAddress = await _addressService.GetAddressById(addressIdGuid);
+        AddressDto? foundAddress = await _addressService.GetAddressById(addressIdGuid);
         if (foundAddress is null) return NotFound();
 
-        return Ok(new BaseResponse<Address>(foundAddress, true));
+        return Ok(new BaseResponse<AddressDto>(foundAddress, true));
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAddress(AddressModel newAddress)
+    public async Task<IActionResult> CreateAddress(CreateAddressDto newAddress)
     {
-        Address? createdAddress = await _addressService.CreateAddress(newAddress);
+        AddressDto? createdAddress = await _addressService.CreateAddress(newAddress);
         return CreatedAtAction(nameof(GetAddressById), new { createdAddress?.AddressId }, createdAddress);
     }
 
     [HttpPut("{addressId}")]
-    public async Task<IActionResult> UpdateAddress(string addressId, AddressModel rawUpdatedAddress)
+    public async Task<IActionResult> UpdateAddress(string addressId, UpdateAddressDto rawUpdatedAddress)
     {
         if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
 
-        Address? addressToUpdate = await _addressService.GetAddressById(addressIdGuid);
+        AddressDto? addressToUpdate = await _addressService.GetAddressById(addressIdGuid);
         if (addressToUpdate is null) return NotFound();
-        Address? updatedAddress = await _addressService.UpdateAddress(addressIdGuid, rawUpdatedAddress);
+        AddressDto? updatedAddress = await _addressService.UpdateAddress(addressIdGuid, rawUpdatedAddress);
 
-        return Ok(new BaseResponse<Address>(updatedAddress, true));
+        return Ok(new BaseResponse<AddressDto>(updatedAddress, true));
     }
 
     [HttpDelete("{addressId}")]
@@ -56,9 +56,11 @@ public class AddressesController(AppDbContext appDbContext) : ControllerBase
     {
         if (!Guid.TryParse(addressId, out Guid addressIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Address ID Format"));
 
-        Address? addressToDelete = await _addressService.GetAddressById(addressIdGuid);
-        if (addressToDelete is null || !await _addressService.DeleteAddress(addressIdGuid)) return NotFound();
+        AddressDto? addressToDelete = await _addressService.GetAddressById(addressIdGuid);
+        if (addressToDelete is null) return NotFound();
+        DeleteAddressDto? deletedAddress = await _addressService.DeleteAddress(addressIdGuid);
+        if (deletedAddress is null) return NotFound();
 
-        return Ok(new BaseResponse<Address>(addressToDelete, true));
+        return Ok(new BaseResponse<DeleteAddressDto>(deletedAddress, true));
     }
 }

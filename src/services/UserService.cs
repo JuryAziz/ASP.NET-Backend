@@ -1,21 +1,31 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Store.API.Controllers;
+using Store.Dtos;
 using Store.EntityFramework;
 
 using Store.EntityFramework.Entities;
-using Store.Models;
 
 namespace Store.Application.Services;
-public class UserService(AppDbContext appDbContext)
+public class UserService(AppDbContext appDbContext, IMapper mapper)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
+    // private readonly IPasswordHasher<UserModel> _passwordHasher = passwordHasher;
+    private readonly IMapper _mapper = mapper;
 
-    public async Task<List<User>> GetUsers()
+    public async Task<IEnumerable<UserDto>> GetUsers()
+    {
+      
+        return (await _appDbContext.Users
+            .ToListAsync())
+            .Select(_mapper.Map<UserDto>);
+    }
+
+    public async Task<User?> GetUserById(Guid userId)
     {
         #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
-        return await _appDbContext.Users
-         .Include(user => user.Cart)
+        User? user = await _appDbContext.Users
+            .Include(user => user.Cart)
                 .ThenInclude(cart => cart.Items)
                 .ThenInclude(cartItem => cartItem.Product)
             .Include(user => user.Addresses)
@@ -28,21 +38,18 @@ public class UserService(AppDbContext appDbContext)
                 .ThenInclude(productReview => productReview.Product)
             .Include(user => user.ProductReviews)
                 .ThenInclude(productReview => productReview.OrderItem)
-            .ToListAsync();
+            .FirstOrDefaultAsync(user => user.UserId == userId);
         #pragma warning restore CS8602 // Dereference of a possibly null reference.
         #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-    }
-
-    public async Task<User?> GetUserById(Guid userId)
-    {
-        return await Task.FromResult((await GetUsers()).FirstOrDefault(u => u.UserId == userId));
+  
+        return await Task.FromResult(user);
     }   
 
-    public async Task<User?> CreateUser(UserModel newUser)
+    public async Task<UserDto?> CreateUser(CreateUserDto newUser)
     {
-        var user = new User
-        {
+        User user = new () {
             Email = newUser.Email,
+            Password = newUser.Password,
             PhoneNumber = newUser.PhoneNumber,
             FirstName = newUser.FirstName,
             LastName = newUser.LastName,
@@ -53,13 +60,15 @@ public class UserService(AppDbContext appDbContext)
 
         await _appDbContext.Users.AddAsync(user);
         await _appDbContext.SaveChangesAsync();
-            
-        return await Task.FromResult(user);
+
+        UserDto DtoUser = _mapper.Map<UserDto>(user);
+
+        return await Task.FromResult(DtoUser);
     }
 
-    public async Task<User?> UpdateUser(Guid userId, UserModel updatedUser)
+    public async Task<UserDto?> UpdateUser(Guid userId, UpdateUserDto updatedUser)
     {
-        var userToUpdate = await GetUserById(userId);
+        User? userToUpdate = await GetUserById(userId);
         if (userToUpdate is null) return null;
 
         userToUpdate.Email = updatedUser.Email;
@@ -71,17 +80,19 @@ public class UserService(AppDbContext appDbContext)
 
         await _appDbContext.SaveChangesAsync();
         
-        return await Task.FromResult(userToUpdate);
+        return await Task.FromResult(_mapper.Map<UserDto>(userToUpdate));
     }
 
-    public async Task<bool> DeleteUser(Guid userId)
+    public async Task<DeleteUserDto?> DeleteUser(Guid userId)
     {
-        var userToDelete = await GetUserById(userId);
-        if (userToDelete is null) return await Task.FromResult(false);
+        User? userToDelete = await _appDbContext.Users.FirstOrDefaultAsync(user => user.UserId == userId);
+        if (userToDelete is null) return null;
 
         _appDbContext.Users.Remove(userToDelete);
         await _appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(true);
+        DeleteUserDto? deletedUser = _mapper.Map<DeleteUserDto>(userToDelete);
+
+        return await Task.FromResult(deletedUser);
     }
 }

@@ -1,30 +1,31 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Store.Dtos;
 using Store.EntityFramework;
 
 using Store.EntityFramework.Entities;
-using Store.Models;
 
 namespace Store.Application.Services;
 
-public class PaymentMethodService(AppDbContext appDbContext)
+public class PaymentMethodService(AppDbContext appDbContext, IMapper mapper)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
+    private readonly IMapper _mapper = mapper;
 
-    public async Task<List<PaymentMethod>> GetPaymentMethods()
+    public async Task<IEnumerable<PaymentMethodDto>> GetPaymentMethods()
     {
-        return await _appDbContext.PaymentMethods
-            .ToListAsync();
+        return (await _appDbContext.PaymentMethods
+            .ToListAsync()).Select(_mapper.Map<PaymentMethodDto>);
     }
 
-    public async Task<PaymentMethod?> GetPaymentMethodById(Guid paymentMethodId)
+    public async Task<PaymentMethodDto?> GetPaymentMethodById(Guid paymentMethodId)
     {
         return await Task.FromResult((await GetPaymentMethods()).FirstOrDefault(pm => pm.PaymentMethodId == paymentMethodId));
     }
 
-    public async Task<PaymentMethod?> CreatePaymentMethod(PaymentMethodModel newPaymentMethod)
+    public async Task<PaymentMethodDto?> CreatePaymentMethod(CreatePaymentMethodDto newPaymentMethod)
     {
-        var paymentMethod = new PaymentMethod
-        {
+        PaymentMethod paymentMethod = new () {
             UserId = newPaymentMethod.UserId,
             Type = newPaymentMethod.Type,
             CardNumber = newPaymentMethod.CardNumber,
@@ -37,12 +38,13 @@ public class PaymentMethodService(AppDbContext appDbContext)
 
         await _appDbContext.PaymentMethods.AddAsync(paymentMethod);
         await _appDbContext.SaveChangesAsync();
-        return await Task.FromResult(paymentMethod);
+
+        return await Task.FromResult(_mapper.Map<PaymentMethodDto>(paymentMethod));
     }
 
-    public async Task<PaymentMethod?> UpdatePaymentMethod(Guid paymentMethodId, PaymentMethodModel updatedPaymentMethod)
+    public async Task<PaymentMethodDto?> UpdatePaymentMethod(Guid paymentMethodId, UpdatePaymentMethodDto updatedPaymentMethod)
     {
-        var paymentMethodToUpdate = await GetPaymentMethodById(paymentMethodId);
+        PaymentMethodDto? paymentMethodToUpdate = await GetPaymentMethodById(paymentMethodId);
         if (paymentMethodToUpdate is not null)
         {
             paymentMethodToUpdate.Type = updatedPaymentMethod.Type;
@@ -55,17 +57,17 @@ public class PaymentMethodService(AppDbContext appDbContext)
             await _appDbContext.SaveChangesAsync();
         };
 
-        return await Task.FromResult(paymentMethodToUpdate);
+        return await Task.FromResult(_mapper.Map<PaymentMethodDto>(paymentMethodToUpdate));
     }
 
-    public async Task<bool> DeletePaymentMethod(Guid paymentMethodId)
+    public async Task<DeletePaymentMethodDto?> DeletePaymentMethod(Guid paymentMethodId)
     {
-        var paymentMethodToDelete = await GetPaymentMethodById(paymentMethodId);
-        if (paymentMethodToDelete is null) return await Task.FromResult(false);
+        PaymentMethod? paymentMethodToDelete = await _appDbContext.PaymentMethods.FirstOrDefaultAsync(paymentMethod => paymentMethod.PaymentMethodId == paymentMethodId);
+        if (paymentMethodToDelete is null) return null;
 
         _appDbContext.PaymentMethods.Remove(paymentMethodToDelete);
         await _appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(true);
+        return await Task.FromResult(_mapper.Map<DeletePaymentMethodDto>(paymentMethodToDelete));
     }
 }
