@@ -23,6 +23,8 @@ builder.Services.AddScoped<PaymentMethodService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoriesService>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
