@@ -3,29 +3,33 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework.Configurations;
-public class CartConfiguration : IEntityTypeConfiguration<Cart>
+public class CartProductConfiguration : IEntityTypeConfiguration<CartItem>
 {
-    public void Configure(EntityTypeBuilder<Cart> builder)
+    public void Configure(EntityTypeBuilder<CartItem> builder)
     {
         //###########################
         //      TableBuilder
         //###########################
 
-        builder.ToTable("Cart");
-        builder.Property(c => c.CartId);
+        builder.ToTable("CartItem");
+        builder.Property(ci => ci.CartItemId);
 
         builder
-            .Property(c => c.CartId)
+            .Property(ci => ci.CartItemId)
             .IsRequired()
             .ValueGeneratedOnAdd();
 
+        builder
+            .Property(ci => ci.Quantity)
+            .IsRequired();
+
+        builder
+            .Property(ci => ci.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
         //###########################
         //      TableBuilder
         //###########################
 
-        builder
-            .HasMany(c => c.Items)
-            .WithOne(ci => ci.Cart)
-            .HasForeignKey(ci => ci.CartId);
     }
 }

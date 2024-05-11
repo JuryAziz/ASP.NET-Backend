@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Store.API.Controllers;
 using Store.EntityFramework;
 
 using Store.EntityFramework.Entities;
@@ -11,19 +12,31 @@ public class UserService(AppDbContext appDbContext)
 
     public async Task<List<User>> GetUsers()
     {
+        #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+        #pragma warning disable CS8602 // Dereference of a possibly null reference.
         return await _appDbContext.Users
+         .Include(user => user.Cart)
+                .ThenInclude(cart => cart.Items)
+                .ThenInclude(cartItem => cartItem.Product)
             .Include(user => user.Addresses)
+            .Include(user => user.PaymentMethods)
+            .Include(user => user.Orders)
+                .ThenInclude(order => order.Items)
+                .ThenInclude(orderItem => orderItem.Product)
+            .Include(user => user.ShoppingLists)
+            .Include(user => user.ProductReviews)
+                .ThenInclude(productReview => productReview.Product)
+            .Include(user => user.ProductReviews)
+                .ThenInclude(productReview => productReview.OrderItem)
             .ToListAsync();
+        #pragma warning restore CS8602 // Dereference of a possibly null reference.
+        #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
     }
 
     public async Task<User?> GetUserById(Guid userId)
     {
-        return await Task.FromResult(
-            await _appDbContext.Users
-                .Include(user => user.Addresses)
-                .FirstOrDefaultAsync(user => user.UserId == userId)
-        );
-    }
+        return await Task.FromResult((await GetUsers()).FirstOrDefault(u => u.UserId == userId));
+    }   
 
     public async Task<User?> CreateUser(UserModel newUser)
     {
@@ -47,17 +60,16 @@ public class UserService(AppDbContext appDbContext)
     public async Task<User?> UpdateUser(Guid userId, UserModel updatedUser)
     {
         var userToUpdate = await GetUserById(userId);
-        if (userToUpdate != null)
-        {
-            userToUpdate.Email = updatedUser.Email;
-            userToUpdate.PhoneNumber = updatedUser.PhoneNumber;
-            userToUpdate.FirstName = updatedUser.FirstName;
-            userToUpdate.LastName = updatedUser.LastName;
-            userToUpdate.DateOfBirth = updatedUser.DateOfBirth;
-            userToUpdate.Role = updatedUser.Role;
+        if (userToUpdate is null) return null;
 
-            await _appDbContext.SaveChangesAsync();
-        };
+        userToUpdate.Email = updatedUser.Email;
+        userToUpdate.PhoneNumber = updatedUser.PhoneNumber;
+        userToUpdate.FirstName = updatedUser.FirstName;
+        userToUpdate.LastName = updatedUser.LastName;
+        userToUpdate.DateOfBirth = updatedUser.DateOfBirth;
+        userToUpdate.Role = updatedUser.Role;
+
+        await _appDbContext.SaveChangesAsync();
         
         return await Task.FromResult(userToUpdate);
     }
@@ -65,7 +77,7 @@ public class UserService(AppDbContext appDbContext)
     public async Task<bool> DeleteUser(Guid userId)
     {
         var userToDelete = await GetUserById(userId);
-        if (userToDelete == null) return await Task.FromResult(false);
+        if (userToDelete is null) return await Task.FromResult(false);
 
         _appDbContext.Users.Remove(userToDelete);
         await _appDbContext.SaveChangesAsync();

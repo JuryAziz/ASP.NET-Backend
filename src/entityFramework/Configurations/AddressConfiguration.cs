@@ -11,28 +11,34 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         //      TableBuilder
         //###########################
 
-        builder.ToTable("Addresses");
+        builder.ToTable("Address");
         builder.HasKey(a => a.AddressId);
 
         builder
-        .Property(a => a.AddressId)
-        .IsRequired();
+            .Property(a => a.AddressId)
+            .IsRequired()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
         builder
-        .Property(a => a.Country)
-        .IsRequired();
+            .Property(a => a.Country)
+            .IsRequired();
 
         builder
-        .Property(a => a.State)
-        .IsRequired();
+            .Property(a => a.State)
+            .IsRequired();
 
         builder
-        .Property(a => a.City)
-        .IsRequired();
+            .Property(a => a.City)
+            .IsRequired();
 
         builder
-        .Property(a => a.PostalCode)
-        .IsRequired();
+            .Property(a => a.PostalCode)
+            .IsRequired();
+
+        builder
+            .Property(a => a.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         //###########################
         //      TableBuilder

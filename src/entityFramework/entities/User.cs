@@ -1,30 +1,25 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.EntityFramework.Entities;
-
-[Table("Users")]
+[Table("User")]
 public class User
 {
     public Guid UserId { get; set; }
+
     public required string Email { get; set; }
     public required string PhoneNumber { get; set; }
     public required string FirstName { get; set; }
-    public string LastName { get; set; } = string.Empty;
-    public DateTime DateOfBirth { get; set; }
-    public int Role { get; set; } = 0;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public string? LastName { get; set; } = string.Empty;
+    public DateTime? DateOfBirth { get; set; } = default;
+    public int? Role { get; set; } = 0;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
-/******************************************************************************/
-    // Those lists I'm not usre if they are supposed to lists of GUIDs or the entities themselves!!
-    // So I made them lists of Guids, it can be altered as needed!
+    public virtual Cart? Cart { get; set;}
+    public virtual List<Address>? Addresses { get; set; } = [];
+    public virtual List<PaymentMethod>? PaymentMethods { get; set; } = [];
+    public virtual List<Order>? Orders { get; set; } = [];
+    public List<ShoppingList>? ShoppingLists { get; set; } = [];
+    public virtual List<ProductReview>? ProductReviews { get; set; } = [];
 
-
-    public virtual Guid? Cart { get; set;}
-
-    public virtual List<Address>? Addresses { get; set; }
-
-    // public List<PaymentMethod>? PaymentMethods { get; set; }
-    // public List<ShoppingList>? ShoppingLists { get; set; }
-    // public List<Order>? Orders { get; set; }
 }

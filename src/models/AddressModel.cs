@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Models;
-
 public class AddressModel
 {
     [Required(ErrorMessage = "Address Id is required.")]

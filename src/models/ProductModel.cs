@@ -1,10 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Text.Json.Serialization;
 using Store.EntityFramework.Entities;
 
 namespace Store.Models;
-
 public class ProductModel
 {
 

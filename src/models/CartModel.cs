@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Models;
-
 public class CartModel
 {
     [Required(ErrorMessage = "Cart Id is required.")]

@@ -1,6 +1,6 @@
 // using Microsoft.EntityFrameworkCore;
 // using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using Store.EntityFramework.Entities;
+// using Store.EntityFramework.Entities;
 
 // namespace Store.EntityFramework.Configurations;
 
@@ -8,16 +8,16 @@
 // {
 //     public void Configure(EntityTypeBuilder<ShoppingList> builder)
 //     {
-//         ///#####################
-//         //TableBuilder
-//         //######################
+//         //###########################
+//         //      TableBuilder
+//         //###########################
 
 //         //builder.ToTable("TableName");
 //         //builder.Property(c => c.ClomenName).
 
-//         ///#####################
-//         //Table Relation
-//         ///#####################
+//         //###########################
+//         //      TableBuilder
+//         //###########################
 
 //         //builder.HasMany(c => c.ClomenName)
 //         // .WithOne(o => o.ClomenName)
