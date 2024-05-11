@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Store.Dtos;
 using Store.EntityFramework;
@@ -6,10 +7,10 @@ using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 
 namespace Store.Application.Services;
-public class UserService(AppDbContext appDbContext, IMapper mapper)
+public class UserService(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, IMapper mapper)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
-    // private readonly IPasswordHasher<UserModel> _passwordHasher = passwordHasher;
+    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
     private readonly IMapper _mapper = mapper;
 
     public async Task<IEnumerable<UserDto>> GetUsers()
@@ -33,7 +34,7 @@ public class UserService(AppDbContext appDbContext, IMapper mapper)
             .Include(user => user.Orders)
                 .ThenInclude(order => order.Items)
                 .ThenInclude(orderItem => orderItem.Product)
-            .Include(user => user.ShoppingLists)
+            // .Include(user => user.ShoppingLists)
             .Include(user => user.ProductReviews)
                 .ThenInclude(productReview => productReview.Product)
             .Include(user => user.ProductReviews)
@@ -47,9 +48,10 @@ public class UserService(AppDbContext appDbContext, IMapper mapper)
 
     public async Task<UserDto?> CreateUser(CreateUserDto newUser)
     {
+        #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         User user = new () {
             Email = newUser.Email,
-            Password = newUser.Password,
+            Password = _passwordHasher.HashPassword(null, newUser.Password),
             PhoneNumber = newUser.PhoneNumber,
             FirstName = newUser.FirstName,
             LastName = newUser.LastName,
@@ -57,6 +59,7 @@ public class UserService(AppDbContext appDbContext, IMapper mapper)
             Role = newUser.Role,
             CreatedAt = newUser.CreatedAt
         };
+        #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         await _appDbContext.Users.AddAsync(user);
         await _appDbContext.SaveChangesAsync();
@@ -95,4 +98,14 @@ public class UserService(AppDbContext appDbContext, IMapper mapper)
 
         return await Task.FromResult(deletedUser);
     }
+
+    public async Task<UserDto?> UserLogin(LoginDto loginDto) {
+        User? foundUser = await _appDbContext.Users.FirstOrDefaultAsync(user => user.Email.ToLower() == loginDto.Email.ToLower()); 
+        if(foundUser is null) return null;
+
+        PasswordVerificationResult passwordVerified = _passwordHasher.VerifyHashedPassword(foundUser, foundUser.Password, loginDto.Password);
+        if(passwordVerified is not PasswordVerificationResult.Success) return null;
+
+        return await Task.FromResult(_mapper.Map<UserDto>(foundUser)); 
+    } 
 }

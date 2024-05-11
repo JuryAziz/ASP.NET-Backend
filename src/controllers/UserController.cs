@@ -6,13 +6,14 @@ using Store.EntityFramework;
 using Store.Helpers;
 using Store.Dtos;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/users")]
-public class UsersController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
+public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, IMapper mapper) : ControllerBase
 {
-    private readonly UserService _userService = new (appDbContext, mapper);
+    private readonly UserService _userService = new (appDbContext, passwordHasher, mapper);
 
     // [Authorize]
     [HttpGet]
@@ -32,6 +33,15 @@ public class UsersController(AppDbContext appDbContext, IMapper mapper) : Contro
         if (foundUser is null) return NotFound();
 
         return Ok(new BaseResponse<User>(foundUser, true));
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> UserLogin([FromBody] LoginDto loginDto)
+    {
+        UserDto? userLoggedIn = await _userService.UserLogin(loginDto);
+        if (userLoggedIn is null) return Unauthorized("Nope");
+
+        return Ok(new BaseResponse<UserDto>(userLoggedIn, true));
     }
 
     [HttpPost]
