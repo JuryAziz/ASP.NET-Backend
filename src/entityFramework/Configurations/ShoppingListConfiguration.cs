@@ -1,26 +1,29 @@
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Metadata.Builders;
-// using Store.EntityFramework.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Store.EntityFramework.Entities;
 
-// namespace Store.EntityFramework.Configurations;
+namespace Store.EntityFramework.Configurations;
 
-// public class ShoppingListConfiguration : IEntityTypeConfiguration<ShoppingList>
-// {
-//     public void Configure(EntityTypeBuilder<ShoppingList> builder)
-//     {
-//         //###########################
-//         //      TableBuilder
-//         //###########################
+public class ShoppingListConfiguration : IEntityTypeConfiguration<ShoppingList>
+{
+    public void Configure(EntityTypeBuilder<ShoppingList> builder)
+    {
+        builder.ToTable("ShoppingList");
+        builder.Property(sl => sl.ShoppingListId);
 
-//         //builder.ToTable("TableName");
-//         //builder.Property(c => c.ClomenName).
+        builder
+            .Property(sl => sl.ShoppingListId)
+            .IsRequired()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
-//         //###########################
-//         //      TableBuilder
-//         //###########################
+        builder
+            .Property(sl => sl.Name)
+            .IsRequired();
 
-//         //builder.HasMany(c => c.ClomenName)
-//         // .WithOne(o => o.ClomenName)
-//         // .HasForeignKey(o => o.ClomenName);
-//     }
-// }
+        // Relations
+
+        builder
+            .HasMany(sl => sl.Items);
+    }
+}
