@@ -3,14 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework.Configurations;
-public class CartProductConfiguration : IEntityTypeConfiguration<CartItem>
+
+public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
 {
     public void Configure(EntityTypeBuilder<CartItem> builder)
     {
-        //###########################
-        //      TableBuilder
-        //###########################
-
         builder.ToTable("CartItem");
         builder.Property(ci => ci.CartItemId);
 
@@ -26,10 +23,5 @@ public class CartProductConfiguration : IEntityTypeConfiguration<CartItem>
         builder
             .Property(ci => ci.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            
-        //###########################
-        //      TableBuilder
-        //###########################
-
     }
 }

@@ -1,24 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Store.EntityFramework.Entities;
-// using Store.Models;
 
 namespace Store.EntityFramework.Configurations;
 
 public class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
-    public void Configure(EntityTypeBuilder<Cart> entityBuilder)
+    public void Configure(EntityTypeBuilder<Cart> builder)
     {
-        entityBuilder.ToTable("Cart");
+        builder.ToTable("Cart");
+        builder.Property(c => c.CartId);
 
-        entityBuilder.HasKey(cart => cart.CartId);
+        builder
+            .Property(c => c.CartId)
+            .IsRequired()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
-        entityBuilder.Property(cart => cart.CartId)
-        .IsRequired()
-        .ValueGeneratedOnAdd();
+        // Relations
 
-        entityBuilder.HasOne(cart => cart.User)
-                     .WithOne(user => user.Cart)
-                     .HasForeignKey<User>(user => user.UserId);
+        builder
+            .HasMany(c => c.Items)
+            .WithOne(ci => ci.Cart)
+            .HasForeignKey(ci => ci.CartId);
     }
 }

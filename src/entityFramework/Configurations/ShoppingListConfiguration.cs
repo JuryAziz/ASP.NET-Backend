@@ -8,10 +8,6 @@ public class ShoppingListConfiguration : IEntityTypeConfiguration<ShoppingList>
 {
     public void Configure(EntityTypeBuilder<ShoppingList> builder)
     {
-        //###########################
-        //      TableBuilder
-        //###########################
-
         builder.ToTable("ShoppingList");
         builder.Property(sl => sl.ShoppingListId);
 
@@ -25,9 +21,7 @@ public class ShoppingListConfiguration : IEntityTypeConfiguration<ShoppingList>
             .Property(sl => sl.Name)
             .IsRequired();
 
-        //###########################
-        //      TableBuilder
-        //###########################
+        // Relations
 
         builder
             .HasMany(sl => sl.Items);
