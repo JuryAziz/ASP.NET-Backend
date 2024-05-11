@@ -5,7 +5,7 @@ namespace Store.EntityFramework.Entities;
 [Table("Users")]
 public class User
 {
-    public required Guid UserId { get; set; }
+    public Guid UserId { get; set; }
     public required string Email { get; set; }
     public required string PhoneNumber { get; set; }
     public required string FirstName { get; set; }
@@ -20,11 +20,11 @@ public class User
     // So I made them lists of Guids, it can be altered as needed!
 
 
-    public Guid? Cart { get; set;}
+    public virtual Guid? Cart { get; set;}
 
-    public List<Guid>? Addresses { get; set; }
+    public virtual List<Address>? Addresses { get; set; }
 
-    public List<Guid>? PaymentMethods { get; set; }
-    public List<Guid>? ShoppingLists { get; set; }
-    public List<Guid>? Orders { get; set; }
+    // public List<PaymentMethod>? PaymentMethods { get; set; }
+    // public List<ShoppingList>? ShoppingLists { get; set; }
+    // public List<Order>? Orders { get; set; }
 }

@@ -1,19 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using Store.EntityFramework.Entities;
 
-namespace Store.EntityFramework;
+namespace Store.entityFramework;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions options)
-        : base(options) { }
-
     public DbSet<User> Users { get; set; }
     // public DbSet<Address> Profiles { get; set; }
     // public DbSet<PaymentMethod> Orders { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<ProductCategory> ProductCategories { get; set; }
+    public DbSet<Address> Address { get; set; }
+    public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public DbSet<Order> Order { get; set; }
+    public DbSet<OrderItem> OrderItem { get; set; }
 
     // use Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)

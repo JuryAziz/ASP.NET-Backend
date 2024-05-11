@@ -1,29 +1,39 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
+using Store.entityFramework;
 using Store.Helpers;
 using Store.Models;
 
 namespace Store.API.Controllers;
+
 [ApiController]
 [Route("/api/paymentmethods")]
-public class PaymentMethodsController(PaymentMethodService paymentMethodService) : ControllerBase
+public class PaymentMethodsController : ControllerBase
 {
-    private readonly PaymentMethodService _paymentMethods = paymentMethodService;
+    private readonly PaymentMethodService _paymentMethodService;
+
+    public PaymentMethodsController(AppDbContext appDbContext)
+    {
+        // _paymentMethodService = paymentMethodService;
+        _paymentMethodService = new PaymentMethodService(appDbContext);
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetPaymentMethods([FromQuery] int page = 1, [FromQuery] int limit = 20)
     {
         try
         {
+
             if (limit > 20) limit = 20;
-            IEnumerable<PaymentMethodModel>? paymentMethods = await _paymentMethods.GetPaymentMethods(page, limit);
-            return Ok(new BaseResponseList<PaymentMethodModel>(paymentMethods, true));
+            IEnumerable<PaymentMethod>? paymentMethods = await _paymentMethodService.GetPaymentMethods(page, limit);
+            var response = new BaseResponseList<PaymentMethod>(paymentMethods, true);
+            return Ok(response);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while 'GetPaymentMethods' page {page} limit {limit}");
-            return StatusCode(500, ex.Message );
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -33,15 +43,15 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         try
         {
             if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
-            PaymentMethodModel? foundPaymentMethod = await _paymentMethods.GetPaymentMethodById(paymentMethodIdGuid);
-            if (foundPaymentMethod == null) return NotFound();;
-            return Ok(new BaseResponse<PaymentMethodModel>(foundPaymentMethod, true));
+            PaymentMethod? foundPaymentMethod = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
+            if (foundPaymentMethod is null) return NotFound(); ;
+            return Ok(new BaseResponse<PaymentMethod>(foundPaymentMethod, true));
 
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while 'GetPaymentMethodById'");
-            return StatusCode(500, ex.Message );
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -50,13 +60,13 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
     {
         try
         {
-            PaymentMethodModel? createdPaymentMethod = await _paymentMethods.CreatePaymentMethod(newPaymentMethod);
+            PaymentMethod? createdPaymentMethod = await _paymentMethodService.CreatePaymentMethod(newPaymentMethod);
             return CreatedAtAction(nameof(GetPaymentMethodById), new { createdPaymentMethod?.PaymentMethodId }, createdPaymentMethod);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while 'CreatePaymentMethod'");
-            return StatusCode(500, ex.Message );
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -66,15 +76,15 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         try
         {
             if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
-            PaymentMethodModel? paymentMethodToUpdate = await _paymentMethods.GetPaymentMethodById(paymentMethodIdGuid);
-            if (paymentMethodToUpdate == null) return NotFound();;
-            await _paymentMethods.UpdatePaymentMethod(paymentMethodIdGuid, rawUpdatedPaymentMethod);
-            return Ok(new BaseResponse<PaymentMethodModel>(paymentMethodToUpdate, true));
+            PaymentMethod? paymentMethodToUpdate = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
+            if (paymentMethodToUpdate == null) return NotFound(); ;
+            await _paymentMethodService.UpdatePaymentMethod(paymentMethodIdGuid, rawUpdatedPaymentMethod);
+            return Ok(new BaseResponse<PaymentMethod>(paymentMethodToUpdate, true));
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while 'UpdatePaymentMethod'");
-            return StatusCode(500, ex.Message );
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -84,15 +94,14 @@ public class PaymentMethodsController(PaymentMethodService paymentMethodService)
         try
         {
             if (!Guid.TryParse(paymentMethodId, out Guid paymentMethodIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid PaymentMethod ID Format"));
-            PaymentMethodModel? paymentMethodToDelete = await _paymentMethods.GetPaymentMethodById(paymentMethodIdGuid);
-            if (paymentMethodToDelete == null || !await _paymentMethods.DeletePaymentMethod(paymentMethodIdGuid)) return NotFound();
-            return Ok(new BaseResponse<PaymentMethodModel>(paymentMethodToDelete, true));
+            PaymentMethod? paymentMethodToDelete = await _paymentMethodService.GetPaymentMethodById(paymentMethodIdGuid);
+            if (paymentMethodToDelete == null || !await _paymentMethodService.DeletePaymentMethod(paymentMethodIdGuid)) return NotFound();
+            return Ok(new BaseResponse<PaymentMethod>(paymentMethodToDelete, true));
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while 'DeletePaymentMethod'");
-            return StatusCode(500, ex.Message );
+            return StatusCode(500, ex.Message);
         }
     }
-
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Store.EntityFramework.Entities;
 
+
 namespace Store.EntityFramework.Configurations;
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>

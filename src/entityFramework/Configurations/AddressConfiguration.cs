@@ -1,26 +1,42 @@
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Metadata.Builders;
-// using Store.EntityFramework.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Store.EntityFramework.Entities;
 
-// namespace Store.EntityFramework.Configurations;
+namespace Store.EntityFramework.Configurations;
+public class AddressConfiguration : IEntityTypeConfiguration<Address>
+{
+    public void Configure(EntityTypeBuilder<Address> builder)
+    {
+        //###########################
+        //      TableBuilder
+        //###########################
 
-// public class AddressConfiguration : IEntityTypeConfiguration<Address>
-// {
-//     public void Configure(EntityTypeBuilder<Address> builder)
-//     {
-//         ///#####################
-//         //TableBuilder
-//         //######################
+        builder.ToTable("Addresses");
+        builder.HasKey(a => a.AddressId);
 
-//         //builder.ToTable("TableName");
-//         //builder.Property(c => c.ClomenName).
+        builder
+        .Property(a => a.AddressId)
+        .IsRequired();
 
-//         ///#####################
-//         //Table Relation
-//         ///#####################
+        builder
+        .Property(a => a.Country)
+        .IsRequired();
 
-//         //builder.HasMany(c => c.ClomenName)
-//         // .WithOne(o => o.ClomenName)
-//         // .HasForeignKey(o => o.ClomenName);
-//     }
-// }
+        builder
+        .Property(a => a.State)
+        .IsRequired();
+
+        builder
+        .Property(a => a.City)
+        .IsRequired();
+
+        builder
+        .Property(a => a.PostalCode)
+        .IsRequired();
+
+        //###########################
+        //      TableBuilder
+        //###########################
+
+    }
+}
