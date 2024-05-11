@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Store.Models;
+namespace Store.EntityFramework.Entities;
 
-[Table("ShoppingLists")]
+[Table("ShoppingList")]
 public class ShoppingList
 {
-    public required Guid ShoppingListId { get; set; }
+    public Guid ShoppingListId { get; set; }
 
     public required Guid UserId { get; set; }
 
@@ -13,9 +13,10 @@ public class ShoppingList
 
     public string Description { get; set; } = string.Empty;
 
-    public List<Guid>? Items { get; set; }
-
     public bool IsPublic { get; set; } = true;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public  User? User { get; set; }
+    public  List<Product>? Items { get; set; } = []; // just the product GUID for now
 }
