@@ -9,8 +9,8 @@ public class ProductReviewModel
     [Required(ErrorMessage = "User Id is required.")]
     public required Guid UserId { get; set; }
 
-    [Required(ErrorMessage = "Order Id is required.")]
-    public required Guid OrderId { get; set; }
+    [Required(ErrorMessage = "Order Item Id is required.")]
+    public required Guid OrderItemId { get; set; }
 
     [Required(ErrorMessage = "Product Id is required.")]
     public required Guid ProductId { get; set; }
