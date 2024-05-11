@@ -11,12 +11,12 @@ namespace Store.API.Controllers;
 [Route("/api/orders")]
 public class OrderController(AppDbContext appDbContext) : ControllerBase
 {
-    private readonly OrderService _OrderService = new (appDbContext);
+    private readonly OrderService _orderService = new (appDbContext);
 
     [HttpGet]
     public async Task<IActionResult> GetOrders([FromQuery] int page = 1, [FromQuery] int limit = 20)
     {
-        List<Order> orders = await _OrderService.GetOrders();
+        List<Order> orders = await _orderService.GetOrders();
         List<Order> paginatedOrders = Paginate.Function(orders, page, limit);
         return Ok(new BaseResponseList<Order>(paginatedOrders, true));
     }
@@ -26,7 +26,7 @@ public class OrderController(AppDbContext appDbContext) : ControllerBase
     {
         if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
 
-        Order? foundOrders = await _OrderService.GetOrderById(orderIdGuid);
+        Order? foundOrders = await _orderService.GetOrderById(orderIdGuid);
         if (foundOrders is null) return NotFound();
 
         return Ok(new BaseResponse<Order>(foundOrders, true));
@@ -35,7 +35,7 @@ public class OrderController(AppDbContext appDbContext) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateOrder(OrderModel newOrder)
     {
-        Order? createdOrder = await _OrderService.CreateOrders(newOrder);
+        Order? createdOrder = await _orderService.CreateOrders(newOrder);
         return CreatedAtAction(nameof(GetOrdersById), new { createdOrder?.OrderId }, createdOrder);
     }
 
@@ -44,9 +44,9 @@ public class OrderController(AppDbContext appDbContext) : ControllerBase
     {
         if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
 
-        Order? orderToBeUpdated = await _OrderService.GetOrderById(orderIdGuid);
+        Order? orderToBeUpdated = await _orderService.GetOrderById(orderIdGuid);
         if (orderToBeUpdated is null) return NotFound();
-        Order? updatedOrder = await _OrderService.UpdateOrders(orderIdGuid, newOrder);
+        Order? updatedOrder = await _orderService.UpdateOrders(orderIdGuid, newOrder);
 
         return Ok(new BaseResponse<Order>(updatedOrder, true));
     }
@@ -56,8 +56,8 @@ public class OrderController(AppDbContext appDbContext) : ControllerBase
     {
         if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
 
-        Order? orderToDelete = await _OrderService.GetOrderById(orderIdGuid);
-        if (orderToDelete is null || !await _OrderService.DeleteOrder(orderIdGuid)) return NotFound();
+        Order? orderToDelete = await _orderService.GetOrderById(orderIdGuid);
+        if (orderToDelete is null || !await _orderService.DeleteOrder(orderIdGuid)) return NotFound();
         
         return Ok(new BaseResponse<Order>(orderToDelete, true));
     }
