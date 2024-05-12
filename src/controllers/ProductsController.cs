@@ -124,18 +124,4 @@ public class ProductsController(ProductService productService) : ControllerBase
         }
 
     }
-
-    [HttpPost("seed")]
-    public async Task<IActionResult> Seed()
-    {
-        try
-        {
-            await _productService.Seed();
-            return Created();
-        }
-        catch (Exception)
-        {
-            return StatusCode(500);
-        }
-    }
 }
