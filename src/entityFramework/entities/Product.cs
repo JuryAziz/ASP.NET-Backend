@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Store.Models;
 namespace Store.EntityFramework.Entities;
 
+[Table("Product")]
 public class Product
 {
     public Guid ProductId { get; set; }
@@ -10,7 +12,7 @@ public class Product
     public required int Stock { get; set; }
     public string? Description { get; set; }
     
-    public virtual IEnumerable<Category>? CategoryEntityList { get; set; }
+    // public virtual IEnumerable<Category>? CategoryEntityList { get; set; }
 
     public IEnumerable<Category>? CategoryList { get; set; }
     public IEnumerable<ProductCategory>? ProductCategoryList { get; set; }
@@ -25,7 +27,7 @@ public class Product
             Price = productModel.Price,
             Stock = productModel.Stock,
             Description = productModel.Description,
-            //CategoryEntityList = productModel.CategoryEntityList?.Select(e => Category.FromModel(e))
+            // CategoryEntityList = productModel.CategoryEntityList?.Select(e => Category.FromModel(e))
         };
     }
 
