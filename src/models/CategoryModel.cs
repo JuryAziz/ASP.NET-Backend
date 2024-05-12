@@ -64,20 +64,6 @@ public class CategoryModel
             _categoryId = category.CategoryId,
             Name = category.Name,
             Description = category.Description,
-            _productEntityList = category.ProductList?.Select(x => ProductModel.FromEntityLimited(x))
         };
     }
-
-
-    public static CategoryModel FromEntityLimited(Category category, IEnumerable<ProductModel>? productModelList = null)
-    {
-        return new CategoryModel
-        {
-            _categoryId = category.CategoryId,
-            Name = category.Name,
-            Description = category.Description,
-            _productEntityList = productModelList ?? null
-        };
-    }
-
 }

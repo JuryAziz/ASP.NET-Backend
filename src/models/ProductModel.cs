@@ -1,18 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+
 using Store.EntityFramework.Entities;
 
 namespace Store.Models;
 public class ProductModel
 {
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     public Guid? _productId = null;
-
-    //[JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    //private IEnumerable<CategoryModel>? _categoryEntityList { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public Guid ProductId
     {
         get => _productId ?? default;
@@ -33,54 +26,5 @@ public class ProductModel
     [MinLength(10, ErrorMessage = "Description must be at least 10 characters long.")]
     [MaxLength(500, ErrorMessage = "Description can be at most 500 characters long.")]
     public string? Description { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public virtual IEnumerable<CategoryModel>? CategoryList
-    {
-        get;
-        set;
-        /*get
-        {
-            return _categoryEntityList;
-        }*/
-    }
-
-
-    public static ProductModel Create(Product product)
-    {
-        return new ProductModel
-        {
-            _productId = null,
-            Name = product.Name,
-            Price = product.Price,
-            Stock = product.Stock,
-            Description = product.Description,
-        };
-    }
-
-    public static ProductModel FromEntityLimited(Product product, IEnumerable<CategoryModel>? categoryModelList = null)
-    {
-        return new ProductModel
-        {
-            _productId = product.ProductId,
-            Name = product.Name,
-            Price = product.Price,
-            Stock = product.Stock,
-            Description = product.Description,
-            CategoryList = categoryModelList ?? null
-        };
-    }
-
-    public static ProductModel FromEntity(Product product)
-    {
-        return new ProductModel
-        {
-            _productId = product.ProductId,
-            Name = product.Name,
-            Price = product.Price,
-            Stock = product.Stock,
-            Description = product.Description,
-            CategoryList = (product.CategoryList ?? []).Select(x => CategoryModel.FromEntityLimited(x))
-        };
-    }
+    public List<CategoryModel>? CategoryList { get; set; }
 }

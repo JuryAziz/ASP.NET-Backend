@@ -9,102 +9,53 @@ public class ProductService(AppDbContext appDbContext)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
 
-    public async Task<PaginationResult<ProductModel>> GetAllProducts(string? search, int page = 1, int limit = 20)
+    public async Task<List<Product>> GetAllProducts()
     {
-        var skip = (page - 1) * limit;
-        IQueryable<Product> q = _appDbContext.Products.Skip(skip).Take(limit).Include(e => e.CategoryList);
-        if (search != null)
-        {
-            q = q.Where(e => e.Name.Contains(search));
-        }
-
-        var totalProductsCount = await _appDbContext.Products.CountAsync();
-        IEnumerable<Product> list = await q.ToListAsync();
-        IEnumerable<ProductModel> productModelList = list.Select(e => ProductModel.FromEntity(e));
-
-        return new PaginationResult<ProductModel>
-        {
-            Items = productModelList,
-            TotalCount = totalProductsCount,
-            PageNumber = page,
-            PageSize = limit
-        };
+        return await _appDbContext.Products.ToListAsync();
     }
 
-    public async Task<ProductModel?> GetProductById(Guid productId)
+    public async Task<Product?> GetProductById(Guid productId)
     {
-        Product? product = await _appDbContext.Products.Where(e => e.ProductId == productId).Include(e => e.CategoryList).SingleOrDefaultAsync();
-        return product != null ? ProductModel.FromEntity(product) : null;
+        return await Task.FromResult((await GetAllProducts()).FirstOrDefault(p => p.ProductId == productId));
     }
 
-    public async Task<ProductModel> CreateProduct(ProductModel newProduct)
+    public async Task<Product> CreateProduct(ProductModel newProduct)
     {
-        ProductModel productTemplet = new ProductModel
+        Product product = new Product
         {
-            _productId = null,
             Name = newProduct.Name,
             Price = newProduct.Price,
             Stock = newProduct.Stock,
             Description = newProduct.Description,
-            CategoryList = newProduct.CategoryList
         };
-        Product productEntity = Product.Create(productTemplet);
-        await _appDbContext.Products.AddAsync(productEntity);
 
-        // this section for add categoies
-        if (productTemplet.CategoryList != null)
-        {
-            foreach (var item in productTemplet.CategoryList)
-            {
-                Category? category = await _appDbContext.Categories.Where(e => e.Name == item.Name).SingleOrDefaultAsync();
-                if (category == null)
-                {
-                    category = Category.FromModel(item);
-                    await _appDbContext.Categories.AddAsync(category);
-                }
-
-                ProductCategory? productCategory = await _appDbContext.ProductCategories
-                .Where(e => e.ProductId == productEntity.ProductId && e.CategoryId == category.CategoryId)
-                .SingleOrDefaultAsync();
-
-                if (productCategory != null)
-                {
-                    continue;
-                }
-                await _appDbContext.ProductCategories.AddAsync(new ProductCategory
-                {
-                    Product = productEntity,
-                    Category = category
-                });
-            }
-        }
-
+        await _appDbContext.Products.AddAsync(product);
         await _appDbContext.SaveChangesAsync();
-        return productTemplet;
+
+        return await Task.FromResult(product);
     }
 
-    public async Task<ProductModel?> UpdateProduct(Guid productId, ProductModel updateProduct)
+    public async Task<Product?> UpdateProduct(Guid productId, ProductModel updateProduct)
     {
-        Product? p = await _appDbContext.Products.Where(e => e.ProductId == productId).FirstOrDefaultAsync();
-
-        if (p == null)
-        {
-            return null;
-        }
+        Product? p = await GetProductById(productId);
+        if (p is null) return null;
 
         p.Name = updateProduct.Name;
         p.Price = updateProduct.Price;
         p.Stock = updateProduct.Stock;
 
-        _appDbContext.Products.Update(p);
         await _appDbContext.SaveChangesAsync();
-        return ProductModel.FromEntity(p);
+        return await Task.FromResult(p);
     }
 
     public async Task<bool> DeleteProduct(Guid productId)
     {
+        var productToDelete = await GetProductById(productId);
+        if (productToDelete is null) return await Task.FromResult(false);
 
-        int _deleted = await _appDbContext.Products.Where(e => e.ProductId == productId).ExecuteDeleteAsync();
-        return _deleted == 1;
+        _appDbContext.Products.Remove(productToDelete);
+        await _appDbContext.SaveChangesAsync();
+
+        return await Task.FromResult(true);
     }
 }

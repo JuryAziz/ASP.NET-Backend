@@ -1,127 +1,112 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Store.Application.Services;
 
+using Store.Application.Services;
+using Store.EntityFramework.Entities;
+using Store.EntityFramework;
 using Store.Helpers;
 using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/products")]
-public class ProductsController(ProductService productService) : ControllerBase
+public class ProductsController(AppDbContext appDbContext) : ControllerBase
 {
-    private readonly ProductService _productService = productService;
+    private readonly ProductService _productService = new(appDbContext);
 
     [HttpGet]
-    public async Task<IActionResult> GetAllProducts([FromQuery] string? q, [FromQuery] int page = 1)
+    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
     {
-        try
-        {
-            if (page <= 0)
-            {
-                return BadRequest(
-                    new BaseResponse<object>(success: false, msg: "page most be more then 0 ")
-                );
-            }
-            PaginationResult<ProductModel> products = await _productService.GetAllProducts(q, page);
+        List<Product> products = await _productService.GetAllProducts();
 
-            return Ok(new BaseResponse<PaginationResult<ProductModel>>(products, true));
-        }
-        catch (Exception)
+        List<Product> sortedProducts = products;
+        switch (dir.ToLower())
         {
-            return StatusCode(500);
+            case "asc":
+                switch (sortBy.ToLower())
+                {
+                    case "name":
+                        sortedProducts = sortedProducts.OrderBy(p => p.Name).ToList();
+                        break;
+                    case "price":
+                        sortedProducts = sortedProducts.OrderBy(p => p.Price).ToList();
+                        break;
+                    case "category":
+                        sortedProducts = sortedProducts.OrderBy(p => p.CategoryList?[0].Name).ToList();
+                        break;
+                    case "stock":
+                        sortedProducts = sortedProducts.OrderBy(p => p.Stock).ToList();
+                        break;
+                }
+                break;
+            case "desc":
+                switch (sortBy.ToLower())
+                {
+                    case "name":
+                        sortedProducts = sortedProducts.OrderByDescending(p => p.Name).ToList();
+                        break;
+                    case "price":
+                        sortedProducts = sortedProducts.OrderByDescending(p => p.Price).ToList();
+                        break;
+                    case "category":
+                        sortedProducts = sortedProducts.OrderByDescending(p => p.CategoryList?[0].Name).ToList();
+                        break;
+                    case "stock":
+                        sortedProducts = sortedProducts.OrderByDescending(p => p.Stock).ToList();
+                        break;
+                }
+                break;
         }
+
+        List<Product> paginatedProducts = Paginate.Function(sortedProducts, page, limit);
+        return Ok(new BaseResponseList<Product>(paginatedProducts, true));
     }
 
     [HttpGet("{productId}")]
-    public async Task<IActionResult> GetProduct(string productId)
+    public async Task<IActionResult> GetProductById(string productId)
     {
-        try
-        {
-            if (!Guid.TryParse(productId, out Guid productIdGuid))
-            {
-                return BadRequest(new BaseResponse<object>(false, "Invalid product ID Format"));
-            }
 
-            var product = await _productService.GetProductById(productIdGuid);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(new BaseResponse<ProductModel>(product, true));
-            }
-        }
-        catch (Exception)
-        {
-            return StatusCode(500);
-        }
+        if (!Guid.TryParse(productId, out Guid productIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid product ID Format"));
+
+        var product = await _productService.GetProductById(productIdGuid);
+        if (product is null) return NotFound();
+
+        return Ok(new BaseResponse<Product>(product, true));
+
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProduct([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Default)] ProductModel newProduct)
+    public async Task<IActionResult> CreateProduct(ProductModel newProduct)
     {
-        try
-        {
-            var createdProduct = await _productService.CreateProduct(newProduct);
-            return CreatedAtAction(nameof(GetProduct), new { productId = createdProduct.ProductId }, createdProduct);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500);
-        }
-
+        var createdProduct = await _productService.CreateProduct(newProduct);
+        return CreatedAtAction(nameof(GetProductById), new { createdProduct?.ProductId }, createdProduct);
     }
 
     [HttpPut("{productId}")]
-    public async Task<IActionResult> UpdateProduct(string productId, [FromBody] ProductModel updateProduct)
+    public async Task<IActionResult> UpdateProduct(string productId, ProductModel updateProduct)
     {
-        try
-        {
-            if (!Guid.TryParse(productId, out Guid productIdGuid))
-            {
-                return BadRequest(new BaseResponse<object>(null, false, "Invalid product ID Format"));
-            }
 
-            if (updateProduct == null)
-                return BadRequest();
+        if (!Guid.TryParse(productId, out Guid productIdGuid)) return BadRequest(new BaseResponse<object>(null, false, "Invalid product ID Format"));
 
-            var product = await _productService.UpdateProduct(productIdGuid, updateProduct);
-            if (product == null)
-            {
-                //
-                return NotFound();
-            }
-            return Ok(product);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500);
-        }
+        Product? productToUpdate = await _productService.GetProductById(productIdGuid);
+        if (productToUpdate is null) return BadRequest(ModelState);
+
+        Product? updatedProduct = await _productService.UpdateProduct(productIdGuid, updateProduct);
+
+        return Ok(new BaseResponse<Product>(updatedProduct, true));
+
 
     }
 
     [HttpDelete("{productId}")]
     public async Task<IActionResult> DeleteProduct(string productId)
     {
-        try
-        {
-            if (!Guid.TryParse(productId, out Guid productIdGuid))
-            {
-                return BadRequest("Invalid product ID Format");
-            }
-            var result = await _productService.DeleteProduct(productIdGuid);
-            if (!result)
-            {
-                return NotFound();
-            }
-            return NoContent();
-        }
-        catch (Exception)
-        {
-            return StatusCode(500);
-        }
 
+        if (!Guid.TryParse(productId, out Guid productIdGuid)) return BadRequest("Invalid product ID Format");
+
+        Product? productToDelete = await _productService.GetProductById(productIdGuid);
+        var result = await _productService.DeleteProduct(productIdGuid);
+        if (!result) return NotFound();
+
+        return Ok(new BaseResponse<Product>(productToDelete, true));
     }
 }
