@@ -11,13 +11,53 @@ namespace Store.API.Controllers;
 [Route("/api/users")]
 public class UsersController(AppDbContext appDbContext) : ControllerBase
 {
-    private readonly UserService _userService = new (appDbContext);
+    private readonly UserService _userService = new(appDbContext);
 
     [HttpGet]
-    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 50)
+    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
     {
         List<User> users = await _userService.GetUsers();
-        List<User> paginatedUsers = Paginate.Function(users, page, limit);
+
+        List<User> sortedUsers = users;
+        switch (dir.ToLower())
+        {
+            case "asc":
+                switch (sortBy.ToLower())
+                {
+                    case "name":
+                        sortedUsers = sortedUsers.OrderBy(u => u.FirstName).ToList();
+                        break;
+                    case "orders":
+                        sortedUsers = sortedUsers.OrderBy(u => u.Orders?.Count).ToList();
+                        break;
+                    case "email":
+                        sortedUsers = sortedUsers.OrderBy(u => u.Email).ToList();
+                        break;
+                    case "createdat":
+                        sortedUsers = sortedUsers.OrderBy(u => u.CreatedAt).ToList();
+                        break;
+                }
+                break;
+            case "desc":
+                switch (sortBy.ToLower())
+                {
+                    case "name":
+                        sortedUsers = sortedUsers.OrderByDescending(u => u.FirstName).ToList();
+                        break;
+                    case "orders":
+                        sortedUsers = sortedUsers.OrderByDescending(u => u.Orders?.Count).ToList();
+                        break;
+                    case "email":
+                        sortedUsers = sortedUsers.OrderByDescending(u => u.Email).ToList();
+                        break;
+                    case "createdat":
+                        sortedUsers = sortedUsers.OrderByDescending(u => u.CreatedAt).ToList();
+                        break;
+                }
+                break;
+        }
+
+        List<User> paginatedUsers = Paginate.Function(sortedUsers, page, limit);
         return Ok(new BaseResponseList<User>(paginatedUsers, true));
     }
 

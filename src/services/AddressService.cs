@@ -63,7 +63,7 @@ public class AddressService(AppDbContext appDbContext)
     {
         var addressToDelete = await GetAddressById(addressId);
         if (addressToDelete == null) return await Task.FromResult(false);
-        
+
         _appDbContext.Addresses.Remove(addressToDelete);
         await _appDbContext.SaveChangesAsync();
 
