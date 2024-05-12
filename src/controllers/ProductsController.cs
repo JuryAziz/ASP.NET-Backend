@@ -103,7 +103,7 @@ public class ProductsController(AppDbContext appDbContext) : ControllerBase
 
         if (!Guid.TryParse(productId, out Guid productIdGuid)) return BadRequest("Invalid product ID Format");
 
-        Product?productToDelete = await _productService.GetProductById(productIdGuid);
+        Product? productToDelete = await _productService.GetProductById(productIdGuid);
         var result = await _productService.DeleteProduct(productIdGuid);
         if (!result) return NotFound();
 
