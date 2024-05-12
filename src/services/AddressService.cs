@@ -65,7 +65,6 @@ public class AddressService(AppDbContext appDbContext, IMapper mapper)
     {
         Address? addressToDelete = await _appDbContext.Addresses.FirstOrDefaultAsync(address => address.AddressId == addressId); 
         if (addressToDelete == null) return null;
-        
         _appDbContext.Addresses.Remove(addressToDelete);
         await _appDbContext.SaveChangesAsync();
 
