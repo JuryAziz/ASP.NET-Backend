@@ -11,7 +11,7 @@ public class Product
     public required int Stock { get; set; }
     public string? Description { get; set; }
 
-    public List<Category>? CategoryEntityList { get; set; }
+    // public List<Category>? CategoryEntityList { get; set; }
     public List<Category>? CategoryList { get; set; }
     public List<ProductCategory>? ProductCategoryList { get; set; }
 }
