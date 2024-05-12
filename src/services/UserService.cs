@@ -7,7 +7,7 @@ using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 
 namespace Store.Application.Services;
-public class UserService(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, IMapper mapper)
+public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHasher<User> passwordHasher)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
@@ -15,7 +15,6 @@ public class UserService(AppDbContext appDbContext, IPasswordHasher<User> passwo
 
     public async Task<IEnumerable<UserDto>> GetUsers()
     {
-      
         return (await _appDbContext.Users
             .ToListAsync())
             .Select(_mapper.Map<UserDto>);
@@ -98,14 +97,4 @@ public class UserService(AppDbContext appDbContext, IPasswordHasher<User> passwo
 
         return await Task.FromResult(deletedUser);
     }
-
-    public async Task<UserDto?> UserLogin(LoginDto loginDto) {
-        User? foundUser = await _appDbContext.Users.FirstOrDefaultAsync(user => user.Email.ToLower() == loginDto.Email.ToLower()); 
-        if(foundUser is null) return null;
-
-        PasswordVerificationResult passwordVerified = _passwordHasher.VerifyHashedPassword(foundUser, foundUser.Password, loginDto.Password);
-        if(passwordVerified is not PasswordVerificationResult.Success) return null;
-
-        return await Task.FromResult(_mapper.Map<UserDto>(foundUser)); 
-    } 
 }
