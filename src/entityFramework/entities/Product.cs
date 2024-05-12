@@ -9,7 +9,7 @@ public class Product
     public required Decimal Price { get; set; }
     public required int Stock { get; set; }
     public string? Description { get; set; }
-    
+
     public virtual IEnumerable<Category>? CategoryEntityList { get; set; }
 
     public IEnumerable<Category>? CategoryList { get; set; }

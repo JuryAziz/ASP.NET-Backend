@@ -12,8 +12,8 @@ public class UserService(AppDbContext appDbContext)
 
     public async Task<List<User>> GetUsers()
     {
-        #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-        #pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         return await _appDbContext.Users
          .Include(user => user.Cart)
                 .ThenInclude(cart => cart.Items)
@@ -29,14 +29,14 @@ public class UserService(AppDbContext appDbContext)
             .Include(user => user.ProductReviews)
                 .ThenInclude(productReview => productReview.OrderItem)
             .ToListAsync();
-        #pragma warning restore CS8602 // Dereference of a possibly null reference.
-        #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
     }
 
     public async Task<User?> GetUserById(Guid userId)
     {
         return await Task.FromResult((await GetUsers()).FirstOrDefault(u => u.UserId == userId));
-    }   
+    }
 
     public async Task<User?> CreateUser(UserModel newUser)
     {
@@ -53,7 +53,7 @@ public class UserService(AppDbContext appDbContext)
 
         await _appDbContext.Users.AddAsync(user);
         await _appDbContext.SaveChangesAsync();
-            
+
         return await Task.FromResult(user);
     }
 
@@ -70,7 +70,7 @@ public class UserService(AppDbContext appDbContext)
         userToUpdate.Role = updatedUser.Role;
 
         await _appDbContext.SaveChangesAsync();
-        
+
         return await Task.FromResult(userToUpdate);
     }
 
