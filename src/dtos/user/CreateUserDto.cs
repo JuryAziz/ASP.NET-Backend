@@ -13,6 +13,9 @@ public class CreateUserDto()
     [MaxLength(100, ErrorMessage = "Email can be at most 100 characters long.")]
     public required string Email { get; set; }
 
+    [Required]
+    [MinLength(8, ErrorMessage = "Name must be at least 8 characters long.")]
+    [MaxLength(16, ErrorMessage = "Name must be at most 16 characters long.")]
     public required string Password { get; set; }
 
     [Required(ErrorMessage = "Phone number is required.")]

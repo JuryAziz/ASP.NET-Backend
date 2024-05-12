@@ -20,11 +20,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         //      TableBuilder
         //###########################
 
-        builder
-            .HasMany(p => p.Reviews)
-            .WithOne(pr => pr.Product)
-            .HasForeignKey(pr => pr.ProductId);
-
         builder.ToTable("product");
         builder.HasKey(c => c.ProductId);
 

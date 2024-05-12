@@ -5,13 +5,20 @@ using Store.EntityFramework.Entities;
 using Store.EntityFramework;
 using Store.Helpers;
 using Store.Models;
+using AutoMapper;
+using System.Security.Claims;
+using Store.Helpers.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/orderitems")]
-public class OrderItemController(AppDbContext appDbContext) : ControllerBase
+public class OrderItemController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
 {
     private readonly OrderItemService _orderItemService = new (appDbContext);
+    private readonly AuthSerivce _authService = new (appDbContext, mapper);
+
+    #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
     public async Task<IActionResult> GetOrderItems([FromQuery] int page = 1, [FromQuery] int limit = 20)
@@ -32,16 +39,24 @@ public class OrderItemController(AppDbContext appDbContext) : ControllerBase
         return Ok(new BaseResponse<OrderItem>(foundOrderItems, true));
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateOrderItem(OrderItemModel newOrderItem)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         OrderItem? createdOrderItem = await _orderItemService.CreateOrderItems(newOrderItem);
         return CreatedAtAction(nameof(GetOrderItemsById), new { createdOrderItem?.OrderItemId }, createdOrderItem);
     }
 
+    [Authorize]
     [HttpPut("{orderItemId}")]
     public async Task<IActionResult> UpdateOrderItem(string orderItemId, OrderItemModel newOrderItem)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         if (!Guid.TryParse(orderItemId, out Guid orderItemIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid OrderItem ID Format"));
 
         OrderItem? orderItemToBeUpdated = await _orderItemService.GetOrderItemById(orderItemIdGuid);
@@ -51,9 +66,13 @@ public class OrderItemController(AppDbContext appDbContext) : ControllerBase
         return Ok(new BaseResponse<OrderItem>(updatedOrderItem, true));
     }
 
+    [Authorize]
     [HttpDelete("{orderItemId}")]
     public async Task<IActionResult> DeleteOrderItem(string orderItemId)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         if (!Guid.TryParse(orderItemId, out Guid orderItemIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid OrderItem ID Format"));
         
         OrderItem? orderItemToDelete = await _orderItemService.GetOrderItemById(orderItemIdGuid);

@@ -1,17 +1,24 @@
+using System.Security.Claims;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Store.Application.Services;
 using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 using Store.Helpers;
+using Store.Helpers.Enums;
 using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/orders")]
-public class OrderController(AppDbContext appDbContext) : ControllerBase
+public class OrderController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
 {
     private readonly OrderService _orderService = new (appDbContext);
+    private readonly AuthSerivce _authService = new (appDbContext, mapper);
+
+    #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
     public async Task<IActionResult> GetOrders([FromQuery] int page = 1, [FromQuery] int limit = 20)
@@ -32,16 +39,24 @@ public class OrderController(AppDbContext appDbContext) : ControllerBase
         return Ok(new BaseResponse<Order>(foundOrders, true));
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateOrder(OrderModel newOrder)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         Order? createdOrder = await _orderService.CreateOrders(newOrder);
         return CreatedAtAction(nameof(GetOrdersById), new { createdOrder?.OrderId }, createdOrder);
     }
 
+    [Authorize]
     [HttpPut("{orderId}")]
     public async Task<IActionResult> UpdateOrder(string orderId, OrderModel newOrder)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
 
         Order? orderToBeUpdated = await _orderService.GetOrderById(orderIdGuid);
@@ -51,9 +66,13 @@ public class OrderController(AppDbContext appDbContext) : ControllerBase
         return Ok(new BaseResponse<Order>(updatedOrder, true));
     }
 
+    [Authorize]
     [HttpDelete("{orderId}")]
     public async Task<IActionResult> DeleteOrder(string orderId)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         if (!Guid.TryParse(orderId, out Guid orderIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid Order ID Format"));
 
         Order? orderToDelete = await _orderService.GetOrderById(orderIdGuid);
