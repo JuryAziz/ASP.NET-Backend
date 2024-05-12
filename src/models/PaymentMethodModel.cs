@@ -14,8 +14,9 @@ public class PaymentMethodModel
     public required string Type { get; set; }
 
     [Required(ErrorMessage = "Card number is required.")]
-    [Range(100000000000, 9999999999999999, ErrorMessage = "Card number must be between 12 to 16 digits")]
-    public required double CardNumber { get; set; }
+    [MinLength(12, ErrorMessage = "Cardholder name can be at least 12 characters long.")]
+    [MaxLength(16, ErrorMessage = "Cardholder name can be at most 16 characters long.")]
+    public required string CardNumber { get; set; }
 
     [Required(ErrorMessage = "Cardholder name is required.")]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Cardholder name can only contain letters and spaces.")]

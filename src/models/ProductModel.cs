@@ -13,7 +13,7 @@ public class ProductModel
 
     [Required(ErrorMessage = "Name is required.")]
     [MinLength(2, ErrorMessage = "Name must be at least 2 characters long.")]
-    [MaxLength(20, ErrorMessage = "Name must be at least 20 characters long.")]
+    [MaxLength(30, ErrorMessage = "Name must be at most 30 characters long.")]
     public required string Name { get; set; }
 
     [Required(ErrorMessage = "Price is required.")]

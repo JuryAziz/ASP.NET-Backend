@@ -1,7 +1,6 @@
 using AutoMapper;
 using Store.Dtos;
 using Store.EntityFramework.Entities;
-using Store.Models;
 
 namespace Store.Helpers;
 
