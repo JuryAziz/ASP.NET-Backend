@@ -25,7 +25,7 @@ For the upcoming database assignment, please design an Entity-Relationship Diagr
 
 Create the necessary tables, define their respective columns, and provide seed data within pgAdmin.
 
-![erd digram](database.erd.png "Erd Digram")
+![erd digramt](<E-Commerce ERD-1.png>)
 
 ## Backend project Requirements
 
