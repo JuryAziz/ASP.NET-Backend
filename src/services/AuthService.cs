@@ -61,6 +61,19 @@ public class AuthSerivce(AppDbContext appDbContext, IMapper mapper, IConfigurati
         return await Task.FromResult(new { userDto, token }); 
     } 
 
+    public async Task<object?> ResetPassword(ResetPasswordDto resetPasswordDto) 
+    {
+        User? foundUser = _appDbContext.Users.FirstOrDefault(user => user.Email.ToLower() == resetPasswordDto.Email.ToLower()); 
+        if(foundUser is null) return null;
+
+        #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+        foundUser.Password = _passwordHasher.HashPassword(null, resetPasswordDto.NewPassword);
+
+        await _appDbContext.SaveChangesAsync();
+
+        return await Task.FromResult(resetPasswordDto); 
+    } 
+
     public string? Authenticate(string userId, UserRole roleReq) 
     {
         User? foundUser = _appDbContext.Users.FirstOrDefault(user => user.UserId.ToString() == userId);

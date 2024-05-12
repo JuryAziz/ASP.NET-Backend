@@ -58,7 +58,7 @@ public class ProductsController(AppDbContext appDbContext) : ControllerBase
         }
 
         List<Product> paginatedProducts = Paginate.Function(sortedProducts, page, limit);
-        return Ok(new BaseResponse<Product>(paginatedProducts, true));
+        return Ok(new BaseResponseList<Product>(paginatedProducts, true));
     }
 
     [HttpGet("{productId}")]

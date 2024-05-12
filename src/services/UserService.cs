@@ -22,30 +22,22 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
 
     public async Task<User?> GetUserById(Guid userId)
     {
-        #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+        #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         User? user = await _appDbContext.Users
             .Include(user => user.Cart)
                 .ThenInclude(cart => cart.Items)
-                .ThenInclude(cartItem => cartItem.Product)
             .Include(user => user.Addresses)
             .Include(user => user.PaymentMethods)
             .Include(user => user.Orders)
-                .ThenInclude(order => order.Items)
-                .ThenInclude(orderItem => orderItem.Product)
-            // .Include(user => user.ShoppingLists)
+            .Include(user => user.ShoppingLists)
             .Include(user => user.ProductReviews)
-                .ThenInclude(productReview => productReview.Product)
-            .Include(user => user.ProductReviews)
-                .ThenInclude(productReview => productReview.OrderItem)
             .FirstOrDefaultAsync(user => user.UserId == userId);
-        #pragma warning restore CS8602 // Dereference of a possibly null reference.
-        #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-  
+        user.Password = null;
         return await Task.FromResult(user);
     }   
 
-    public async Task<UserDto?> CreateUser(CreateUserDto newUser)
+    public async Task<UserDto?> CreateUser(RegisterDto newUser)
     {
         #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         User user = new () {

@@ -58,5 +58,4 @@ public class ProductService(AppDbContext appDbContext)
 
         return await Task.FromResult(true);
     }
-
 }

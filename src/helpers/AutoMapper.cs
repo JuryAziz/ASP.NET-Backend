@@ -10,7 +10,8 @@ public class AutoMapper : Profile
     public AutoMapper() 
     {
         // Input => Output
-        CreateMap<CreateUserDto, UserDto>();
+        CreateMap<RegisterDto, UserDto>();
+        
         CreateMap<User, UserDto>();
         CreateMap<User, DeleteUserDto>();
 

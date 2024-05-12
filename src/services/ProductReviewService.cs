@@ -28,9 +28,9 @@ public class ProductReviewService(AppDbContext appDbContext)
     {
         var productReview = new ProductReview
         {
-            UserId = Guid.NewGuid(),
-            OrderItemId = Guid.NewGuid(),
-            ProductId = Guid.NewGuid(),
+            UserId = newReview.UserId,
+            OrderItemId = newReview.OrderItemId,
+            ProductId = newReview.ProductId,
             Rating = newReview.Rating,
             Title = newReview.Title,
             Description = newReview.Description,

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Store.Dtos;
 
-public class CreateUserDto()
+public class RegisterDto()
 {
 
     [Required(ErrorMessage = "User ID is required.")]
