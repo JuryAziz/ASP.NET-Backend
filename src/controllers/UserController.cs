@@ -7,15 +7,20 @@ using Store.Helpers;
 using Store.Dtos;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Store.Helpers.Enums;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/users")]
 public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, IMapper mapper) : ControllerBase
 {
-    private readonly UserService _userService = new (appDbContext, passwordHasher, mapper);
+    private readonly UserService _userService = new (appDbContext, mapper, passwordHasher);
+    private readonly AuthSerivce _authService = new (appDbContext, mapper);
 
-    // [Authorize]
+    #pragma warning disable CS8604 // Possible null reference argument.
+
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 50)
     {
@@ -35,25 +40,24 @@ public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> pa
         return Ok(new BaseResponse<User>(foundUser, true));
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> UserLogin([FromBody] LoginDto loginDto)
-    {
-        UserDto? userLoggedIn = await _userService.UserLogin(loginDto);
-        if (userLoggedIn is null) return Unauthorized("Nope");
-
-        return Ok(new BaseResponse<UserDto>(userLoggedIn, true));
-    }
-
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDto newUser)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if (userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         UserDto? createdUser = await _userService.CreateUser(newUser);
         return CreatedAtAction(nameof(GetUserById), new { createdUser?.UserId }, createdUser);
     }
 
+    [Authorize]
     [HttpPut("{userId}")]
     public async Task<IActionResult> UpdateUser(string userId, UpdateUserDto rawUpdatedUser)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
 
         User? userToUpdate = await _userService.GetUserById(userIdGuid);
@@ -63,9 +67,13 @@ public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> pa
         return Ok(new BaseResponse<UserDto>(updatedUser, true));
     }
 
+    [Authorize]
     [HttpDelete("{userId}")]
     public async Task<IActionResult> DeleteUser(string userId)
     {
+        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
+        if(userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
+
         if (!Guid.TryParse(userId, out Guid userIdGuid)) return BadRequest("Invalid User ID Format");
 
         User? userToDelete = await _userService.GetUserById(userIdGuid);
