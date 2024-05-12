@@ -3,25 +3,21 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Store.EntityFramework.Entities;
 
 namespace Store.EntityFramework.Configurations;
+
 public class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
-        //###########################
-        //      TableBuilder
-        //###########################
-
         builder.ToTable("Cart");
         builder.Property(c => c.CartId);
 
         builder
             .Property(c => c.CartId)
             .IsRequired()
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
-        //###########################
-        //      TableBuilder
-        //###########################
+        // Relations
 
         builder
             .HasMany(c => c.Items)
