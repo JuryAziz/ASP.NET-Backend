@@ -1,36 +1,65 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Store.Application.Services;
 
+using Store.Application.Services;
+using Store.EntityFramework.Entities;
+using Store.EntityFramework;
 using Store.Helpers;
 using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/products")]
-public class ProductsController(ProductService productService) : ControllerBase
+public class ProductsController(AppDbContext appDbContext) : ControllerBase
 {
-    private readonly ProductService _productService = productService;
+    private readonly ProductService _productService = new(appDbContext);
 
     [HttpGet]
-    public async Task<IActionResult> GetAllProducts([FromQuery] string? q, [FromQuery] int page = 1)
+    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
     {
-        try
-        {
-            if (page <= 0)
-            {
-                return BadRequest(
-                    new BaseResponse<object>(success: false, msg: "page most be more then 0 ")
-                );
-            }
-            PaginationResult<ProductModel> products = await _productService.GetAllProducts(q, page);
+        List<Product> products = await _productService.GetAllProducts();
 
-            return Ok(new BaseResponse<PaginationResult<ProductModel>>(products, true));
-        }
-        catch (Exception)
+        List<Product> sortedProducts = products;
+        switch (dir.ToLower())
         {
-            return StatusCode(500);
+            case "asc":
+                switch (sortBy.ToLower())
+                {
+                    case "name":
+                        sortedProducts = sortedProducts.OrderBy(p => p.Name).ToList();
+                        break;
+                    case "price":
+                        sortedProducts = sortedProducts.OrderBy(p => p.Price).ToList();
+                        break;
+                    case "category":
+                        sortedProducts = sortedProducts.OrderBy(p => p.CategoryList.Get).ToList();
+                        break;
+                    case "createdat":
+                        sortedProducts = sortedProducts.OrderBy(p => p.CreatedAt).ToList();
+                        break;
+                }
+                break;
+            case "desc":
+                switch (sortBy.ToLower())
+                {
+                    case "name":
+                        sortedProducts = sortedProducts.OrderByDescending(u => u.FirstName).ToList();
+                        break;
+                    case "orders":
+                        sortedProducts = sortedProducts.OrderByDescending(u => u.Orders?.Count).ToList();
+                        break;
+                    case "email":
+                        sortedProducts = sortedProducts.OrderByDescending(u => u.Email).ToList();
+                        break;
+                    case "createdat":
+                        sortedProducts = sortedProducts.OrderByDescending(u => u.CreatedAt).ToList();
+                        break;
+                }
+                break;
         }
+        List<Product> paginatedProducts = Paginate.Function(sortedProducts, page, limit);
+        return Ok(new BaseResponse<Product>(paginatedProducts, true));
+
+
     }
 
     [HttpGet("{productId}")]
