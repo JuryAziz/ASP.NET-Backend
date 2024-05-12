@@ -41,17 +41,6 @@ public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> pa
     }
 
     [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> CreateUser(CreateUserDto newUser)
-    {
-        var userIdString = _authService.Authenticate(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, UserRole.Admin);
-        if (userIdString != null) return Unauthorized(new BaseResponse<string>(false, userIdString));
-
-        UserDto? createdUser = await _userService.CreateUser(newUser);
-        return CreatedAtAction(nameof(GetUserById), new { createdUser?.UserId }, createdUser);
-    }
-
-    [Authorize]
     [HttpPut("{userId}")]
     public async Task<IActionResult> UpdateUser(string userId, UpdateUserDto rawUpdatedUser)
     {
