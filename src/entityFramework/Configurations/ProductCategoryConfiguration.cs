@@ -8,7 +8,7 @@ public class ProductCategoryConfiguration : IEntityTypeConfiguration<ProductCate
 {
     public void Configure(EntityTypeBuilder<ProductCategory> builder)
     {
-        builder.ToTable("product_category");
+        builder.ToTable("Product_category");
         builder.HasKey(c => c.ProductCategoryId);
         builder.Property(c => c.ProductCategoryId).HasColumnName("product_category_id").IsRequired().ValueGeneratedOnAdd().HasDefaultValueSql("gen_random_uuid()");
         builder.Property(a => a.CategoryId).HasColumnName("category_id").IsRequired();

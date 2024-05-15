@@ -20,7 +20,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         //      TableBuilder
         //###########################
 
-        builder.ToTable("product");
+        // builder.ToTable("product");
         builder.HasKey(c => c.ProductId);
 
         builder.Property(c => c.ProductId).HasColumnName("product_id").IsRequired().ValueGeneratedOnAdd().HasDefaultValueSql("gen_random_uuid()");
