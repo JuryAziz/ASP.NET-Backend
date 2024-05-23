@@ -4,37 +4,38 @@ using Store.Application.Services;
 using Store.EntityFramework.Entities;
 using Store.EntityFramework;
 using Store.Helpers;
-using Store.Models;
+using Store.Dtos;
+using AutoMapper;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/products")]
-public class ProductsController(AppDbContext appDbContext) : ControllerBase
+public class ProductsController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
 {
-    private readonly ProductService _productService = new(appDbContext);
+    private readonly ProductService _productService = new(appDbContext, mapper);
 
     [HttpGet]
-    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
+    public async Task<IActionResult> GetAllProducts([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
     {
-        List<Product> products = await _productService.GetAllProducts();
+        IEnumerable<ProductDto> products = await _productService.GetAllProducts();
+        IEnumerable<ProductDto> sortedProducts = products;
 
-        List<Product> sortedProducts = products;
         switch (dir.ToLower())
         {
             case "asc":
                 switch (sortBy.ToLower())
                 {
                     case "name":
-                        sortedProducts = sortedProducts.OrderBy(p => p.Name).ToList();
+                        sortedProducts = [.. sortedProducts.OrderBy(p => p.Name)];
                         break;
                     case "price":
-                        sortedProducts = sortedProducts.OrderBy(p => p.Price).ToList();
+                        sortedProducts = [.. sortedProducts.OrderBy(p => p.Price)];
                         break;
                     case "category":
-                        sortedProducts = sortedProducts.OrderBy(p => p.CategoryList?[0].Name).ToList();
+                        sortedProducts = [.. sortedProducts.OrderBy(p => p.Categories?.ToArray()[0].Name)];
                         break;
                     case "stock":
-                        sortedProducts = sortedProducts.OrderBy(p => p.Stock).ToList();
+                        sortedProducts = [.. sortedProducts.OrderBy(p => p.Stock)];
                         break;
                 }
                 break;
@@ -42,23 +43,24 @@ public class ProductsController(AppDbContext appDbContext) : ControllerBase
                 switch (sortBy.ToLower())
                 {
                     case "name":
-                        sortedProducts = sortedProducts.OrderByDescending(p => p.Name).ToList();
+                        sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Name)];
                         break;
                     case "price":
-                        sortedProducts = sortedProducts.OrderByDescending(p => p.Price).ToList();
+                        sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Price)];
                         break;
                     case "category":
-                        sortedProducts = sortedProducts.OrderByDescending(p => p.CategoryList?[0].Name).ToList();
+                        sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Categories?.ToArray()[0].Name)];
                         break;
                     case "stock":
-                        sortedProducts = sortedProducts.OrderByDescending(p => p.Stock).ToList();
+                        sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Stock)];
                         break;
                 }
                 break;
         }
 
-        List<Product> paginatedProducts = Paginate.Function(sortedProducts, page, limit);
-        return Ok(new BaseResponseList<Product>(paginatedProducts, true));
+        PaginationResult<ProductDto> paginatedProducts = new() { Items = sortedProducts.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = products.Count(), PageNumber = pageNumber, PageSize = pageSize };
+
+        return Ok(new BaseResponse<PaginationResult<ProductDto>>(paginatedProducts, true));
     }
 
     [HttpGet("{productId}")]
@@ -75,14 +77,14 @@ public class ProductsController(AppDbContext appDbContext) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProduct(ProductModel newProduct)
+    public async Task<IActionResult> CreateProduct(CreateProductDto newProduct)
     {
-        var createdProduct = await _productService.CreateProduct(newProduct);
+        ProductDto? createdProduct = await _productService.CreateProduct(newProduct);
         return CreatedAtAction(nameof(GetProductById), new { createdProduct?.ProductId }, createdProduct);
     }
 
     [HttpPut("{productId}")]
-    public async Task<IActionResult> UpdateProduct(string productId, ProductModel updateProduct)
+    public async Task<IActionResult> UpdateProduct(string productId, UpdateProductDto updateProduct)
     {
 
         if (!Guid.TryParse(productId, out Guid productIdGuid)) return BadRequest(new BaseResponse<object>(null, false, "Invalid product ID Format"));
@@ -90,9 +92,9 @@ public class ProductsController(AppDbContext appDbContext) : ControllerBase
         Product? productToUpdate = await _productService.GetProductById(productIdGuid);
         if (productToUpdate is null) return BadRequest(ModelState);
 
-        Product? updatedProduct = await _productService.UpdateProduct(productIdGuid, updateProduct);
+        ProductDto? updatedProduct = await _productService.UpdateProduct(productIdGuid, updateProduct);
 
-        return Ok(new BaseResponse<Product>(updatedProduct, true));
+        return Ok(new BaseResponse<ProductDto>(updatedProduct, true));
 
 
     }
@@ -104,9 +106,10 @@ public class ProductsController(AppDbContext appDbContext) : ControllerBase
         if (!Guid.TryParse(productId, out Guid productIdGuid)) return BadRequest("Invalid product ID Format");
 
         Product? productToDelete = await _productService.GetProductById(productIdGuid);
-        var result = await _productService.DeleteProduct(productIdGuid);
-        if (!result) return NotFound();
+        if (productToDelete is null) return NotFound();
+        DeleteProductDto? deletedProduct = await _productService.DeleteProduct(productIdGuid);
+        if (deletedProduct is null) return NotFound();
 
-        return Ok(new BaseResponse<Product>(productToDelete, true));
+        return Ok(new BaseResponse<DeleteProductDto>(deletedProduct, true));
     }
 }

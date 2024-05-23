@@ -8,6 +8,10 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
+        //###########################
+        //      TableBuilder
+        //###########################
+
         builder.ToTable("Cart");
         builder.Property(c => c.CartId);
 
@@ -17,7 +21,9 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .ValueGeneratedOnAdd()
             .HasDefaultValueSql("gen_random_uuid()");
 
-        // Relations
+        //###########################
+        //      TableRelations
+        //###########################
 
         builder
             .HasMany(c => c.Items)

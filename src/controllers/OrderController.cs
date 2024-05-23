@@ -21,11 +21,11 @@ public class OrderController(AppDbContext appDbContext, IMapper mapper) : Contro
     #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
-    public async Task<IActionResult> GetOrders([FromQuery] int page = 1, [FromQuery] int limit = 20)
+    public async Task<IActionResult> GetOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
     {
         List<Order> orders = await _orderService.GetOrders();
-        List<Order> paginatedOrders = Paginate.Function(orders, page, limit);
-        return Ok(new BaseResponseList<Order>(paginatedOrders, true));
+        PaginationResult<Order> paginatedOrders = new() { Items = orders.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = orders.Count, PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<Order>>(paginatedOrders, true));
     }
 
     [HttpGet("{orderId}")]

@@ -53,7 +53,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         //###########################
-        //      TableBuilder
+        //      TableRelations
         //###########################
 
         builder

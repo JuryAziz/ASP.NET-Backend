@@ -1,36 +1,37 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 using Store.Application.Services;
+using Store.Dtos;
 using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 using Store.Helpers;
-using Store.Models;
 
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/categories")]
-public class CategoriesController(AppDbContext appDbContext) : ControllerBase
+public class CategoriesController(AppDbContext appDbContext, IMapper mapper) : ControllerBase
 {
-    private readonly CategoriesService _categoriesService = new(appDbContext);
+    private readonly CategoriesService _categoriesService = new(appDbContext, mapper);
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
+    public async Task<IActionResult> GetAllCategories([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
     {
-        List<Category> categories = await _categoriesService.GetAllCategories();
+        IEnumerable<CategoryDto> categories = await _categoriesService.GetAllCategories();
 
-        List<Category> sortedCategories = categories;
+        IEnumerable<CategoryDto> sortedCategories = categories;
         switch (dir.ToLower())
         {
             case "asc":
-                sortedCategories = sortedCategories.OrderBy(c => c.Name).ToList();
+                sortedCategories = [.. sortedCategories.OrderBy(c => c.Name)];
                 break;
             case "desc":
-                sortedCategories = sortedCategories.OrderByDescending(c => c.Name).ToList();
+                sortedCategories = [.. sortedCategories.OrderByDescending(c => c.Name)];
                 break;
         }
 
-        List<Category> paginatedCategories = Paginate.Function(sortedCategories, page, limit);
-        return Ok(new BaseResponseList<Category>(paginatedCategories, true));
+        PaginationResult<CategoryDto> paginatedCategories = new() { Items = sortedCategories.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = sortedCategories.Count(), PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<CategoryDto>>(paginatedCategories, true));
     }
 
     [HttpGet("{categoryId}")]
@@ -39,7 +40,7 @@ public class CategoriesController(AppDbContext appDbContext) : ControllerBase
 
         if (!Guid.TryParse(categoryId, out Guid categoryIdGuid)) return BadRequest(new BaseResponse<object>(false, "Invalid category ID Format"));
 
-        var category = await _categoriesService.GetCategoryById(categoryIdGuid);
+        Category? category = await _categoriesService.GetCategoryById(categoryIdGuid);
         if (category is null) return NotFound();
 
         return Ok(new BaseResponse<Category>(category, true));
@@ -47,7 +48,7 @@ public class CategoriesController(AppDbContext appDbContext) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory(CategoryModel newCategory)
+    public async Task<IActionResult> CreateCategory(CreateCategoryDto newCategory)
     {
 
         var createdCategory = await _categoriesService.CreateCategory(newCategory);
@@ -55,16 +56,15 @@ public class CategoriesController(AppDbContext appDbContext) : ControllerBase
     }
 
     [HttpPut("{categoryId}")]
-    public async Task<IActionResult> UpdateCategory(string categoryId, CategoryModel updateCategory)
+    public async Task<IActionResult> UpdateCategory(string categoryId, UpdateCategoryDto updateCategory)
     {
         if (!Guid.TryParse(categoryId, out Guid categoryIdGuid)) return BadRequest(new BaseResponse<object>(null, false, "Invalid category ID Format"));
 
         Category? categoryToUpdate = await _categoriesService.GetCategoryById(categoryIdGuid);
         if (categoryToUpdate is null) return BadRequest(ModelState);
+        CategoryDto? updatedCategory = await _categoriesService.UpdateCategory(categoryIdGuid, updateCategory);
 
-        Category? updatedCategory = await _categoriesService.UpdateCategory(categoryIdGuid, updateCategory);
-
-        return Ok(new BaseResponse<Category>(updatedCategory, true));
+        return Ok(new BaseResponse<CategoryDto>(updatedCategory, true));
 
     }
 
@@ -75,10 +75,11 @@ public class CategoriesController(AppDbContext appDbContext) : ControllerBase
         if (!Guid.TryParse(categoryId, out Guid categoryIdGuid)) return BadRequest("Invalid category ID format");
 
         Category? categoryToDelete = await _categoriesService.GetCategoryById(categoryIdGuid);
-        var result = await _categoriesService.DeleteCategory(categoryIdGuid);
-        if (!result) return NotFound();
+        if(categoryToDelete is null) return NotFound();
+        DeleteCategoryDto? deletedCategory = await _categoriesService.DeleteCategory(categoryIdGuid);
+        if (deletedCategory is null) return NotFound();
 
-        return Ok(new BaseResponse<Category>(categoryToDelete, true));
+        return Ok(new BaseResponse<DeleteCategoryDto>(deletedCategory, true));
     }
     
 }

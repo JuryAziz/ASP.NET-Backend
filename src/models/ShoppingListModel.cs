@@ -18,7 +18,7 @@ public class ShoppingListModel
     [MinLength(10, ErrorMessage = "Description must be at least 10 characters long.")]
     [MaxLength(500, ErrorMessage = "Description can be at most 500 characters long.")]
     public string Description { get; set; } = string.Empty;
-    public virtual List<Product>? Items { get; set; } = [];
+    public List<Guid>? Items { get; set; } = [];
     public bool IsPublic { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

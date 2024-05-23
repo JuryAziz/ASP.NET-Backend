@@ -14,11 +14,11 @@ public class CartController(AppDbContext appDbContext) : ControllerBase
     private readonly CartService _cartService = new(appDbContext);
 
     [HttpGet]
-    public async Task<IActionResult> GetCarts([FromQuery] int page = 1, [FromQuery] int limit = 20)
+    public async Task<IActionResult> GetCarts([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
     {
         List<Cart> carts = await _cartService.GetCarts();
-        List<Cart> paginatedCarts = Paginate.Function(carts, page, limit);
-        return Ok(new BaseResponseList<Cart>(paginatedCarts, true));
+        PaginationResult<Cart> paginatedCarts = new() { Items = carts.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = carts.Count, PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<Cart>>(paginatedCarts, true));
     }
 
     [HttpGet("{cartId}")]

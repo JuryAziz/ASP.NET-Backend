@@ -37,7 +37,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         //###########################
-        //      TableBuilder
+        //      TableRelations
         //###########################
 
         // Address Relation 1:N

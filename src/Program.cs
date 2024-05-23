@@ -56,6 +56,17 @@ builder.Services.AddScoped<CategoriesService>();
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+// connecting api to frontend 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000") // react link here 
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+    });
+});
+
 var Configuration = builder.Configuration;
 #pragma warning disable CS8604 // Possible null reference argument.
 var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
@@ -89,6 +100,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowSpecificOrigin");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

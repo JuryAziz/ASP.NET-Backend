@@ -41,7 +41,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         //###########################
-        //      TableBuilder
+        //      TableRelations
         //###########################
 
     }

@@ -21,5 +21,17 @@ public class AutoMapper : Profile
         CreateMap<CreatePaymentMethodDto, PaymentMethodDto>();
         CreateMap<PaymentMethod, PaymentMethodDto>();
         CreateMap<PaymentMethod, DeletePaymentMethodDto>();
+
+        CreateMap<CreateCategoryDto, CategoryDto>();
+        CreateMap<Category, CategoryDto>();
+        CreateMap<Category, DeleteCategoryDto>();
+
+        CreateMap<CreateProductDto, ProductDto>();
+        CreateMap<Product, ProductDto>();
+        CreateMap<Product, DeleteProductDto>();
+
+        CreateMap<CreateOrderDto, OrderDto>();
+        CreateMap<Order, OrderDto>();
+        CreateMap<Order, DeleteOrderDto>();
     }
 }

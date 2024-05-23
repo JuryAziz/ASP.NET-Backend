@@ -22,7 +22,7 @@ public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> pa
     #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
-    public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
+    public async Task<IActionResult> GetUsers([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, [FromQuery] string sortBy = "Name", [FromQuery] string dir = "Asc")
     {
         IEnumerable<UserDto> users = await _userService.GetUsers();
 
@@ -65,8 +65,8 @@ public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> pa
                 break;
         }
 
-        IEnumerable<UserDto> paginatedUsers = Paginate.Function(sortedUsers.ToList(), page, limit);
-        return Ok(new BaseResponseList<UserDto>(paginatedUsers, true));
+        PaginationResult<UserDto> paginatedUsers = new() { Items = sortedUsers.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = sortedUsers.Count(), PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<UserDto>>(paginatedUsers, true));
     }
 
     [HttpGet("{userId}")]
@@ -113,18 +113,3 @@ public class UsersController(AppDbContext appDbContext, IPasswordHasher<User> pa
         return Ok(new BaseResponse<DeleteUserDto>(deletedUser, true));
     }
 }
-
-// localhost:5135/api/users/{ID}/addresses
-// localhost:5135/api/users/{ID}/paymentmethod
-// localhost:5135/api/users/{ID}/orders
-// localhost:5135/api/users/{ID}/cart
-// localhost:5135/api/users/{ID}/shoppinglists
-// localhost:5135/api/users/{ID}/review
-
-// localhost:5135/api/orders/{ID}/items
-// localhost:5135/api/users/{ID}/items/{ID}/review
-// localhost:5135/api/users/{ID}/items/{ID}/product
-
-
-// localhost:5135/api/product/{ID}/categories
-// localhost:5135/api/product/{ID}/reviews

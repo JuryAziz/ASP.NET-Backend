@@ -12,5 +12,5 @@ public class ShoppingList
     public bool IsPublic { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public User? User { get; set; }
-    public List<Product>? Items { get; set; } = []; // just the product GUID for now
+    public List<Guid>? Items { get; set; } = [];
 }
