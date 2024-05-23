@@ -11,5 +11,8 @@ public class Product
     public required int Stock { get; set; }
     public string? Description { get; set; }
 
+    public string? Thumbnail { get; set; }
+    public string[] Images { get; set; } = [];
+
     public List<Category> Categories { get; set; } = [];
 }
