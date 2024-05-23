@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Models;
-public class OrderModel
-{
-    [Required(ErrorMessage = "Order Id is required.")]
-    public required Guid OrderId { get; set; }
+namespace Store.Dtos;
 
+public class CreateOrderDto()
+{
     [Required(ErrorMessage = "User Id is required.")]
     public required Guid UserId { get; set; }
 
@@ -20,9 +18,5 @@ public class OrderModel
 
     [Required(ErrorMessage = "Shipment Id is required.")]
     public required Guid ShipmentId { get; set; }
-
-    [Required(ErrorMessage = "Status is required.")]
-    public required int Status { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
+

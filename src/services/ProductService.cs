@@ -1,27 +1,31 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Store.Dtos;
 using Store.EntityFramework;
 using Store.EntityFramework.Entities;
-using Store.Helpers;
-using Store.Models;
 
 namespace Store.Application.Services;
-public class ProductService(AppDbContext appDbContext)
+public class ProductService(AppDbContext appDbContext, IMapper mapper)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
+    private readonly IMapper _mapper = mapper;
 
-    public async Task<List<Product>> GetAllProducts()
+    public async Task<IEnumerable<ProductDto>> GetAllProducts()
     {
-        return await _appDbContext.Products.ToListAsync();
+        return (await _appDbContext.Products
+        .Include(p => p.Categories)
+        .ToListAsync()).Select(_mapper.Map<ProductDto>);
     }
 
     public async Task<Product?> GetProductById(Guid productId)
     {
-        return await Task.FromResult((await GetAllProducts()).FirstOrDefault(p => p.ProductId == productId));
+        return await Task.FromResult(_appDbContext.Products
+        .FirstOrDefault(p => p.ProductId == productId));
     }
 
-    public async Task<Product> CreateProduct(ProductModel newProduct)
+    public async Task<ProductDto> CreateProduct(CreateProductDto newProduct)
     {
-        Product product = new Product
+        Product product = new()
         {
             Name = newProduct.Name,
             Price = newProduct.Price,
@@ -29,33 +33,43 @@ public class ProductService(AppDbContext appDbContext)
             Description = newProduct.Description,
         };
 
+        product.Categories = newProduct.Categories.Select(categoryName => {
+            Category? category = _appDbContext.Categories.FirstOrDefault(category => category.Name.ToLower() == categoryName.ToLower() );
+            if (category is null) return new Category { Name = categoryName, Products = [product] };
+            category.Products.Add(product);
+            return category;
+        }).ToList();
+
         await _appDbContext.Products.AddAsync(product);
         await _appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(product);
+        return await Task.FromResult(_mapper.Map<ProductDto>(product));
     }
 
-    public async Task<Product?> UpdateProduct(Guid productId, ProductModel updateProduct)
+    public async Task<ProductDto?> UpdateProduct(Guid productId, UpdateProductDto updatedProduct)
     {
-        Product? p = await GetProductById(productId);
-        if (p is null) return null;
+        Product? product = await GetProductById(productId);
+        if (product is null) return null;
 
-        p.Name = updateProduct.Name;
-        p.Price = updateProduct.Price;
-        p.Stock = updateProduct.Stock;
+        product.Name = updatedProduct.Name;
+        product.Price = updatedProduct.Price;
+        product.Stock = updatedProduct.Stock;
 
         await _appDbContext.SaveChangesAsync();
-        return await Task.FromResult(p);
+
+        return await Task.FromResult(_mapper.Map<ProductDto>(product));
     }
 
-    public async Task<bool> DeleteProduct(Guid productId)
+    public async Task<DeleteProductDto?> DeleteProduct(Guid productId)
     {
-        var productToDelete = await GetProductById(productId);
-        if (productToDelete is null) return await Task.FromResult(false);
+        Product? productToDelete = await GetProductById(productId);
+        if (productToDelete is null) return null;
 
         _appDbContext.Products.Remove(productToDelete);
         await _appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(true);
+        DeleteProductDto? deletedProduct = _mapper.Map<DeleteProductDto>(productToDelete);
+
+        return await Task.FromResult(deletedProduct);
     }
 }

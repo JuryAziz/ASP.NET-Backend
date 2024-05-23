@@ -41,7 +41,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         //###########################
-        //      TableBuilder
+        //      TableRelations
         //###########################
 
         // Address Relation 1:1

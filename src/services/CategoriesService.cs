@@ -1,27 +1,34 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Store.Dtos;
 using Store.EntityFramework;
 using Store.EntityFramework.Entities;
-using Store.Helpers;
-using Store.Models;
 
 namespace Store.Application.Services;
-public class CategoriesService(AppDbContext appDbContext)
+public class CategoriesService(AppDbContext appDbContext, IMapper mapper)
 {
     private readonly AppDbContext _appDbContext = appDbContext;
+    private readonly IMapper _mapper = mapper;
 
-    public async Task<List<Category>> GetAllCategories()
+    public async Task<IEnumerable<CategoryDto>> GetAllCategories()
     {
-       return await _appDbContext.Categories.ToListAsync();
+        return (await _appDbContext.Categories
+            .Include(c => c.Products)
+            .ToListAsync())
+            .Select(_mapper.Map<CategoryDto>);
     }
 
     public async Task<Category?> GetCategoryById(Guid categoryId)
     {
-        return await Task.FromResult((await GetAllCategories()).FirstOrDefault(c => c.CategoryId == categoryId));
+        Category? category = await _appDbContext.Categories
+            .Include(category => category.Products)
+            .FirstOrDefaultAsync(category => category.CategoryId == categoryId);
+        return await Task.FromResult(category);
     }
 
-    public async Task<Category> CreateCategory(CategoryModel newCategory)
+    public async Task<CategoryDto> CreateCategory(CreateCategoryDto newCategory)
     {
-        Category category = new Category
+        Category category = new()
         {
             Name = newCategory.Name,
             Description = newCategory.Description,
@@ -30,29 +37,34 @@ public class CategoriesService(AppDbContext appDbContext)
         await _appDbContext.Categories.AddAsync(category);
         await _appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(category);
+        CategoryDto DtoCategory = _mapper.Map<CategoryDto>(category);
+
+        return await Task.FromResult(DtoCategory);
     }
 
-    public async Task<Category?> UpdateCategory(Guid categoryId, CategoryModel updateCategory)
+    public async Task<CategoryDto?> UpdateCategory(Guid categoryId, UpdateCategoryDto updatedCategory)
     {
-        Category? category = await GetCategoryById(categoryId);
-        if (category is null) return null;
+        Category? categoryToUpdate = await GetCategoryById(categoryId);
+        if (categoryToUpdate is null) return null;
 
-        category.Name = updateCategory.Name;
-        category.Description = updateCategory.Description;
+        categoryToUpdate.Name = updatedCategory.Name;
+        categoryToUpdate.Description = updatedCategory.Description;
 
         await _appDbContext.SaveChangesAsync();
-        return await Task.FromResult(category);
+
+        return await Task.FromResult(_mapper.Map<CategoryDto>(categoryToUpdate));
     }
 
-    public async Task<bool> DeleteCategory(Guid categoryId)
+    public async Task<DeleteCategoryDto?> DeleteCategory(Guid categoryId)
     {
-        var CategoryToDelete = await GetCategoryById(categoryId);
-        if (CategoryToDelete is null) return await Task.FromResult(false);
+        Category? CategoryToDelete = await GetCategoryById(categoryId);
+        if (CategoryToDelete is null) return null;
 
         _appDbContext.Categories.Remove(CategoryToDelete);
         await _appDbContext.SaveChangesAsync();
 
-        return await Task.FromResult(true);
+        DeleteCategoryDto? deletedCategory = _mapper.Map<DeleteCategoryDto>(CategoryToDelete);
+
+        return await Task.FromResult(deletedCategory);
     }
 }

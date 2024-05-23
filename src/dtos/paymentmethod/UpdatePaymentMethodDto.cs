@@ -3,28 +3,24 @@ using Store.Models;
 
 namespace Store.Dtos;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 public class UpdatePaymentMethodDto()
 {
-    [Required(ErrorMessage = "Type is required.")]
     [MaxLength(20, ErrorMessage = "Type can be at most 20 characters long.")]
-    public required string Type { get; set; }
+    public string Type { get; set; }
 
-    [Required(ErrorMessage = "Card number is required.")]
     [Range(100000000000, 9999999999999999, ErrorMessage = "Card number must be between 12 to 16 digits")]
-    public required double CardNumber { get; set; }
+    public double CardNumber { get; set; }
 
-    [Required(ErrorMessage = "Cardholder name is required.")]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Cardholder name can only contain letters and spaces.")]
     [MaxLength(50, ErrorMessage = "Cardholder name can be at most 50 characters long.")]
-    public required string CardHolderName { get; set; }
+    public string CardHolderName { get; set; }
 
-    [Required(ErrorMessage = "Expiration date is required.")]
     [CustomValidation(typeof(PaymentMethodModel), nameof(ValidateCardExpirationDate))]
-    public required DateTime CardExpirationDate { get; set; }
+    public DateTime CardExpirationDate { get; set; }
 
-    [Required(ErrorMessage = "CCV is required.")]
     [RegularExpression(@"^\d{3}$", ErrorMessage = "CCV must be exactly three digits.")]
-    public required int CardCCV { get; set; }
+    public int CardCCV { get; set; }
 
     public bool IsDefault { get; set; } = true;
 

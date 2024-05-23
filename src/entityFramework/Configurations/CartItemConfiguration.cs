@@ -14,7 +14,8 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
         builder
             .Property(ci => ci.CartItemId)
             .IsRequired()
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("gen_random_uuid()");
 
         builder
             .Property(ci => ci.Quantity)
@@ -23,5 +24,9 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
         builder
             .Property(ci => ci.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        //###########################
+        //      TableRelations
+        //###########################
     }
 }

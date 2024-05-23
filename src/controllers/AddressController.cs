@@ -20,11 +20,11 @@ public class AddressesController(AppDbContext appDbContext, IMapper mapper) : Co
     #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
-    public async Task<IActionResult> GetAddresses([FromQuery] int page = 1, [FromQuery] int limit = 25)
+    public async Task<IActionResult> GetAddresses([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
     {
         IEnumerable<AddressDto>? addresses = await _addressService.GetAddresses();
-        IEnumerable<AddressDto> paginatedAddresses = Paginate.Function(addresses.ToList(), page, limit);
-        return Ok(new BaseResponseList<AddressDto>(paginatedAddresses, true));
+        PaginationResult<AddressDto> paginatedAddresses = new() { Items = addresses.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = addresses.Count(), PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<AddressDto>>(paginatedAddresses, true));
     }
 
     [HttpGet("{addressId}")]

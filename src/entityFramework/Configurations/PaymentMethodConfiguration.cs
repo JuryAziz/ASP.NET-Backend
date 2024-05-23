@@ -14,7 +14,6 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
         builder.ToTable("PaymentMethod");
         builder.HasKey(pm => pm.PaymentMethodId);
 
-        // primary key is required and auto genrate
         builder
             .Property(pm => pm.PaymentMethodId)
             .IsRequired()
@@ -58,7 +57,7 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
 
       
         //###########################
-        //      TableBuilder
+        //      TableRelations
         //###########################
 
     }

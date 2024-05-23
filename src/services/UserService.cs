@@ -55,9 +55,7 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
         await _appDbContext.Users.AddAsync(user);
         await _appDbContext.SaveChangesAsync();
 
-        UserDto DtoUser = _mapper.Map<UserDto>(user);
-
-        return await Task.FromResult(DtoUser);
+        return await Task.FromResult(_mapper.Map<UserDto>(user));
     }
 
     public async Task<UserDto?> UpdateUser(Guid userId, UpdateUserDto updatedUser)
@@ -85,8 +83,6 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
         _appDbContext.Users.Remove(userToDelete);
         await _appDbContext.SaveChangesAsync();
 
-        DeleteUserDto? deletedUser = _mapper.Map<DeleteUserDto>(userToDelete);
-
-        return await Task.FromResult(deletedUser);
+        return await Task.FromResult(_mapper.Map<DeleteUserDto>(userToDelete));
     }
 }

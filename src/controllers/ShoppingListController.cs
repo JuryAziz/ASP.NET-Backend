@@ -14,11 +14,11 @@ public class ShoppingListController(AppDbContext appDbContext) : ControllerBase
     private readonly ShoppingListService _shoppingListService = new(appDbContext);
 
     [HttpGet]
-    public async Task<IActionResult> GetShoppingLists([FromQuery] int page = 1, [FromQuery] int limit = 20)
+    public async Task<IActionResult> GetShoppingLists([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
     {
         List<ShoppingList> shoppingLists = await _shoppingListService.GetShoppingLists();
-        List<ShoppingList> paginatedShoppingLists = Paginate.Function(shoppingLists, page, limit);
-        return Ok(new BaseResponseList<ShoppingList>(paginatedShoppingLists, true));
+        PaginationResult<ShoppingList> paginatedShoppingLists = new() { Items = shoppingLists.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = shoppingLists.Count(), PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<ShoppingList>>(paginatedShoppingLists, true));
     }
 
     [HttpGet("{shoppingListId}")]

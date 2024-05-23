@@ -21,11 +21,11 @@ public class ProductReviewController(AppDbContext appDbContext, IMapper mapper) 
     #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
-    public async Task<IActionResult> GetProductReviews([FromQuery] int page = 1, [FromQuery] int limit = 50)
+    public async Task<IActionResult> GetProductReviews([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50)
     {
         List<ProductReview> productReviews = await _productReviewService.GetProductReviews();
-        List<ProductReview> paginatedProductReviews = Paginate.Function(productReviews, page, limit);
-        return Ok(new BaseResponseList<ProductReview>(paginatedProductReviews, true));
+        PaginationResult<ProductReview> paginatedProductReviews = new() { Items = productReviews.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = productReviews.Count(), PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<ProductReview>>(paginatedProductReviews, true));
     }
 
     [HttpGet("{reviewId}")]

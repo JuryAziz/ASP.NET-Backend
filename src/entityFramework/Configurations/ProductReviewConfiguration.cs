@@ -34,7 +34,7 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
             .HasAnnotation("MinLength", 10);
 
         //###########################
-        //      TableBuilder
+        //      TableRelations
         //###########################
 
     }

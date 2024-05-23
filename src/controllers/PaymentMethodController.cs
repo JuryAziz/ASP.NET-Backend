@@ -22,11 +22,11 @@ public class PaymentMethodsController(AppDbContext appDbContext, IMapper mapper)
     #pragma warning disable CS8604 // Possible null reference argument.
 
     [HttpGet]
-    public async Task<IActionResult> GetPaymentMethods([FromQuery] int page = 1, [FromQuery] int limit = 50)
+    public async Task<IActionResult> GetPaymentMethods([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50)
     {
         IEnumerable<PaymentMethodDto> paymentMethods = await _paymentMethodService.GetPaymentMethods();
-        IEnumerable<PaymentMethodDto> paginatedPaymentMethods = Paginate.Function(paymentMethods.ToList(), page, limit);
-        return Ok(new BaseResponseList<PaymentMethodDto>(paginatedPaymentMethods, true));
+        PaginationResult<PaymentMethodDto> paginatedPaymentMethods = new() { Items = paymentMethods.Skip((pageNumber - 1) * pageSize).Take(pageSize), TotalCount = paymentMethods.Count(), PageNumber = pageNumber, PageSize = pageSize };
+        return Ok(new BaseResponse<PaginationResult<PaymentMethodDto>>(paginatedPaymentMethods, true));
     }
 
     [HttpGet("{paymentMethodId}")]

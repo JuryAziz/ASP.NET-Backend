@@ -1,5 +1,6 @@
-namespace Store.Models;
-public class ProductModel
+namespace Store.Dtos;
+
+public class ProductDto()
 {
     public required Guid ProductId { get; set; }
     public required string Name { get; set; }
@@ -8,5 +9,5 @@ public class ProductModel
     public string? Description { get; set; }
     public string? Thumbnail { get; set; }
     public string[] Images { get; set; } = [];
-    public string[] Categories { get; set; } = [];
+    public List<CategoryDto> Categories { get; set; } = [];
 }
