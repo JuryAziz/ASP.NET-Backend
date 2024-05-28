@@ -12,9 +12,9 @@ using System.Security.Claims;
 namespace Store.API.Controllers;
 [ApiController]
 [Route("/api/auth")]
-public class AuthController(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, IMapper mapper, IConfiguration configuration) : ControllerBase
+public class AuthController(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher, IMapper mapper) : ControllerBase
 {
-    private readonly AuthSerivce _authService = new (appDbContext, mapper, configuration, passwordHasher);
+    private readonly AuthSerivce _authService = new (appDbContext, mapper,passwordHasher);
     private readonly UserService _userService = new (appDbContext, mapper, passwordHasher);
 
     [HttpPost("register")]

@@ -4,6 +4,5 @@ bin
 obj
 *.http
 .mono
-appsettings.json
-
+.env
 Migrations

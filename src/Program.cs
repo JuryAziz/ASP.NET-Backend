@@ -8,12 +8,14 @@ using Store.Application.Services;
 using Store.EntityFramework;
 using Store.EntityFramework.Entities;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => 
+builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -24,6 +26,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Bearer Authentication with JWT Token",
         Type = SecuritySchemeType.Http
     });
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -39,7 +42,10 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var DefaultConnection = Environment.GetEnvironmentVariable("DefaultConnection") ?? throw new Exception("DefaultConnection is not set in .env file");
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(DefaultConnection));
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
@@ -56,34 +62,39 @@ builder.Services.AddScoped<CategoriesService>();
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
-// connecting api to frontend 
-builder.Services.AddCors(options => {
+// connecting api to frontend
+builder.Services.AddCors(options =>
+{
     options.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // react link here 
+        builder.WithOrigins("http://localhost:3000") // react link here
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
     });
 });
 
-var Configuration = builder.Configuration;
-#pragma warning disable CS8604 // Possible null reference argument.
-var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
-#pragma warning restore CS8604 // Possible null reference argument.
-builder.Services.AddAuthentication(options => {
+var JwtKey = Environment.GetEnvironmentVariable("Jwt__Key") ?? throw new Exception("Jwt__Key is not set in .env file");
+var JwtIssuer = Environment.GetEnvironmentVariable("Jwt__Issuer") ?? throw new Exception("Jwt__Issuer is not set in .env file");
+var JwtAudience = Environment.GetEnvironmentVariable("Jwt__Audience") ?? throw new Exception("Jwt__Audience is not set in .env file");
+
+var key = Encoding.ASCII.GetBytes(JwtKey);
+builder.Services.AddAuthentication(options =>
+{
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options => {
+}).AddJwtBearer(options =>
+{
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidIssuer = Configuration["Jwt:Issuer"],
-        ValidAudience = Configuration["Jwt:Audience"],
+        ValidIssuer = JwtIssuer,
+        ValidAudience = JwtAudience,
         ClockSkew = TimeSpan.Zero
     };
 });
