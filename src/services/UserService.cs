@@ -22,8 +22,7 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
 
     public async Task<User?> GetUserById(Guid userId)
     {
-        #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        #pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         User? user = await _appDbContext.Users
             .Include(user => user.Cart)
                 .ThenInclude(cart => cart.Items)
@@ -33,14 +32,15 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
             .Include(user => user.ShoppingLists)
             .Include(user => user.ProductReviews)
             .FirstOrDefaultAsync(user => user.UserId == userId);
-        user.Password = null;
+
         return await Task.FromResult(user);
-    }   
+    }
 
     public async Task<UserDto?> CreateUser(RegisterDto newUser)
     {
-        #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        User user = new () {
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+        User user = new()
+        {
             Email = newUser.Email,
             Password = _passwordHasher.HashPassword(null, newUser.Password),
             PhoneNumber = newUser.PhoneNumber,
@@ -50,7 +50,7 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
             Role = newUser.Role,
             CreatedAt = newUser.CreatedAt
         };
-        #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         await _appDbContext.Users.AddAsync(user);
         await _appDbContext.SaveChangesAsync();
@@ -71,7 +71,7 @@ public class UserService(AppDbContext appDbContext, IMapper mapper, IPasswordHas
         userToUpdate.Role = updatedUser.Role;
 
         await _appDbContext.SaveChangesAsync();
-        
+
         return await Task.FromResult(_mapper.Map<UserDto>(userToUpdate));
     }
 
