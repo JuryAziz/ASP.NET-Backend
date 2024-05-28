@@ -13,7 +13,7 @@ using Store.EntityFramework;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240528152021_Boo")]
+    [Migration("20240528153357_Boo")]
     partial class Boo
     {
         /// <inheritdoc />
