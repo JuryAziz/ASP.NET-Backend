@@ -9,5 +9,5 @@ public class ProductDto()
     public string? Description { get; set; }
     public string? Thumbnail { get; set; }
     public string[] Images { get; set; } = [];
-    public List<CategoryDto> Categories { get; set; } = [];
+    public CategoryDto? Category { get; set; }
 }

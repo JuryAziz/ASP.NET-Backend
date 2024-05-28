@@ -8,5 +8,5 @@ public class ProductModel
     public string? Description { get; set; }
     public string? Thumbnail { get; set; }
     public string[] Images { get; set; } = [];
-    public string[] Categories { get; set; } = [];
+    public string? Categories { get; set; }
 }

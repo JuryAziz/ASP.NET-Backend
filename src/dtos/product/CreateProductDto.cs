@@ -22,6 +22,6 @@ public class CreateProductDto()
     public string? Thumbnail { get; set; }
     public string[] Images { get; set; } = [];
 
-    public string[] Categories { get; set; } = [];
+    public string? Category { get; set; }
 }
 

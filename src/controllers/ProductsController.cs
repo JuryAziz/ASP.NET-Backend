@@ -32,7 +32,7 @@ public class ProductsController(AppDbContext appDbContext, IMapper mapper) : Con
                         sortedProducts = [.. sortedProducts.OrderBy(p => p.Price)];
                         break;
                     case "category":
-                        sortedProducts = [.. sortedProducts.OrderBy(p => p.Categories?.ToArray()[0].Name)];
+                        sortedProducts = [.. sortedProducts.OrderBy(p => p.Category?.Name)];
                         break;
                     case "stock":
                         sortedProducts = [.. sortedProducts.OrderBy(p => p.Stock)];
@@ -49,7 +49,7 @@ public class ProductsController(AppDbContext appDbContext, IMapper mapper) : Con
                         sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Price)];
                         break;
                     case "category":
-                        sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Categories?.ToArray()[0].Name)];
+                        sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Category?.Name)];
                         break;
                     case "stock":
                         sortedProducts = [.. sortedProducts.OrderByDescending(p => p.Stock)];

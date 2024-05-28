@@ -13,7 +13,7 @@ public class ProductService(AppDbContext appDbContext, IMapper mapper)
     public async Task<IEnumerable<ProductDto>> GetAllProducts()
     {
         return (await _appDbContext.Products
-        .Include(p => p.Categories)
+        .Include(p => p.Category)
         .ToListAsync()).Select(_mapper.Map<ProductDto>);
     }
 
@@ -33,12 +33,8 @@ public class ProductService(AppDbContext appDbContext, IMapper mapper)
             Description = newProduct.Description,
         };
 
-        product.Categories = newProduct.Categories.Select(categoryName => {
-            Category? category = _appDbContext.Categories.FirstOrDefault(category => category.Name.ToLower() == categoryName.ToLower() );
-            if (category is null) return new Category { Name = categoryName, Products = [product] };
-            category.Products.Add(product);
-            return category;
-        }).ToList();
+        Category? category = _appDbContext.Categories.FirstOrDefault(category => category.Name == newProduct.Category);
+        category?.Products.Add(product);
 
         await _appDbContext.Products.AddAsync(product);
         await _appDbContext.SaveChangesAsync();
@@ -52,8 +48,12 @@ public class ProductService(AppDbContext appDbContext, IMapper mapper)
         if (product is null) return null;
 
         product.Name = updatedProduct.Name;
+        product.Description = updatedProduct.Description;
         product.Price = updatedProduct.Price;
         product.Stock = updatedProduct.Stock;
+
+        Category? category = _appDbContext.Categories.FirstOrDefault(category => category.Name == updatedProduct.Category);
+        product.Category = category;
 
         await _appDbContext.SaveChangesAsync();
 

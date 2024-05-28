@@ -14,5 +14,5 @@ public class Product
     public string? Thumbnail { get; set; }
     public string[] Images { get; set; } = [];
 
-    public List<Category> Categories { get; set; } = [];
+    public Category? Category { get; set; }
 }
