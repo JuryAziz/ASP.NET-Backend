@@ -31,6 +31,7 @@ public class ProductService(AppDbContext appDbContext, IMapper mapper)
             Price = newProduct.Price,
             Stock = newProduct.Stock,
             Description = newProduct.Description,
+            Thumbnail = newProduct.Thumbnail,
         };
 
         Category? category = _appDbContext.Categories.FirstOrDefault(category => category.Name == newProduct.Category);
