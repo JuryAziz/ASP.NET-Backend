@@ -53,6 +53,7 @@ public class AuthSerivce(AppDbContext appDbContext, IMapper mapper, IPasswordHas
     {
         User? foundUser = _appDbContext.Users.FirstOrDefault(user => user.Email.ToLower() == loginDto.Email.ToLower());
         if (foundUser is null) return null;
+        if ((UserRole)foundUser.Role == UserRole.Banned) return null;
 
         PasswordVerificationResult passwordVerified = _passwordHasher.VerifyHashedPassword(foundUser, foundUser.Password, loginDto.Password);
         if (passwordVerified is not PasswordVerificationResult.Success) return null;
