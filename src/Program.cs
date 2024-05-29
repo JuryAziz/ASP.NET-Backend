@@ -67,7 +67,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // react link here
+        builder.WithOrigins("https://main--candela-by-jay.netlify.app") // react link here
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
